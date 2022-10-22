@@ -1,5 +1,5 @@
-import { getProject, types } from '@theatre/core'
-import { useEffect, useState } from 'react'
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { useEffect } from 'react'
 import Stack from '@rewind/core/src/components/Stack'
 import PoweredBy from './PoweredBy'
 import MusicorumPresents from './MusicorumPresents'

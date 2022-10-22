@@ -1,11 +1,6 @@
 import Centered from '@rewind/core/src/components/Centered'
-import { ISheet, types, UnknownShorthandCompoundProps } from '@theatre/core'
-import { CSSProperties, useEffect, useMemo, useState } from 'react'
+import { CSSProperties } from 'react'
 import { useSplashSheet } from './useSplashSheet'
-
-interface RewindTextProps {
-  sheet: ISheet
-}
 
 export default function RewindText() {
   const values = useSplashSheet((s) => s.rewindValues)

@@ -10,11 +10,6 @@ const PoweredSources = styled(ReactComponent)`
   height: auto;
 `
 
-interface Props {
-  opacity: number
-  y: number
-}
-
 export default function PoweredBy() {
   const poweredValues = useSplashSheet((s) => s.poweredValues)
   return (
@@ -27,7 +22,7 @@ export default function PoweredBy() {
           transform: `translateY(${poweredValues.y}px)`
         }}
       >
-        <span>Powered by</span>
+        <b>Powered by</b>
         <PoweredSources />
       </Flex>
     </Centered>

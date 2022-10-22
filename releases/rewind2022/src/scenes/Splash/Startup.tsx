@@ -1,5 +1,11 @@
 import styled from '@emotion/styled'
 import Centered from '@rewind/core/src/components/Centered'
+import { animate } from 'motion'
+import { CSSProperties, useRef } from 'react'
+import Button from '../../components/Button'
+import { LoadState, useOrchestrator } from '../../hooks/useOrchestrator'
+import { Palette } from '../../theme/colors'
+import { useSplashSheet } from './useSplashSheet'
 
 const Text = styled.h1`
   margin: 0;
@@ -8,22 +14,55 @@ const Text = styled.h1`
   line-height: 105%;
 `
 
-const ContinueButton = styled.button`
+const ContinueButton = styled(Button)`
   margin-top: 50px;
-  padding: 8px 20px;
 `
 
 export default function Startup() {
+  const [topText, bottomText, button, loadSheet, loadValues] = useSplashSheet(
+    (s) => [
+      s.topTextValues,
+      s.bottomTextValues,
+      s.buttonValues,
+      s.loadSheet,
+      s.loadValues
+    ]
+  )
+
+  const setOrchestratorState = useOrchestrator((s) => s.setState)
+
+  const createStyle = (values: typeof topText): CSSProperties => ({
+    opacity: values.opacity,
+    transform: `translateY(${values.y}px) scale(${values.scale})`
+  })
+
+  const handleContinue = () => {
+    loadSheet.sequence.play().then(() => {
+      setOrchestratorState(LoadState.RESOLVE)
+    })
+  }
+
   return (
     <Centered
       style={{
-        flexDirection: 'column'
+        flexDirection: 'column',
+        transform: `translateX(${loadValues.x}px)`,
+        opacity: loadValues.opacity
       }}
     >
-      <Text>That moment has come</Text>
-      <Text>to rewind your 2022 in music</Text>
+      <Text style={createStyle(topText)}>The time to rewind your</Text>
+      <Text style={createStyle(bottomText)}>2022 in music has come</Text>
 
-      <ContinueButton>foo bar</ContinueButton>
+      <ContinueButton
+        style={{
+          opacity: button.opacity,
+          visibility: button.active ? 'visible' : 'hidden'
+        }}
+        background={Palette.SweetWine}
+        onClick={handleContinue}
+      >
+        Continue
+      </ContinueButton>
     </Centered>
   )
 }
