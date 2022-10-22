@@ -1,0 +1,6 @@
+{
+  "name": "@rewind/resolver",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Package for fetching and resolving data for rewind"
+}
