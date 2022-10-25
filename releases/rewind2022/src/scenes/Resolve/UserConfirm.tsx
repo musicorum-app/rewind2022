@@ -6,10 +6,11 @@ import { useEffect, useRef } from 'react'
 import Flex from '@react-css/flex'
 
 export default function UserConfirm() {
-  const [setStep, user, step] = useDataResolve((s) => [
+  const [setStep, user, step, resolve] = useDataResolve((s) => [
     s.setStep,
     s.user,
-    s.step
+    s.step,
+    s.resolve
   ])
 
   const containerRef = useRef<HTMLDivElement>(null)
@@ -60,7 +61,7 @@ export default function UserConfirm() {
             style={{
               marginLeft: 10
             }}
-            onClick={goBack}
+            onClick={resolve}
           >
             Continue
           </Button>

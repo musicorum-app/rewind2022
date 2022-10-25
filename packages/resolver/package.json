@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "description": "Package for fetching and resolving data for rewind",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
   "dependencies": {
-    "@musicorum/lastfm": "^0.0.5"
+    "@musicorum/lastfm": "^0.0.8"
   }
 }

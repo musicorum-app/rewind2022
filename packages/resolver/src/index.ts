@@ -1,5 +1,6 @@
 import { LastfmUserInfo } from '@musicorum/lastfm/dist/types/packages/user'
 import LastClient from '@musicorum/lastfm'
+import { getTopTracks } from './finders/tops'
 
 const from = new Date('2022-01-01 00:00')
 const to = new Date('2022-12-31 23:59')
@@ -12,12 +13,12 @@ export enum ResolveStep {
 }
 
 export interface StatusUpdatePayload {
-  step: ResolveStep,
+  step: ResolveStep
   stepNumber?: number
   maxSteps?: number
 }
 
-export async function resolve(
+export async function resolveRewindData(
   user: LastfmUserInfo,
   lastClient: LastClient,
   statusCallback: (status: StatusUpdatePayload) => void
@@ -35,18 +36,27 @@ export async function resolve(
     }
   )
 
-  for (let i = 2; i < recentTracks.totalPages; i++) {
+  for (let i = 2; i < recentTracks.totalPages + 1; i++) {
     statusCallback({
       step: ResolveStep.FETCHING_PAGES,
-      stepNumber: i - 1,
-      maxSteps: recentTracks.totalPages - 1
+      stepNumber: i,
+      maxSteps: recentTracks.totalPages
     })
     await recentTracks.fetchPage(i)
   }
 
   statusCallback({
-    step: ResolveStep.FETCHING_RESOURCES,
+    step: ResolveStep.FETCHING_RESOURCES
   })
 
-  const topTracks = 
+  // @ts-expect-error vtnc
+  window.recentTracks = recentTracks
+
+  const topTracks = getTopTracks(recentTracks)
+
+  // @ts-expect-error vtnc
+  window.topTracks = topTracks
+
+  console.log(recentTracks.getAll())
+  console.log(topTracks)
 }

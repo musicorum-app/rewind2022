@@ -513,10 +513,10 @@
     "@motionone/dom" "^10.14.2"
     tslib "^2.3.1"
 
-"@musicorum/lastfm@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@musicorum/lastfm/-/lastfm-0.0.5.tgz#3ccc0ccad48bcd832a0e1959049f7ad0fa7a34d8"
-  integrity sha512-HI0FWV5CD49PRrWE7CN8B6oUOFTxLPBp5otkt5dOjH7jiS3zaW8Ddnho8LzfRYxVDoYRoPgJApEQxP+l6Tl7zA==
+"@musicorum/lastfm@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@musicorum/lastfm/-/lastfm-0.0.8.tgz#2b22050b486eb6649698ae84d8ab28c477237b79"
+  integrity sha512-bHG292biDOIY5jOE7MdFhGERi3ibwkUH1Cu/Do2rUKbuga/PYBrozb4UiAhMISkNWrFR91+htrq3HyZpoerKzA==
   dependencies:
     axios "^1.1.3"
 
