@@ -1,35 +1,40 @@
-import PaginatedResult from '@musicorum/lastfm/dist/PaginatedResource'
 import { LastfmRecentTracksTrack } from '@musicorum/lastfm/dist/types/packages/user'
 
 const normalize = (str: string) => str.toLowerCase().replaceAll(' ', '')
 
-const hashTrack = (track: LastfmRecentTracksTrack) =>
-  normalize(`${track.name}_${track.artist.name}`)
-const hashArtist = (track: LastfmRecentTracksTrack) => track.artist.name
-
-export function getTopTracks(
-  recentTracks: PaginatedResult<LastfmRecentTracksTrack>
+function getTop(
+  recentTracks: LastfmRecentTracksTrack[],
+  hashFn: (track: LastfmRecentTracksTrack) => string
 ) {
-  const aggregator = new Map<string, Set<LastfmRecentTracksTrack>>()
+  const aggregator = new Map<string, LastfmRecentTracksTrack[]>()
 
-  for (const track of recentTracks.getAll()) {
-    const hash = hashTrack(track)
+  for (const track of recentTracks) {
+    const hash = normalize(hashFn(track))
     if (!aggregator.has(hash)) {
-      aggregator.set(hash, new Set())
+      aggregator.set(hash, [])
     }
 
-    aggregator.get(hash)!.add(track)
+    aggregator.get(hash)?.push(track)
   }
 
-  const sorted = [...aggregator.entries()].sort(
-    ([, tracksA], [, tracksB]) => tracksB.size - tracksA.size
+  const sorted = [...aggregator.values()].sort(
+    (tracksA, tracksB) => tracksB.length - tracksA.length
   )
 
   return sorted
 }
 
-export function getTopArtists(
-  recentTracks: PaginatedResult<LastfmRecentTracksTrack>
-) {
-  const aggregator = new Map<string, Set<LastfmRecentTracksTrack['artist']>>()
+export function getTopTracks(recentTracks: LastfmRecentTracksTrack[]) {
+  return getTop(recentTracks, (track) => `${track.name}_${track.artist.name}`)
+}
+
+export function getTopArtists(recentTracks: LastfmRecentTracksTrack[]) {
+  return getTop(recentTracks, (track) => track.artist.name)
+}
+
+export function getTopAlbums(recentTracks: LastfmRecentTracksTrack[]) {
+  return getTop(
+    recentTracks,
+    (track) => `${track.album.name}_${track.artist.name}`
+  )
 }
