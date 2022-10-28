@@ -11,7 +11,7 @@ export interface OrchestratorStore {
   setState: (state: LoadState) => void
 }
 
-const initialState = import.meta.env.DEV ? LoadState.RESOLVE : LoadState.STARTUP
+const initialState = import.meta.env.DEV ? LoadState.STARTUP : LoadState.STARTUP
 
 export const useOrchestrator = create<OrchestratorStore>((set) => ({
   state: initialState,

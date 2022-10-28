@@ -28,8 +28,15 @@ export function getTopTracks(recentTracks: LastfmRecentTracksTrack[]) {
   return getTop(recentTracks, (track) => `${track.name}_${track.artist.name}`)
 }
 
+function getAritstFromURL(url: string) {
+  return url.match(/\/music\/(.*)\//)?.[1]
+}
+
 export function getTopArtists(recentTracks: LastfmRecentTracksTrack[]) {
-  return getTop(recentTracks, (track) => track.artist.name)
+  return getTop(
+    recentTracks,
+    (track) => track.artist.name
+  )
 }
 
 export function getTopAlbums(recentTracks: LastfmRecentTracksTrack[]) {

@@ -47,7 +47,8 @@ export default function Startup() {
       style={{
         flexDirection: 'column',
         transform: `translateX(${loadValues.x}px)`,
-        opacity: loadValues.opacity
+        opacity: loadValues.opacity,
+        overflow: 'hidden'
       }}
     >
       <Text style={createStyle(topText)}>The time to rewind your</Text>
