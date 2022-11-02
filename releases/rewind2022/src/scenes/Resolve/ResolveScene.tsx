@@ -6,14 +6,18 @@ import { interpolateBackgroundGradient } from '../../modules/backgroundGradient'
 import { Gradients } from '../../theme/colors'
 import { DataResolveStep, useDataResolve } from './useDataResolve'
 import UserConfirm from './UserConfirm'
+import UserLoading from './UserLoading'
+import { useTranslation } from 'react-i18next'
 
 const preload = document.querySelector<HTMLDivElement>('#preload')!
 const app = document.querySelector<HTMLDivElement>('#root')!
 
 export default function ResolveScene() {
-  const startSheet = useResolveSheet((s) => s.startSheet)
-
   const currentStep = useDataResolve((s) => s.step)
+
+  const { i18n } = useTranslation()
+  // @ts-expect-error tmnc
+  window.t = i18n
 
   useEffect(() => {
     // startSheet.sequence.play()
@@ -22,6 +26,8 @@ export default function ResolveScene() {
 
     preload.style.opacity = '0'
     preload.style.display = 'none'
+
+    console.log(preload)
 
     interpolateBackgroundGradient(
       Gradients.MidnightSky,
@@ -35,6 +41,8 @@ export default function ResolveScene() {
       {currentStep === DataResolveStep.USER_INPUT && <UserInput />}
 
       {currentStep === DataResolveStep.USER_CONFIRM && <UserConfirm />}
+
+      {currentStep === DataResolveStep.LOADING && <UserLoading />}
     </Stack>
   )
 }

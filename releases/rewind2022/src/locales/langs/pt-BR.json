@@ -1,0 +1,8 @@
+{
+  "common": {
+    "continue": "Continuar"
+  },
+  "errors": {
+    "private_scrobbles": "Seu perfil do last.fm possui scrobbles privados. Por favor, <0>deixe-os públicos</0> para continuar"
+  }
+}

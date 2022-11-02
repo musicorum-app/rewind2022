@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import SplashScene from './scenes/Splash/SplashScene'
 import '@fontsource/manrope/400.css'
 import '@fontsource/manrope/500.css'
@@ -7,7 +6,7 @@ import '@fontsource/manrope/800.css'
 import './App.css'
 import { LoadState, useOrchestrator } from './hooks/useOrchestrator'
 import ResolveScene from './scenes/Resolve/ResolveScene'
-import { useTweaks } from 'use-tweaks'
+import './locales/i18n'
 
 export default function App() {
   return <StateDisplay />

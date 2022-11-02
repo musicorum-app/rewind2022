@@ -1,0 +1,16 @@
+{
+  "common": {
+    "continue": "Continue",
+    "back": "Back",
+    "try_again": "Try again"
+  },
+  "loading": {
+    "generic": "Loading...",
+    "fetching_pages": "Reading your scrobbles..."
+  },
+  "errors": {
+    "generic": "Something went wrong!",
+    "private_scrobbles": "Your last.fm profile have private scrobbles. Please <1>make them public</1> to continue",
+    "rate_limit": "There are too many people using this website right now and last.fm is limiting us. Please try again later"
+  }
+}

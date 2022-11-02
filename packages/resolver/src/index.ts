@@ -17,8 +17,8 @@ export enum ResolveStep {
 
 export interface StatusUpdatePayload {
   step: ResolveStep
-  stepNumber?: number
-  maxSteps?: number
+  value?: number
+  maxValue?: number
 }
 
 export async function resolveRewindData(
@@ -50,8 +50,8 @@ export async function resolveRewindData(
     for (let i = 2; i < pagination.totalPages + 1; i++) {
       statusCallback({
         step: ResolveStep.FETCHING_PAGES,
-        stepNumber: i,
-        maxSteps: pagination.totalPages
+        value: pagination.getAll().length,
+        maxValue: pagination.totalResults
       })
       await pagination.fetchPage(i)
     }
@@ -86,4 +86,9 @@ export async function resolveRewindData(
 
   console.log(recentTracks)
   console.log(topTracks)
+}
+
+// @ts-expect-error force global function
+window.clearRewindDataCache = async () => {
+  await caches.delete('ScrobblesCache')
 }

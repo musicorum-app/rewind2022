@@ -11,9 +11,19 @@ export interface OrchestratorStore {
   setState: (state: LoadState) => void
 }
 
-const initialState = import.meta.env.DEV ? LoadState.STARTUP : LoadState.STARTUP
-
 export const useOrchestrator = create<OrchestratorStore>((set) => ({
-  state: initialState,
+  state: getInitialState(),
   setState: (state) => set({ state })
 }))
+
+function getInitialState() {
+  if (import.meta.env.PROD) {
+    return LoadState.STARTUP
+  }
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const ls = parseInt(localStorage.getItem('RewindSavedLoadState')!)
+
+  return ls && Object.values(LoadState).includes(ls)
+    ? (ls as unknown as LoadState)
+    : LoadState.STARTUP
+}

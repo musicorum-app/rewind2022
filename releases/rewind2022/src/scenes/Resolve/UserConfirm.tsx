@@ -4,6 +4,8 @@ import { DataResolveStep, useDataResolve } from './useDataResolve'
 import { animate } from 'motion'
 import { useEffect, useRef } from 'react'
 import Flex from '@react-css/flex'
+import { useTranslation } from 'react-i18next'
+import UserCard from './UserCard'
 
 export default function UserConfirm() {
   const [setStep, user, step, resolve] = useDataResolve((s) => [
@@ -12,6 +14,8 @@ export default function UserConfirm() {
     s.step,
     s.resolve
   ])
+
+  const { t } = useTranslation()
 
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -47,15 +51,13 @@ export default function UserConfirm() {
     }
   }, [])
 
-  console.log(user)
-
   return (
     <Centered>
       <div ref={containerRef}>
-        {user?.name}
+        {user && <UserCard user={user} />}
         <Flex>
           <Button background="rgba(255, 255, 255, 0.2)" onClick={goBack}>
-            Back
+            {t('common.back')}
           </Button>
           <Button
             style={{
@@ -63,7 +65,7 @@ export default function UserConfirm() {
             }}
             onClick={resolve}
           >
-            Continue
+            {t('common.continue')}
           </Button>
         </Flex>
       </div>

@@ -88,7 +88,7 @@ export default function UserInput() {
     } catch (err) {
       if (err instanceof LastfmError) {
         console.log(err, err.error)
-        if (err.error === LastfmErrorCode.PARAMETER_ERROR) {
+        if (err.error === LastfmErrorCode.INVALID_PARAMETER) {
           setError({
             show: true,
             text: 'User not found'
