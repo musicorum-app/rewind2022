@@ -72,7 +72,7 @@ export async function extractImageColor(img: HTMLImageElement | string) {
 
   const colors = extractColorsFromImageData(imageData).slice(0, 4)
 
-  if (import.meta.env) {
+  if (import.meta.env.DEV) {
     console.log(
       `%c* Analyzing colors for ${img.src}`,
       'border-top: 1px solid white'
@@ -91,7 +91,7 @@ export async function extractImageColor(img: HTMLImageElement | string) {
     highAreaColors = colors.filter((c) => c.area >= 10)
   }
 
-  if (import.meta.env) {
+  if (import.meta.env.DEV) {
     console.log('* Filtered colors')
     if (highAreaColors.length) printColors(highAreaColors)
     else console.log('%cnone', 'color: gray; font-style: italic;')
@@ -101,7 +101,7 @@ export async function extractImageColor(img: HTMLImageElement | string) {
     .sort((a, b) => b.saturation - a.saturation)
     .at(0)
 
-  if (import.meta.env && color) {
+  if (import.meta.env.DEV && color) {
     console.log('* Result color')
     printColors([color])
   }
