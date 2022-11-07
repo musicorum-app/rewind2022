@@ -6,6 +6,8 @@ import studio from '@theatre/studio'
 // Vite
 if (import.meta.env.DEV) {
   studio.initialize()
+  // @ts-expect-error force global variable
+  window.studio = studio
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

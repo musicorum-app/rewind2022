@@ -1,9 +1,9 @@
 import create from 'zustand'
 
 export enum LoadState {
-  STARTUP,
-  RESOLVE,
-  PLAY
+  STARTUP = 1,
+  RESOLVE = 2,
+  PLAY = 3
 }
 
 export interface OrchestratorStore {
@@ -12,18 +12,6 @@ export interface OrchestratorStore {
 }
 
 export const useOrchestrator = create<OrchestratorStore>((set) => ({
-  state: getInitialState(),
+  state: LoadState.STARTUP,
   setState: (state) => set({ state })
 }))
-
-function getInitialState() {
-  if (import.meta.env.PROD) {
-    return LoadState.STARTUP
-  }
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const ls = parseInt(localStorage.getItem('RewindSavedLoadState')!)
-
-  return ls && Object.values(LoadState).includes(ls)
-    ? (ls as unknown as LoadState)
-    : LoadState.STARTUP
-}

@@ -1,11 +1,11 @@
 import chroma from 'chroma-js'
-import { GradientPalette } from '../theme/colors'
+import { Gradient } from '../theme/colors'
 
 const body = document.body
 
 export function interpolateBackgroundGradient(
-  from: GradientPalette,
-  to: GradientPalette,
+  from: Gradient,
+  to: Gradient,
   value: number
 ) {
   const color1 = chroma.scale([from[0], to[0]])(value)

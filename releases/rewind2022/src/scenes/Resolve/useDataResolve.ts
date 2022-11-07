@@ -10,11 +10,16 @@ import {
   LastfmError,
   LastfmErrorCode
 } from '@musicorum/lastfm/dist/error/LastfmError'
+import {
+  RewindData2022,
+  sanitizeRewindData
+} from '../../modules/rewindDataExtras'
 
 export enum DataResolveStep {
   USER_INPUT,
   USER_CONFIRM,
-  LOADING
+  LOADING,
+  DONE
 }
 
 export interface DataResolveStore {
@@ -30,7 +35,10 @@ export interface DataResolveStore {
   user: LastfmUserInfo | null
   setUser: (user: LastfmUserInfo | null) => void
 
+  rewindData: RewindData2022 | null
   resolve: () => void
+
+  clear: () => void
 }
 
 export const useDataResolve = create<DataResolveStore>((set, get) => ({
@@ -48,6 +56,15 @@ export const useDataResolve = create<DataResolveStore>((set, get) => ({
   user: null,
   setUser: (user) => set({ user }),
 
+  clear: () => {
+    set({
+      user: null,
+      rewindData: null,
+      step: DataResolveStep.USER_INPUT
+    })
+  },
+
+  rewindData: null,
   resolve: async () => {
     const user = get().user
     if (!user) {
@@ -57,19 +74,39 @@ export const useDataResolve = create<DataResolveStore>((set, get) => ({
     set({ step: DataResolveStep.LOADING })
 
     try {
-      await resolveRewindData(user, lastfmClient, (loadingStatus) => {
-        set({ loadingStatus })
-      })
+      const data = await resolveRewindData(
+        user,
+        lastfmClient,
+        (loadingStatus) => {
+          set({ loadingStatus })
+        }
+      )
+
+      const rewindData = await sanitizeRewindData(data)
+
+      if (import.meta.env.DEV) {
+        // @ts-expect-error force global var
+        window.rewindData = rewindData
+      }
+
+      set({ rewindData, step: DataResolveStep.DONE })
     } catch (err) {
       if (err instanceof LastfmError) {
-        console.log(err.error)
+        console.log('lfm error', err.error)
         if (err.error === LastfmErrorCode.REQUIRES_LOGIN) {
-          set({ error: 'errors.private_scrobbles' })
+          return set({ error: 'errors.private_scrobbles' })
         } else if (err.error === LastfmErrorCode.RATE_LIMIT_EXCEEDED) {
-          set({ error: 'errors.rate_limit' })
+          return set({ error: 'errors.rate_limit' })
         }
       }
+      set({ error: 'errors.generic' })
       console.error(err)
     }
   }
 }))
+
+export function useRewindData() {
+  const rewindData = useDataResolve((s) => s.rewindData)
+
+  return rewindData
+}

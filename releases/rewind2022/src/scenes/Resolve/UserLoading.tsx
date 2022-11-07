@@ -94,7 +94,7 @@ export default function UserLoading() {
               marginBottom: 6
             }}
           >
-            {subTitle ? t(subTitle) : null}
+            {subTitle}
           </p>
 
           <ProgressBar value={value} />

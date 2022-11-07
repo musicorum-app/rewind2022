@@ -1,7 +1,7 @@
 import { getProject, IProject, ISheet, types } from '@theatre/core'
 import create from 'zustand'
 import { interpolateBackgroundGradient } from '../../modules/backgroundGradient'
-import { Gradients } from '../../theme/colors'
+import { Palettes } from '../../theme/colors'
 import projectState from './assets/state.json'
 
 const project = getProject('Splash Scene', {
@@ -97,8 +97,8 @@ export const useSplashSheet = create<SplashSheetStore>((set) => {
 
   backgroundObject.onValuesChange((values) => {
     interpolateBackgroundGradient(
-      Gradients.Burn,
-      Gradients.MidnightSky,
+      Palettes.Burn.gradient,
+      Palettes.MidnightSky.gradient,
       values.value
     )
   })

@@ -4,6 +4,8 @@ import {
 } from '@musicorum/lastfm/dist/types/packages/user'
 import LastClient from '@musicorum/lastfm'
 import { getTopAlbums, getTopArtists, getTopTracks } from './finders/tops'
+import { RewindData, Track } from './types'
+import { removeDefaultTrackImage } from './modules/image'
 
 const from = new Date('2022-01-01 00:00')
 const to = new Date('2022-12-31 23:59')
@@ -25,11 +27,11 @@ export async function resolveRewindData(
   user: LastfmUserInfo,
   lastClient: LastClient,
   statusCallback: (status: StatusUpdatePayload) => void
-) {
+): Promise<RewindData> {
   statusCallback({
     step: ResolveStep.STARTUP
   })
-  let recentTracks: LastfmRecentTracksTrack[] = []
+  let recentTracks: Track[] = []
   const cache = await caches.match('/scrobbles_cache.json')
 
   if (import.meta.env.DEV && cache) {
@@ -56,7 +58,7 @@ export async function resolveRewindData(
       await pagination.fetchPage(i)
     }
 
-    recentTracks = pagination.getAll()
+    recentTracks = pagination.getAll().map((t) => removeDefaultTrackImage(t))
     if (import.meta.env.DEV) {
       const storage = await caches.open('ScrobblesCache')
 
@@ -74,21 +76,44 @@ export async function resolveRewindData(
     step: ResolveStep.FETCHING_RESOURCES
   })
 
-  // @ts-expect-error vtnc
-  window.recentTracks = recentTracks
-
   const topTracks = getTopTracks(recentTracks)
   const topArtists = getTopArtists(recentTracks)
   const topAlbums = getTopAlbums(recentTracks)
 
-  // @ts-expect-error vtnc
-  window.tops = [topTracks, topArtists, topAlbums]
-
   console.log(recentTracks)
   console.log(topTracks)
+
+  const firstScrobblesList = [...recentTracks].reverse()
+
+  const firstScrobbles = [] as Track[]
+  for (let i = 0; i < firstScrobblesList.length; i++) {
+    const track = firstScrobblesList[i]
+    console.log(track.url)
+    if (firstScrobbles.length >= 5) {
+      break
+    } else if (
+      // make sure to include first scrobble
+      i === 0 ||
+      !firstScrobbles.find((t) => t.album.name === track.album.name)
+    ) {
+      console.log(i)
+      firstScrobbles.push(track)
+    }
+  }
+
+  const data: RewindData = {
+    firstScrobbles
+  }
+
+  if (import.meta.env.DEV) {
+    // @ts-expect-error force global var
+    window.rewindData = data
+  }
+
+  return data
 }
 
-// @ts-expect-error force global function
-window.clearRewindDataCache = async () => {
-  await caches.delete('ScrobblesCache')
+export function clearRewindDataCache() {
+  console.debug('Cleared rewind cache')
+  return caches.delete('ScrobblesCache')
 }

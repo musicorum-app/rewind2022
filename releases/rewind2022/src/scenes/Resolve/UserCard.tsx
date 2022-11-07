@@ -1,5 +1,11 @@
 import styled from '@emotion/styled'
 import { LastfmUserInfo } from '@musicorum/lastfm/dist/types/packages/user'
+import {
+  getImage,
+  ImageType,
+  imageTypeDefaultImages
+} from '../../modules/lastfmImage'
+import { Image } from '@chakra-ui/image'
 
 const Wrapper = styled.div`
   display: flex;
@@ -22,10 +28,12 @@ export interface UserCardProps {
   user: LastfmUserInfo
 }
 
+const defaultUserImage = imageTypeDefaultImages[ImageType.USER]
+
 export default function UserCard({ user }: UserCardProps) {
   return (
     <Wrapper>
-      <img src={user.images[2].url} />
+      <Image src={user.images[3]?.url} fallbackSrc={defaultUserImage} />
       <h2>{user.name}</h2>
     </Wrapper>
   )

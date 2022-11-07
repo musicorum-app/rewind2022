@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { forwardRef } from 'react'
-import { Palette } from '../theme/colors'
+import { Palettes } from '../theme/colors'
 
 export interface ProgressBarProps {
   value: number
@@ -28,7 +28,7 @@ const ProgressBar = forwardRef<HTMLDivElement, Partial<ProgressBarProps>>(
     return (
       <LoadingBar
         ref={ref}
-        color={props.color ?? Palette.SweetWine}
+        color={props.color ?? Palettes.MidnightSky.color}
         value={props.value ?? 0}
       >
         <div aria-valuenow={props.value ?? 0} />

@@ -4,7 +4,7 @@ import { animate } from 'motion'
 import { CSSProperties, useRef } from 'react'
 import Button from '../../components/Button'
 import { LoadState, useOrchestrator } from '../../hooks/useOrchestrator'
-import { Palette } from '../../theme/colors'
+import { Palettes } from '../../theme/colors'
 import { useSplashSheet } from './useSplashSheet'
 
 const Text = styled.h1`
@@ -12,6 +12,7 @@ const Text = styled.h1`
   text-align: center;
   font-size: clamp(20px, 6vw, 90px);
   line-height: 105%;
+  font-variation-settings: 'wght' 800;
 `
 
 const ContinueButton = styled(Button)`
@@ -59,7 +60,7 @@ export default function Startup() {
           opacity: button.opacity,
           visibility: button.active ? 'visible' : 'hidden'
         }}
-        background={Palette.SweetWine}
+        background={Palettes.MidnightSky.color}
         onClick={handleContinue}
       >
         Continue
