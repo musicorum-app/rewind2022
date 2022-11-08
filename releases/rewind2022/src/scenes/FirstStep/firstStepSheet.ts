@@ -1,4 +1,5 @@
-import { getProject } from '@theatre/core'
+import { createDomSheetObjectProps } from '@rewind/core/src/modules/sheetObject'
+import { getProject, types } from '@theatre/core'
 import { createMainControllerObject } from '../../modules/sheets'
 
 const project = getProject('First Step Scene', {
@@ -12,6 +13,14 @@ const mainObject = firstStepIntroSheet.object(
   createMainControllerObject()
 )
 
+const trackObject = firstStepIntroSheet.object(
+  'Track Object',
+  createDomSheetObjectProps({
+    transitionInterpolation: types.number(0, { range: [0, 1] })
+  })
+)
+
 export const firstStepObjects = {
-  mainObject
+  mainObject,
+  trackObject
 }

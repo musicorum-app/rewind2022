@@ -15,7 +15,8 @@ export enum PaletteType {
   Yellow = 'Yellow',
   Red = 'Red',
   DarkBlue = 'DarkBlue',
-  LightBlue = 'LightBlue'
+  LightBlue = 'LightBlue',
+  Chuu = 'Chuu'
 }
 
 export const Palettes: Record<PaletteType, Palette> = {
@@ -51,6 +52,12 @@ export const Palettes: Record<PaletteType, Palette> = {
   },
   LightBlue: {
     gradient: ['#2EB7E2', '#00667C'],
-    color: '#004E6F'
+    color: '#004E6F',
+    targetColors: ['#2EB7E2', '#00667C']
+  },
+  Chuu: {
+    gradient: ['#F1626B', '#923445'],
+    color: '#5C2323',
+    targetColors: ['#5C2323', '#F1626B']
   }
 }

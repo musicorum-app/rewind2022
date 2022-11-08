@@ -39,11 +39,11 @@ function printColors(colors: Colors[]) {
 
 function printImage(img: HTMLImageElement) {
   const canvas = document.createElement('canvas')
-  canvas.width = 16
-  canvas.height = 16
+  canvas.width = 64
+  canvas.height = 64
 
   const ctx = canvas.getContext('2d')
-  ctx?.drawImage(img, 0, 0, 16, 16)
+  ctx?.drawImage(img, 0, 0, 64, 64)
 
   const b64Url = canvas.toDataURL('image/jpeg', 60)
   // @ts-expect-error aaaa
@@ -60,8 +60,8 @@ export async function extractImageColor(img: HTMLImageElement | string) {
   }
 
   const canvas = document.createElement('canvas')
-  canvas.width = img.width
-  canvas.height = img.height
+  canvas.width = img.width * 1.8
+  canvas.height = img.height * 1.8
 
   const ctx = canvas.getContext('2d')
   ctx?.drawImage(img, 0, 0)
@@ -70,7 +70,9 @@ export async function extractImageColor(img: HTMLImageElement | string) {
 
   if (!imageData) return null
 
-  const colors = extractColorsFromImageData(imageData).slice(0, 4)
+  const colors = extractColorsFromImageData(imageData, {
+    pixels: img.width * img.height
+  }).slice(0, 4)
 
   if (import.meta.env.DEV) {
     console.log(
@@ -82,14 +84,7 @@ export async function extractImageColor(img: HTMLImageElement | string) {
     printColors(colors)
   }
 
-  let highAreaColors = colors.filter((c) => c.area >= 30)
-
-  if (highAreaColors.length === 0) {
-    highAreaColors = colors.filter((c) => c.area >= 20)
-  }
-  if (highAreaColors.length === 0) {
-    highAreaColors = colors.filter((c) => c.area >= 10)
-  }
+  const highAreaColors = colors.filter((c) => c.saturation >= 0.4)
 
   if (import.meta.env.DEV) {
     console.log('* Filtered colors')
@@ -98,12 +93,15 @@ export async function extractImageColor(img: HTMLImageElement | string) {
   }
 
   const color = (highAreaColors.length >= 1 ? highAreaColors : colors)
-    .sort((a, b) => b.saturation - a.saturation)
+    .sort((a, b) => b.area - a.area)
     .at(0)
 
   if (import.meta.env.DEV && color) {
-    console.log('* Result color')
-    printColors([color])
+    const textColor = chroma(color.hex).luminance() > 0.5 ? 'black' : 'white'
+    console.log(
+      `* Result color: %c${color.hex}`,
+      `background: ${color.hex}; color: ${textColor}; padding: 2px 7px;`
+    )
   }
 
   return color ? color.hex : null

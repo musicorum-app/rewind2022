@@ -24,11 +24,11 @@ async function convertTrack(
   preLoadImage = false,
   getPalette = false
 ): Promise<RewindTrack> {
-  let url = old.image
+  const url = old.image
   let color = null
 
   if (preLoadImage && url) {
-    url = await preloadImage(url)
+    await preloadImage(url)
   }
 
   if (getPalette && url) {

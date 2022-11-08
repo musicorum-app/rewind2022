@@ -12,6 +12,7 @@ import {
   ImageType,
   imageTypeDefaultImages
 } from '../../modules/lastfmImage'
+import PositionReferenceObject from '../../components/PositionReferenceObject'
 
 const MainYear = styled.div`
   font-variation-settings: 'wght' 800;
@@ -23,10 +24,14 @@ const MainYear = styled.div`
 `
 
 const BackImage = styled.img`
-  position: absolute;
-  transform-origin: right bottom;
-  width: 110px;
-  border-radius: 4px;
+  &,
+  & > div {
+    position: absolute;
+    transform-origin: right bottom;
+    width: 110px;
+    height: 110px;
+    border-radius: 4px;
+  }
 `
 
 const YearDigit = styled.div``
@@ -132,9 +137,7 @@ export default function YearSplashScene() {
 
       <BackImage
         ref={backImage1Ref}
-        src={
-          getImage(rewindData.firstScrobbles[0].image, 700) ?? defaultTrackImage
-        }
+        src={getImage(rewindData.firstScrobbles[3].image) ?? defaultTrackImage}
       />
 
       <BackImage
@@ -146,9 +149,17 @@ export default function YearSplashScene() {
         src={getImage(rewindData.firstScrobbles[2].image) ?? defaultTrackImage}
       />
       <BackImage
+        as={'div'}
         ref={backImage4Ref}
-        src={getImage(rewindData.firstScrobbles[3].image) ?? defaultTrackImage}
-      />
+        // src={
+        //   getImage(rewindData.firstScrobbles[0].image, 700) ?? defaultTrackImage
+        // }
+      >
+        <PositionReferenceObject
+          id="year-splash-track-ref"
+          refTo="first-track-ref"
+        />
+      </BackImage>
       <BackImage
         ref={backImage5Ref}
         src={getImage(rewindData.firstScrobbles[4].image) ?? defaultTrackImage}
