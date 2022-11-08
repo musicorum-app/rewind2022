@@ -5,6 +5,15 @@ import { firstStepObjects } from './firstStepSheet'
 import { Palettes } from '../../theme/colors'
 import { interpolateBackgroundGradient } from '../../modules/backgroundGradient'
 import { useMainControllerObjectObserver } from '../../modules/sheets'
+import styled from '@emotion/styled'
+
+const TrackImageRef = styled.div`
+  position: absolute;
+  right: var(--margin);
+  bottom: var(--margin);
+  width: 35vw;
+  height: 35vw;
+`
 
 export default function FirstStepScene() {
   const rewindData = useRewindData()
