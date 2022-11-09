@@ -77,10 +77,19 @@ const bottomTextObject = yearSplashSheet.object(
   createDomSheetObjectProps()
 )
 
+const firstTrackObject = yearSplashSheet.object(
+  'First Track',
+  createDomSheetObjectProps({
+    transitionInterpolation: types.number(0, { range: [0, 1] })
+  })
+)
+
 export const yearSplashObjects = {
   mainObject,
 
   yearGroupObject,
+
+  firstTrackObject,
 
   yearDigit1Object,
   yearDigit2Object,

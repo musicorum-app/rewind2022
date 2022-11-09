@@ -13,6 +13,8 @@ import {
   imageTypeDefaultImages
 } from '../../modules/lastfmImage'
 import PositionReferenceObject from '../../components/PositionReferenceObject'
+import { firstStepFromYearSplashObjects } from '../FirstStep/firstStepSheet'
+import { useDomSheetObjectValueUpdate } from '@rewind/core/src/hooks/useDomSheetObjectValueUpdate'
 
 const MainYear = styled.div`
   font-variation-settings: 'wght' 800;
@@ -48,6 +50,8 @@ const defaultTrackImage = imageTypeDefaultImages[ImageType.TRACK]
 
 export default function YearSplashScene() {
   const rewindData = useRewindData()
+  const containerRef = useRef<HTMLDivElement>(null)
+
   const yearGroupRef = useRef<HTMLHeadingElement>(null)
   const bottomTextRef = useRef<HTMLHeadingElement>(null)
 
@@ -64,38 +68,65 @@ export default function YearSplashScene() {
 
   const { t } = useTranslation()
 
-  useSheetObjectValueUpdate(yearGroupRef, yearSplashObjects.yearGroupObject)
-  useSheetObjectValueUpdate(bottomTextRef, yearSplashObjects.bottomTextObject)
-
   useSheetObjectValueUpdate(
+    containerRef,
+    firstStepFromYearSplashObjects.yearSplashContainerObject,
+    (values, el) => {
+      el.style.scale = values.scale.toString()
+      el.style.opacity = values.opacity.toString()
+    }
+  )
+
+  useDomSheetObjectValueUpdate(yearGroupRef, yearSplashObjects.yearGroupObject)
+  useDomSheetObjectValueUpdate(
+    bottomTextRef,
+    yearSplashObjects.bottomTextObject
+  )
+
+  useDomSheetObjectValueUpdate(
     yearDigit1Ref,
     yearSplashObjects.yearDigit1Object,
     digitChangeCallback
   )
 
-  useSheetObjectValueUpdate(
+  useDomSheetObjectValueUpdate(
     yearDigit2Ref,
     yearSplashObjects.yearDigit2Object,
     digitChangeCallback
   )
 
-  useSheetObjectValueUpdate(
+  useDomSheetObjectValueUpdate(
     yearDigit3Ref,
     yearSplashObjects.yearDigit3Object,
     digitChangeCallback
   )
 
-  useSheetObjectValueUpdate(
+  useDomSheetObjectValueUpdate(
     yearDigit4Ref,
     yearSplashObjects.yearDigit4Object,
     digitChangeCallback
   )
 
-  useSheetObjectValueUpdate(backImage1Ref, yearSplashObjects.backImage1Object)
-  useSheetObjectValueUpdate(backImage2Ref, yearSplashObjects.backImage2Object)
-  useSheetObjectValueUpdate(backImage3Ref, yearSplashObjects.backImage3Object)
-  useSheetObjectValueUpdate(backImage4Ref, yearSplashObjects.backImage4Object)
-  useSheetObjectValueUpdate(backImage5Ref, yearSplashObjects.backImage5Object)
+  useDomSheetObjectValueUpdate(
+    backImage1Ref,
+    yearSplashObjects.backImage1Object
+  )
+  useDomSheetObjectValueUpdate(
+    backImage2Ref,
+    yearSplashObjects.backImage2Object
+  )
+  useDomSheetObjectValueUpdate(
+    backImage3Ref,
+    yearSplashObjects.backImage3Object
+  )
+  useDomSheetObjectValueUpdate(
+    backImage4Ref,
+    yearSplashObjects.backImage4Object
+  )
+  useDomSheetObjectValueUpdate(
+    backImage5Ref,
+    yearSplashObjects.backImage5Object
+  )
 
   const toGradient = useMemo(() => {
     const targetPalette = rewindData?.firstScrobbles[0].image.palette
@@ -126,6 +157,7 @@ export default function YearSplashScene() {
         overflow: 'unset',
         flexDirection: 'column'
       }}
+      ref={containerRef}
     >
       <MainYear ref={yearGroupRef}>
         <YearDigit ref={yearDigit1Ref}>2</YearDigit>

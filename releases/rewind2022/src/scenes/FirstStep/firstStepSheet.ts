@@ -6,21 +6,27 @@ const project = getProject('First Step Scene', {
   state: undefined
 })
 
-export const firstStepIntroSheet = project.sheet('Intro')
+export const firstStepFromYearSplashSheet = project.sheet('From Year Splash')
 
-const mainObject = firstStepIntroSheet.object(
+const mainObject = firstStepFromYearSplashSheet.object(
   'Main Controller',
   createMainControllerObject()
 )
 
-const trackObject = firstStepIntroSheet.object(
-  'Track Object',
+const trackObject = firstStepFromYearSplashSheet.object(
+  'First track',
   createDomSheetObjectProps({
     transitionInterpolation: types.number(0, { range: [0, 1] })
   })
 )
 
-export const firstStepObjects = {
+const yearSplashContainerObject = firstStepFromYearSplashSheet.object(
+  'Year splash',
+  createDomSheetObjectProps()
+)
+
+export const firstStepFromYearSplashObjects = {
   mainObject,
-  trackObject
+  trackObject,
+  yearSplashContainerObject
 }

@@ -11,6 +11,7 @@ const Element = styled.div<{ isOrigin: boolean }>`
 
   transition: opacity 150ms ease-in-out;
   z-index: 10000;
+  pointer-events: none;
 `
 
 /**

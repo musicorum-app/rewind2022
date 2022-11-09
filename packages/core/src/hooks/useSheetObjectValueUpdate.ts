@@ -5,27 +5,27 @@ import {
   sheetObjectValuesToImperativeStyle
 } from '../modules/sheetObject'
 
-type ObjectProps = ReturnType<typeof createDomSheetObjectProps>
+export type DomSheetObjectProps = ReturnType<typeof createDomSheetObjectProps>
 
 export function useSheetObjectValueUpdate<
   EL extends HTMLElement,
-  O extends ISheetObject<ObjectProps>
+  O extends ISheetObject
 >(
-  ref: RefObject<EL>,
-  object: O,
-  extraCallback?: (values: O['value'], element: EL) => void
+  ref: RefObject<EL> | EL,
+  objects: O | O[],
+  callback: (values: O['value'], element: EL) => void
 ) {
   useEffect(() => {
-    const el = ref.current
+    const el = 'current' in ref ? ref.current : ref
     if (el) {
-      const unsubscribe = object.onValuesChange((values) => {
-        sheetObjectValuesToImperativeStyle(values, el.style, [])
-        if (extraCallback) {
-          extraCallback(values, el)
-        }
-      })
+      const objs = Array.isArray(objects) ? objects : [objects]
+      const unsubscribes = objs.map((o) =>
+        o.onValuesChange((values) => {
+          callback(values, el)
+        })
+      )
 
-      return unsubscribe
+      return () => unsubscribes.forEach((u) => u())
     }
   }, [ref])
 }

@@ -1,59 +1,79 @@
-import { useWindowSize } from './useWindowSize'
+import { RefObject, useEffect } from 'react'
+import { ISheetObject } from '@theatre/core'
+import {
+  DomSheetObjectProps,
+  useSheetObjectValueUpdate
+} from '@rewind/core/src/hooks/useSheetObjectValueUpdate'
+import useWindowResize from '@rewind/core/src/hooks/useWindowResize'
+import { interpolateBetweenReferenceElements } from '../modules/referenceInterpolator'
+import { KeysWithValsOfType } from '../types'
+import { useDomSheetObjectValueUpdate } from '@rewind/core/src/hooks/useDomSheetObjectValueUpdate'
 
-import { useMemo, useLayoutEffect, RefObject } from 'react'
-import { mapValueBetweenRanges } from '../utils/math'
-
-const interpolatePx = (origin: number, target: number, value: number) =>
-  mapValueBetweenRanges([0, 1], [origin, target], value) + 'px'
-
-export default function usePositionedReferenceObjectInterpolation(
+export default function useSheetObjectValueUpdateWithReferencedInterpolation<
+  EL extends HTMLElement,
+  O extends ISheetObject<DomSheetObjectProps>
+>(
   originElementId: string,
   targetElementId: string,
-  elementToInterpolate: HTMLElement | RefObject<HTMLElement>,
-  interpolation: number
+  elementToInterpolate: EL | RefObject<EL>,
+  sheetObject: O,
+  objectKey: KeysWithValsOfType<O['value'], number>
 ) {
-  const [windowWidth, windowHeight] = useWindowSize()
-
-  const originMeasurements = useMemo(() => {
-    const element = document.getElementById(originElementId)
-    return element?.getBoundingClientRect() ?? new DOMRect(0, 0, 20, 20)
-  }, [windowWidth, windowHeight])
-
-  const targetMeasurements = useMemo(() => {
-    const element = document.getElementById(targetElementId)
-    return element?.getBoundingClientRect() ?? new DOMRect(0, 0, 20, 20)
-  }, [windowWidth, windowHeight])
-
-  useLayoutEffect(() => {
+  const parseElements = () => {
+    const originElement = document.getElementById(originElementId)
+    const targetElement = document.getElementById(targetElementId)
     const element =
-      elementToInterpolate instanceof HTMLElement
-        ? elementToInterpolate
-        : elementToInterpolate.current
+      'current' in elementToInterpolate
+        ? elementToInterpolate.current
+        : elementToInterpolate
 
-    if (element) {
-      element.style.position = 'absolute'
+    return {
+      originElement,
+      targetElement,
+      element
+    }
+  }
 
-      element.style.left = interpolatePx(
-        originMeasurements.x,
-        targetMeasurements.x,
-        interpolation
-      )
-      element.style.top = interpolatePx(
-        originMeasurements.y,
-        targetMeasurements.y,
-        interpolation
-      )
+  useDomSheetObjectValueUpdate(
+    elementToInterpolate,
+    sheetObject,
+    (values, el) => {
+      const { originElement, targetElement } = parseElements()
+      if (originElement && targetElement) {
+        interpolateBetweenReferenceElements(
+          originElement,
+          targetElement,
+          el,
+          values[objectKey]
+        )
+      }
+    }
+  )
 
-      element.style.width = interpolatePx(
-        originMeasurements.width,
-        targetMeasurements.width,
-        interpolation
-      )
-      element.style.height = interpolatePx(
-        originMeasurements.height,
-        targetMeasurements.height,
-        interpolation
+  useWindowResize(() => {
+    const { originElement, targetElement, element } = parseElements()
+
+    if (originElement && targetElement && element) {
+      interpolateBetweenReferenceElements(
+        originElement,
+        targetElement,
+        element,
+        // why the fuck do i need to cast this
+        (sheetObject.value as O['value'])[objectKey]
       )
     }
-  }, [interpolation, originMeasurements, targetMeasurements])
+  })
+
+  useEffect(() => {
+    const { originElement, targetElement, element } = parseElements()
+
+    if (originElement && targetElement && element) {
+      interpolateBetweenReferenceElements(
+        originElement,
+        targetElement,
+        element,
+        (sheetObject.value as O['value'])[objectKey]
+      )
+    }
+  }, [])
 }
