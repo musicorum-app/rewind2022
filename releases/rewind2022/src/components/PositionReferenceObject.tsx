@@ -10,7 +10,7 @@ const Element = styled.div<{ isOrigin: boolean }>`
     p.isOrigin ? 'rgb(255, 255, 0, 0.2)' : 'rgb(255,0, 0, 0.2)'};
 
   transition: opacity 150ms ease-in-out;
-  z-index: 10000;
+  z-index: 9999999;
   pointer-events: none;
 `
 

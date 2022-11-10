@@ -34,7 +34,7 @@ export async function resolveRewindData(
   let recentTracks: Track[] = []
   const cache = await caches.match('/scrobbles_cache.json')
 
-  if (import.meta.env.DEV && cache) {
+  if (cache) {
     recentTracks = await cache.json()
   }
 
@@ -59,7 +59,7 @@ export async function resolveRewindData(
     }
 
     recentTracks = pagination.getAll().map((t) => removeDefaultTrackImage(t))
-    if (import.meta.env.DEV) {
+    if (Date.now() > 2) {
       const storage = await caches.open('ScrobblesCache')
 
       const response = new Response(JSON.stringify(recentTracks), {

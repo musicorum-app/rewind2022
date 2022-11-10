@@ -1,10 +1,8 @@
 import Centered from '@rewind/core/src/components/Centered'
 import { useRewindData } from '../Resolve/useDataResolve'
 import { useRef, useMemo, useEffect } from 'react'
-import { yearSplashObjects, yearSplashSheet } from './yearSplashSheet'
 import { Palettes } from '../../theme/colors'
 import { useSheetObjectValueUpdate } from '@rewind/core/src/hooks/useSheetObjectValueUpdate'
-import { useMainControllerObjectObserver } from '../../modules/sheets'
 import styled from '@emotion/styled'
 import { useTranslation } from 'react-i18next'
 import {
@@ -15,6 +13,8 @@ import {
 import PositionReferenceObject from '../../components/PositionReferenceObject'
 import { firstStepFromYearSplashObjects } from '../FirstStep/firstStepSheet'
 import { useDomSheetObjectValueUpdate } from '@rewind/core/src/hooks/useDomSheetObjectValueUpdate'
+import { yearSplashObjects } from './yearSplashObjects'
+import { interpolateBackgroundGradient } from '../../modules/backgroundGradient'
 
 const MainYear = styled.div`
   font-variation-settings: 'wght' 800;
@@ -68,15 +68,6 @@ export default function YearSplashScene() {
 
   const { t } = useTranslation()
 
-  useSheetObjectValueUpdate(
-    containerRef,
-    firstStepFromYearSplashObjects.yearSplashContainerObject,
-    (values, el) => {
-      el.style.scale = values.scale.toString()
-      el.style.opacity = values.opacity.toString()
-    }
-  )
-
   useDomSheetObjectValueUpdate(yearGroupRef, yearSplashObjects.yearGroupObject)
   useDomSheetObjectValueUpdate(
     bottomTextRef,
@@ -111,6 +102,7 @@ export default function YearSplashScene() {
     backImage1Ref,
     yearSplashObjects.backImage1Object
   )
+
   useDomSheetObjectValueUpdate(
     backImage2Ref,
     yearSplashObjects.backImage2Object
@@ -135,16 +127,17 @@ export default function YearSplashScene() {
       : Palettes.Burn.gradient
   }, [rewindData])
 
-  const { pointerEvents } = useMainControllerObjectObserver(
-    yearSplashObjects.mainObject,
-    Palettes.MidnightSky.gradient,
-    toGradient
-  )
+  useSheetObjectValueUpdate(yearSplashObjects.mainObject, (values) => {
+    interpolateBackgroundGradient(
+      Palettes.MidnightSky.gradient,
+      toGradient,
+      values.backgroundInterpolation
+    )
+  })
 
   useEffect(() => {
-    yearSplashSheet.sequence.play()
-
-    return () => yearSplashSheet.sequence.pause()
+    // yearSplashForwardSheet.sequence.play()
+    // return () => yearSplashForwardSheet.sequence.pause()
   }, [])
 
   if (!rewindData) return null
@@ -153,7 +146,6 @@ export default function YearSplashScene() {
     <Centered
       is3D
       style={{
-        pointerEvents: pointerEvents ? 'unset' : 'none',
         overflow: 'unset',
         flexDirection: 'column'
       }}
@@ -182,7 +174,10 @@ export default function YearSplashScene() {
       />
       <BackImage
         as={'div'}
-        ref={backImage4Ref}
+        style={{
+          background: 'transparent',
+          transform: 'translate(-274px, -70px)'
+        }}
         // src={
         //   getImage(rewindData.firstScrobbles[0].image, 700) ?? defaultTrackImage
         // }

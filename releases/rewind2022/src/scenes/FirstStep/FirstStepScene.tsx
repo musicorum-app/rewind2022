@@ -3,7 +3,6 @@ import { useRewindData } from '../Resolve/useDataResolve'
 import { useRef, useLayoutEffect, useState } from 'react'
 import { Palettes } from '../../theme/colors'
 import { interpolateBackgroundGradient } from '../../modules/backgroundGradient'
-import { useMainControllerObjectObserver } from '../../modules/sheets'
 import styled from '@emotion/styled'
 import PositionReferenceObject from '../../components/PositionReferenceObject'
 import {
@@ -14,7 +13,6 @@ import {
 import { useWindowSize } from '../../hooks/useWindowSize'
 import usePositionedReferenceObjectInterpolation from '../../hooks/useSheetObjectValueUpdateWithReferencedInterpolation'
 import useSheetObjectValueUpdateWithReferencedInterpolation from '../../hooks/useSheetObjectValueUpdateWithReferencedInterpolation'
-import { yearSplashObjects } from '../YearSplash/yearSplashSheet'
 import { useDomSheetObjectValueUpdate } from '@rewind/core/src/hooks/useDomSheetObjectValueUpdate'
 import { firstStepFromYearSplashObjects } from './firstStepSheet'
 
@@ -32,7 +30,7 @@ const TrackImage = styled.img`
   position: absolute;
   left: 0;
   top: 0;
-  z-index: 2;
+  z-index: -2;
   border-radius: 4px;
 `
 
@@ -48,12 +46,6 @@ export default function FirstStepScene() {
   const rewindData = useRewindData()
   const trackImageRef = useRef<HTMLImageElement>(null)
 
-  const { pointerEvents } = useMainControllerObjectObserver(
-    firstStepFromYearSplashObjects.mainObject,
-    Palettes.MidnightSky.gradient,
-    Palettes.MidnightSky.gradient
-  )
-
   useSheetObjectValueUpdateWithReferencedInterpolation(
     'year-splash-track-ref',
     'first-track-ref',
@@ -62,19 +54,10 @@ export default function FirstStepScene() {
     'transitionInterpolation'
   )
 
-  useDomSheetObjectValueUpdate(
-    trackImageRef,
-    yearSplashObjects.firstTrackObject
-  )
-
   if (!rewindData) return null
 
   return (
-    <Centered
-      style={{
-        pointerEvents: pointerEvents ? 'unset' : 'none'
-      }}
-    >
+    <Centered disablePointerEvents>
       <TrackImageRefWrapper>
         <PositionReferenceObject id="first-track-ref" />
       </TrackImageRefWrapper>
@@ -84,7 +67,7 @@ export default function FirstStepScene() {
       <TrackImage
         ref={trackImageRef}
         src={
-          getImage(rewindData.firstScrobbles[0].image, 700) ?? defaultTrackImage
+          getImage(rewindData.firstScrobbles[0].image, 500) ?? defaultTrackImage
         }
       />
     </Centered>

@@ -1,31 +1,15 @@
 import { ISheetObject } from '@theatre/core'
-import { RefObject, useEffect } from 'react'
-import {
-  createDomSheetObjectProps,
-  sheetObjectValuesToImperativeStyle
-} from '../modules/sheetObject'
+import { useEffect } from 'react'
 
-export type DomSheetObjectProps = ReturnType<typeof createDomSheetObjectProps>
-
-export function useSheetObjectValueUpdate<
-  EL extends HTMLElement,
-  O extends ISheetObject
->(
-  ref: RefObject<EL> | EL,
-  objects: O | O[],
-  callback: (values: O['value'], element: EL) => void
+export function useSheetObjectValueUpdate<O extends ISheetObject>(
+  object: O,
+  callback: (values: O['value']) => void
 ) {
   useEffect(() => {
-    const el = 'current' in ref ? ref.current : ref
-    if (el) {
-      const objs = Array.isArray(objects) ? objects : [objects]
-      const unsubscribes = objs.map((o) =>
-        o.onValuesChange((values) => {
-          callback(values, el)
-        })
-      )
+    const unsubscribe = object.onValuesChange((values) => {
+      callback(values)
+    })
 
-      return () => unsubscribes.forEach((u) => u())
-    }
-  }, [ref])
+    return () => unsubscribe()
+  }, [])
 }

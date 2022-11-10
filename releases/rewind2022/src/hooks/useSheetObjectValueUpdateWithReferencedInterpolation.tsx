@@ -1,13 +1,12 @@
 import { RefObject, useEffect } from 'react'
 import { ISheetObject } from '@theatre/core'
-import {
-  DomSheetObjectProps,
-  useSheetObjectValueUpdate
-} from '@rewind/core/src/hooks/useSheetObjectValueUpdate'
 import useWindowResize from '@rewind/core/src/hooks/useWindowResize'
 import { interpolateBetweenReferenceElements } from '../modules/referenceInterpolator'
 import { KeysWithValsOfType } from '../types'
-import { useDomSheetObjectValueUpdate } from '@rewind/core/src/hooks/useDomSheetObjectValueUpdate'
+import {
+  DomSheetObjectProps,
+  useDomSheetObjectValueUpdate
+} from '@rewind/core/src/hooks/useDomSheetObjectValueUpdate'
 
 export default function useSheetObjectValueUpdateWithReferencedInterpolation<
   EL extends HTMLElement,
@@ -46,6 +45,7 @@ export default function useSheetObjectValueUpdateWithReferencedInterpolation<
           el,
           values[objectKey]
         )
+        el.setAttribute('data-interpolation-value', values[objectKey])
       }
     }
   )
@@ -54,12 +54,14 @@ export default function useSheetObjectValueUpdateWithReferencedInterpolation<
     const { originElement, targetElement, element } = parseElements()
 
     if (originElement && targetElement && element) {
+      const dataValue = element.getAttribute('data-interpolation-value')
+      const value = dataValue ? parseInt(dataValue) : 0
+
       interpolateBetweenReferenceElements(
         originElement,
         targetElement,
         element,
-        // why the fuck do i need to cast this
-        (sheetObject.value as O['value'])[objectKey]
+        value
       )
     }
   })
@@ -72,8 +74,8 @@ export default function useSheetObjectValueUpdateWithReferencedInterpolation<
         originElement,
         targetElement,
         element,
-        (sheetObject.value as O['value'])[objectKey]
+        0
       )
     }
-  }, [])
+  }, [elementToInterpolate])
 }

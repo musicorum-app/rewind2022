@@ -1,4 +1,9 @@
-import { ISheet, ISheetObject, types, UnknownShorthandCompoundProps } from '@theatre/core'
+import {
+  ISheet,
+  ISheetObject,
+  types,
+  UnknownShorthandCompoundProps
+} from '@theatre/core'
 import { CSSProperties } from 'react'
 
 export function createDomSheetObjectProps<
@@ -50,6 +55,7 @@ export function sheetObjectValuesToImperativeStyle(
   style: CSSStyleDeclaration,
   exclude: (keyof ObjectValuesModel)[]
 ) {
+  style.willChange = 'transform'
   if (!exclude.includes('opacity')) style.opacity = v.opacity.toString()
   if (!exclude.includes('visible'))
     style.visibility = v.visible ? 'visible' : 'hidden'

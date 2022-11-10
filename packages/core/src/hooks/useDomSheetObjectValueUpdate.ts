@@ -4,7 +4,7 @@ import {
   createDomSheetObjectProps,
   sheetObjectValuesToImperativeStyle
 } from '../modules/sheetObject'
-import { useSheetObjectValueUpdate } from './useSheetObjectValueUpdate'
+import { useElementSheetObjectValueUpdate } from './useElementSheetObjectValueUpdate'
 
 export type DomSheetObjectProps = ReturnType<typeof createDomSheetObjectProps>
 
@@ -13,10 +13,10 @@ export function useDomSheetObjectValueUpdate<
   O extends ISheetObject<DomSheetObjectProps>
 >(
   ref: RefObject<EL> | EL,
-  objects: O | O[],
+  object: O,
   extraCallback?: (values: O['value'], element: EL) => void
 ) {
-  useSheetObjectValueUpdate(ref, objects, (values, el) => {
+  useElementSheetObjectValueUpdate(ref, object, (values, el) => {
     sheetObjectValuesToImperativeStyle(values, el.style, [])
     if (extraCallback) {
       extraCallback(values, el)

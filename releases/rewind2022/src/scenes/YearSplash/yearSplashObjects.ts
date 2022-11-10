@@ -1,90 +1,80 @@
-import { createDomSheetObjectProps, createSheetObject } from '@rewind/core/src/modules/sheetObject'
+import {
+  createDomSheetObjectProps,
+  createSheetObject
+} from '@rewind/core/src/modules/sheetObject'
 import { getProject, types } from '@theatre/core'
 import { createMainControllerObject } from '../../modules/sheets'
-import yearSplashScene from './assets/yearSplashScene.json'
+import { mainSheet } from '../scenes'
 
-const project = getProject('Year Splash Scene', {
-  state: yearSplashScene
-})
-
-export const yearSplashSheet = project.sheet('Intro')
-
-const mainObject = yearSplashSheet.object(
+const mainObject = mainSheet.object(
   'Main Controller',
   createMainControllerObject()
 )
 
-const yearGroupObject = yearSplashSheet.object(
+const yearGroupObject = mainSheet.object(
   'Year group',
   createDomSheetObjectProps()
 )
 
-const yearDigit1Object = yearSplashSheet.object(
+const yearDigit1Object = mainSheet.object(
   'Year digit 1',
   createDomSheetObjectProps({
     weight: types.number(500, { range: [0, 800] })
   })
 )
 
-const yearDigit1Objects = createSheetObject(
-  'Year digit 1',
-  [yearSplashSheet],
-  createDomSheetObjectProps({
-    weight: types.number(500, { range: [0, 800] })
-  }))
-
-const yearDigit2Object = yearSplashSheet.object(
+const yearDigit2Object = mainSheet.object(
   'Year digit 2',
   createDomSheetObjectProps({
     weight: types.number(500, { range: [0, 800] })
   })
 )
 
-const yearDigit3Object = yearSplashSheet.object(
+const yearDigit3Object = mainSheet.object(
   'Year digit 3',
   createDomSheetObjectProps({
     weight: types.number(500, { range: [0, 800] })
   })
 )
 
-const yearDigit4Object = yearSplashSheet.object(
+const yearDigit4Object = mainSheet.object(
   'Year digit 4',
   createDomSheetObjectProps({
     weight: types.number(500, { range: [0, 800] })
   })
 )
 
-const backImage1Object = yearSplashSheet.object(
+const backImage1Object = mainSheet.object(
   'Back Image 1',
   createDomSheetObjectProps()
 )
 
-const backImage2Object = yearSplashSheet.object(
+const backImage2Object = mainSheet.object(
   'Back Image 2',
   createDomSheetObjectProps()
 )
 
-const backImage3Object = yearSplashSheet.object(
+const backImage3Object = mainSheet.object(
   'Back Image 3',
   createDomSheetObjectProps()
 )
 
-const backImage4Object = yearSplashSheet.object(
+const backImage4Object = mainSheet.object(
   'Back Image 4',
   createDomSheetObjectProps()
 )
 
-const backImage5Object = yearSplashSheet.object(
+const backImage5Object = mainSheet.object(
   'Back Image 5',
   createDomSheetObjectProps()
 )
 
-const bottomTextObject = yearSplashSheet.object(
+const bottomTextObject = mainSheet.object(
   'Bottom Text',
   createDomSheetObjectProps()
 )
 
-const firstTrackObject = yearSplashSheet.object(
+const firstTrackObject = mainSheet.object(
   'First Track',
   createDomSheetObjectProps({
     transitionInterpolation: types.number(0, { range: [0, 1] })
