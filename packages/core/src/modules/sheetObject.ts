@@ -1,4 +1,4 @@
-import { types, UnknownShorthandCompoundProps } from '@theatre/core'
+import { ISheet, ISheetObject, types, UnknownShorthandCompoundProps } from '@theatre/core'
 import { CSSProperties } from 'react'
 
 export function createDomSheetObjectProps<
@@ -58,4 +58,12 @@ export function sheetObjectValuesToImperativeStyle(
     style.transform = `translateX(${v.position.x}px) translateY(${v.position.y}px) translateZ(${v.position.z}px) scale(${v.scale})`
   if (!exclude.includes('pointerEvents'))
     style.pointerEvents = v.pointerEvents ? 'unset' : 'none'
+}
+
+export function createSheetObject<Props extends UnknownShorthandCompoundProps>(
+  key: string,
+  sheets: ISheet[],
+  objectProps: Props
+) {
+  return sheets.map((s) => s.object(key, objectProps))
 }

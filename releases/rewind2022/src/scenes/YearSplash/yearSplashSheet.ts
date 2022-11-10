@@ -1,4 +1,4 @@
-import { createDomSheetObjectProps } from '@rewind/core/src/modules/sheetObject'
+import { createDomSheetObjectProps, createSheetObject } from '@rewind/core/src/modules/sheetObject'
 import { getProject, types } from '@theatre/core'
 import { createMainControllerObject } from '../../modules/sheets'
 import yearSplashScene from './assets/yearSplashScene.json'
@@ -25,6 +25,13 @@ const yearDigit1Object = yearSplashSheet.object(
     weight: types.number(500, { range: [0, 800] })
   })
 )
+
+const yearDigit1Objects = createSheetObject(
+  'Year digit 1',
+  [yearSplashSheet],
+  createDomSheetObjectProps({
+    weight: types.number(500, { range: [0, 800] })
+  }))
 
 const yearDigit2Object = yearSplashSheet.object(
   'Year digit 2',

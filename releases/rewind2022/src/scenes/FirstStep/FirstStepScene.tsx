@@ -12,8 +12,8 @@ import {
   imageTypeDefaultImages
 } from '../../modules/lastfmImage'
 import { useWindowSize } from '../../hooks/useWindowSize'
-import usePositionedReferenceObjectInterpolation from '../../hooks/usePositionedReferenceObjectInterpolation'
-import useSheetObjectValueUpdateWithReferencedInterpolation from '../../hooks/usePositionedReferenceObjectInterpolation'
+import usePositionedReferenceObjectInterpolation from '../../hooks/useSheetObjectValueUpdateWithReferencedInterpolation'
+import useSheetObjectValueUpdateWithReferencedInterpolation from '../../hooks/useSheetObjectValueUpdateWithReferencedInterpolation'
 import { yearSplashObjects } from '../YearSplash/yearSplashSheet'
 import { useDomSheetObjectValueUpdate } from '@rewind/core/src/hooks/useDomSheetObjectValueUpdate'
 import { firstStepFromYearSplashObjects } from './firstStepSheet'
