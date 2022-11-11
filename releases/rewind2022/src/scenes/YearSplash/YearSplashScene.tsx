@@ -11,7 +11,6 @@ import {
   imageTypeDefaultImages
 } from '../../modules/lastfmImage'
 import PositionReferenceObject from '../../components/PositionReferenceObject'
-import { firstStepFromYearSplashObjects } from '../FirstStep/firstStepSheet'
 import { useDomSheetObjectValueUpdate } from '@rewind/core/src/hooks/useDomSheetObjectValueUpdate'
 import { yearSplashObjects } from './yearSplashObjects'
 import { interpolateBackgroundGradient } from '../../modules/backgroundGradient'
@@ -121,7 +120,7 @@ export default function YearSplashScene() {
   )
 
   const toGradient = useMemo(() => {
-    const targetPalette = rewindData?.firstScrobbles[0].image.palette
+    const targetPalette = rewindData?.firstScrobbles.items[0].image.palette
     return targetPalette
       ? Palettes[targetPalette].gradient
       : Palettes.Burn.gradient
@@ -161,16 +160,25 @@ export default function YearSplashScene() {
 
       <BackImage
         ref={backImage1Ref}
-        src={getImage(rewindData.firstScrobbles[3].image) ?? defaultTrackImage}
+        src={
+          getImage(rewindData.firstScrobbles.items[3].image) ??
+          defaultTrackImage
+        }
       />
 
       <BackImage
         ref={backImage2Ref}
-        src={getImage(rewindData.firstScrobbles[1].image) ?? defaultTrackImage}
+        src={
+          getImage(rewindData.firstScrobbles.items[1].image) ??
+          defaultTrackImage
+        }
       />
       <BackImage
         ref={backImage3Ref}
-        src={getImage(rewindData.firstScrobbles[2].image) ?? defaultTrackImage}
+        src={
+          getImage(rewindData.firstScrobbles.items[2].image) ??
+          defaultTrackImage
+        }
       />
       <BackImage
         as={'div'}
@@ -189,7 +197,10 @@ export default function YearSplashScene() {
       </BackImage>
       <BackImage
         ref={backImage5Ref}
-        src={getImage(rewindData.firstScrobbles[4].image) ?? defaultTrackImage}
+        src={
+          getImage(rewindData.firstScrobbles.items[4].image) ??
+          defaultTrackImage
+        }
       />
     </Centered>
   )
