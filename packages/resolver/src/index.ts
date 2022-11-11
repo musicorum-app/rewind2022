@@ -101,8 +101,21 @@ export async function resolveRewindData(
     }
   }
 
+  const firstScrobblesOnTracks = topTracks.find((tracks) =>
+    tracks.find(
+      (t) => t.date!.toString() === firstScrobbles[0].date!.toString()
+    )
+  )
+
+  if (!firstScrobblesOnTracks) {
+    throw new Error('Could not find first scrobbles count through the year')
+  }
+
   const data: RewindData = {
-    firstScrobbles
+    firstScrobbles: {
+      items: firstScrobbles,
+      firstScrobbleTrackCount: firstScrobblesOnTracks.length
+    }
   }
 
   if (import.meta.env.DEV) {

@@ -15,8 +15,13 @@ export interface RewindTrack extends Omit<Track, 'image'> {
   image: Image
 }
 
+export interface FirstScrobblesData {
+  items: RewindTrack[]
+  firstScrobbleTrackCount: number
+}
+
 export interface RewindData2022 {
-  firstScrobbles: RewindTrack[]
+  firstScrobbles: FirstScrobblesData
 }
 
 async function convertTrack(
@@ -49,13 +54,16 @@ export async function sanitizeRewindData(
   rewindData: RewindData
 ): Promise<RewindData2022> {
   const firstScrobbles = await Promise.all(
-    rewindData.firstScrobbles.map((track, i) =>
+    rewindData.firstScrobbles.items.map((track, i) =>
       convertTrack(track, true, i === 0)
     )
   )
 
   return {
-    firstScrobbles
+    firstScrobbles: {
+      items: firstScrobbles,
+      firstScrobbleTrackCount: rewindData.firstScrobbles.firstScrobbleTrackCount
+    }
   }
 }
 

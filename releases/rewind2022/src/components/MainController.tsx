@@ -10,9 +10,11 @@ import { useDataResolve, useRewindData } from '../scenes/Resolve/useDataResolve'
 const levaElement = document.querySelector('#overlay')
 
 export default function MainController() {
-  const [loadState, setLoadState] = useOrchestrator((s) => [
+  const [loadState, setLoadState, prev, next] = useOrchestrator((s) => [
     s.state,
-    s.setState
+    s.setState,
+    s.prev,
+    s.next
   ])
 
   const clear = useDataResolve((s) => s.clear)
@@ -28,16 +30,21 @@ export default function MainController() {
         },
         value: loadState
       },
-      clearRewindCache: button(() => {
-        clearRewindDataCache()
-      }),
-      resetUserData: button(() => {
-        clear()
-        setLoadState(LoadState.RESOLVE)
-      })
+      prev: button(() => prev()),
+      next: button(() => next())
     },
     [loadState]
   )
+
+  useControls('Data', {
+    clearRewindCache: button(() => {
+      clearRewindDataCache()
+    }),
+    resetUserData: button(() => {
+      clear()
+      setLoadState(LoadState.RESOLVE)
+    })
+  })
 
   const imagevalues = useControls('Image color extractor', {
     image: { image: undefined }

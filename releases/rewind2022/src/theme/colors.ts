@@ -52,7 +52,7 @@ export const Palettes: Record<PaletteType, Palette> = {
   },
   LightBlue: {
     gradient: ['#2EB7E2', '#00667C'],
-    color: '#004E6F',
+    color: '#002E41',
     targetColors: ['#2EB7E2', '#00667C']
   },
   Chuu: {

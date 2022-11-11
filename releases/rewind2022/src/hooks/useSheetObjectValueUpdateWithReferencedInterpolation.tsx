@@ -68,14 +68,17 @@ export default function useSheetObjectValueUpdateWithReferencedInterpolation<
 
   useEffect(() => {
     const { originElement, targetElement, element } = parseElements()
+    console.debug('ue')
 
     if (originElement && targetElement && element) {
+      const dataValue = element.getAttribute('data-interpolation-value')
+      const value = dataValue ? parseInt(dataValue) : 0
       interpolateBetweenReferenceElements(
         originElement,
         targetElement,
         element,
-        0
+        value
       )
     }
-  }, [elementToInterpolate])
+  })
 }

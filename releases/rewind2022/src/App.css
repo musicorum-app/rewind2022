@@ -1,6 +1,13 @@
 * {
-  font-family: ManropeVariable, sans-serif;
+  font-family: Manrope, sans-serif;
   color: white
+}
+
+@supports (font-variation-settings: normal) {
+  * {
+    font-family: "ManropeVariable", sans-serif;
+    font-variation-settings: "wght" 500;
+  }
 }
 
 .ReactCollapse--collapse {

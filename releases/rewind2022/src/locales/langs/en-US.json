@@ -19,5 +19,10 @@
   },
   "year_splash": {
     "welcome": "Welcome to your yearly rewind"
+  },
+  "first_track": {
+    "sub_text_zero": "This was your first scrobble of the year, on {{date, datetime}}. You only listened this song once this year.",
+    "sub_text_one": "This was your first scrobble of the year, on {{date, datetime}}. You only listened this song one more time this year.",
+    "sub_text_other": "This was your first scrobble of the year, on {{date, datetime}}. You also listened this song {{count, number}} more times this year."
   }
 }
