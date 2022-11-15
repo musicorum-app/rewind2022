@@ -115,6 +115,9 @@ export async function resolveRewindData(
     firstScrobbles: {
       items: firstScrobbles,
       firstScrobbleTrackCount: firstScrobblesOnTracks.length
+    },
+    scrobbles: {
+      total: recentTracks.length
     }
   }
 

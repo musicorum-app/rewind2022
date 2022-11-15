@@ -20,7 +20,7 @@ export interface FirstScrobblesData {
   firstScrobbleTrackCount: number
 }
 
-export interface RewindData2022 {
+export interface RewindData2022 extends Omit<RewindData, 'firstScrobbles'> {
   firstScrobbles: FirstScrobblesData
 }
 
@@ -60,6 +60,7 @@ export async function sanitizeRewindData(
   )
 
   return {
+    ...rewindData,
     firstScrobbles: {
       items: firstScrobbles,
       firstScrobbleTrackCount: rewindData.firstScrobbles.firstScrobbleTrackCount

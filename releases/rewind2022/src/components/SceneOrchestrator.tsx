@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { useOrchestrator } from '../hooks/useOrchestrator'
 import FirstStepScene from '../scenes/FirstStep/FirstStepScene'
 import { mainSheet, sceneTimings } from '../scenes/scenes'
+import ScrobblesScene from '../scenes/Scrobbles/ScrobblesScene'
 import YearSplashScene from '../scenes/YearSplash/YearSplashScene'
 
 export default function SceneOrchestrator() {
@@ -22,6 +23,7 @@ export default function SceneOrchestrator() {
     <Stack>
       <YearSplashScene />
       <FirstStepScene />
+      {/* <ScrobblesScene /> */}
     </Stack>
   )
 }

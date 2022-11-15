@@ -11,4 +11,7 @@ export interface FirstScrobblesData {
 
 export interface RewindData {
   firstScrobbles: FirstScrobblesData
+  scrobbles: {
+    total: number
+  }
 }

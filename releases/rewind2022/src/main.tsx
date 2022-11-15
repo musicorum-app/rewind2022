@@ -5,7 +5,7 @@ import App from './App'
 // Vite
 if (import.meta.env.DEV) {
   import('@theatre/studio').then((studio) => {
-    studio.default.initialize()
+    // studio.default.initialize()
     // @ts-expect-error force global variable
     window.studio = studio
   })
