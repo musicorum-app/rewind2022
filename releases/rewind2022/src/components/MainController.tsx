@@ -3,6 +3,7 @@ import { button, Leva, useControls } from 'leva'
 import { useEffect } from 'react'
 import { Portal } from 'react-portal'
 import { LoadState, useOrchestrator } from '../hooks/useOrchestrator'
+import { useTimelineController } from '../hooks/useTimelineController'
 import { extractImageColor } from '../modules/image'
 import { getClosestPalette } from '../modules/rewindDataExtras'
 import { useDataResolve, useRewindData } from '../scenes/Resolve/useDataResolve'
@@ -16,6 +17,8 @@ export default function MainController() {
     s.prev,
     s.next
   ])
+
+  const currentTimeline = useTimelineController((s) => s.currentTimeline)
 
   const clear = useDataResolve((s) => s.clear)
 
@@ -34,6 +37,16 @@ export default function MainController() {
       next: button(() => next())
     },
     [loadState]
+  )
+
+  useControls(
+    'Timeline',
+    {
+      play: button(() => {
+        currentTimeline?.play(0)
+      })
+    },
+    [currentTimeline]
   )
 
   useControls('Data', {
@@ -88,6 +101,7 @@ export default function MainController() {
             root: '13px'
           }
         }}
+        collapsed={true}
       />
     </Portal>
   )

@@ -10,19 +10,19 @@ export default function SceneOrchestrator() {
   const setIsTransitioning = useOrchestrator((s) => s.setIsTransitioning)
 
   useEffect(() => {
-    mainSheet.sequence
-      .play({
-        range: sceneTimings.YearSplash.forward
-      })
-      .then(() => {
-        setIsTransitioning(false)
-      })
+    // mainSheet.sequence
+    //   .play({
+    //     range: sceneTimings.YearSplash.forward
+    //   })
+    //   .then(() => {
+    //     setIsTransitioning(false)
+    //   })
   }, [])
 
   return (
     <Stack>
       <YearSplashScene />
-      <FirstStepScene />
+      {/* <FirstStepScene /> */}
       {/* <ScrobblesScene /> */}
     </Stack>
   )

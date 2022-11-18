@@ -1,5 +1,4 @@
 import Stack from '@rewind/core/src/components/Stack'
-import { useResolveSheet } from './useResolveSheet'
 import UserInput from './UserInput'
 import { useEffect } from 'react'
 import { interpolateBackgroundGradient } from '../../modules/backgroundGradient'

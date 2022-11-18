@@ -1,17 +1,17 @@
 * {
-  font-family: Manrope, sans-serif;
+  font-family: Satoshi-Regular, sans-serif;
   color: white
 }
 
 @supports (font-variation-settings: normal) {
   * {
-    font-family: "ManropeVariable", sans-serif;
+    font-family: "Satoshi-Variable", sans-serif;
     font-variation-settings: "wght" 500;
   }
 }
 
 .ReactCollapse--collapse {
-  transition: height 300ms;
+  transition: height 200ms;
 }
 
 :root {

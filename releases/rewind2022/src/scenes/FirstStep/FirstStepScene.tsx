@@ -73,10 +73,6 @@ export default function FirstStepScene() {
   const rewindData = useRewindData()
   const trackImageRef = useRef<HTMLImageElement>(null)
 
-  const titleRef = useRef<HTMLSpanElement>(null)
-  const trackNameRef = useRef<HTMLHeadingElement>(null)
-  const trackDetailsRef = useRef<HTMLHeadingElement>(null)
-
   const { t } = useTranslation()
 
   useSheetObjectValueUpdateWithReferencedInterpolation(
@@ -85,13 +81,6 @@ export default function FirstStepScene() {
     trackImageRef,
     firstTrackObjects.trackObject,
     'transitionInterpolation'
-  )
-
-  useDomSheetObjectValueUpdate(titleRef, firstTrackObjects.titleObject)
-  useDomSheetObjectValueUpdate(trackNameRef, firstTrackObjects.trackNameObject)
-  useDomSheetObjectValueUpdate(
-    trackDetailsRef,
-    firstTrackObjects.trackDetailsObject
   )
 
   const color = useMemo(() => {
@@ -111,7 +100,6 @@ export default function FirstStepScene() {
         style={{
           color
         }}
-        ref={titleRef}
       >
         The first one
       </FirstText>
@@ -127,7 +115,6 @@ export default function FirstStepScene() {
               fontVariationSettings: "'wght' 900",
               margin: 0
             }}
-            ref={trackNameRef}
           >
             {rewindData.firstScrobbles.items[0].name}
           </h1>
@@ -136,7 +123,6 @@ export default function FirstStepScene() {
               color,
               fontVariationSettings: "'wght' 600"
             }}
-            ref={trackDetailsRef}
           >
             {t('first_track.sub_text', {
               count: rewindData.firstScrobbles.firstScrobbleTrackCount - 1,
