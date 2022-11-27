@@ -15,6 +15,10 @@ import { useDomSheetObjectValueUpdate } from '@rewind/core/src/hooks/useDomSheet
 import { interpolateBackgroundGradient } from '../../modules/backgroundGradient'
 import { yearSplashForwardTimeline } from './yearSplashTimeline'
 import { useTimelineController } from '../../hooks/useTimelineController'
+import useReferenceObjectUpdater from '../../hooks/useReferenceObjectUpdater'
+import { scenesStore } from '../scenes'
+import { RewindScene } from '../../types'
+import { useOrchestrator } from '../../hooks/useOrchestrator'
 
 const MainYear = styled.div`
   font-variation-settings: 'wght' 800;
@@ -26,8 +30,7 @@ const MainYear = styled.div`
 `
 
 const BackImage = styled.img<{ transform: string }>`
-  &,
-  & > div {
+  & {
     position: absolute;
     transform-origin: right bottom;
     width: 110px;
@@ -78,56 +81,11 @@ export default function YearSplashScene() {
 
   const { t } = useTranslation()
 
-  // useDomSheetObjectValueUpdate(yearGroupRef, yearSplashObjects.yearGroupObject)
-  // useDomSheetObjectValueUpdate(
-  //   bottomTextRef,
-  //   yearSplashObjects.bottomTextObject
-  // )
-
-  // useDomSheetObjectValueUpdate(
-  //   yearDigit1Ref,
-  //   yearSplashObjects.yearDigit1Object,
-  //   digitChangeCallback
-  // )
-
-  // useDomSheetObjectValueUpdate(
-  //   yearDigit2Ref,
-  //   yearSplashObjects.yearDigit2Object,
-  //   digitChangeCallback
-  // )
-
-  // useDomSheetObjectValueUpdate(
-  //   yearDigit3Ref,
-  //   yearSplashObjects.yearDigit3Object,
-  //   digitChangeCallback
-  // )
-
-  // useDomSheetObjectValueUpdate(
-  //   yearDigit4Ref,
-  //   yearSplashObjects.yearDigit4Object,
-  //   digitChangeCallback
-  // )
-
-  // useDomSheetObjectValueUpdate(
-  //   backImage1Ref,
-  //   yearSplashObjects.backImage1Object
-  // )
-
-  // useDomSheetObjectValueUpdate(
-  //   backImage2Ref,
-  //   yearSplashObjects.backImage2Object
-  // )
-  // useDomSheetObjectValueUpdate(
-  //   backImage3Ref,
-  //   yearSplashObjects.backImage3Object
-  // )
-  // useDomSheetObjectValueUpdate(
-  //   backImage4Ref,
-  //   yearSplashObjects.backImage4Object
-  // )
-  // useDomSheetObjectValueUpdate(
-  //   backImage5Ref,
-  //   yearSplashObjects.backImage5Object
+  // useReferenceObjectUpdater(
+  //   '#year-splash-track-ref',
+  //   '#first-track-ref',
+  //   '#fst-track-image',
+  //   [backImage4Ref]
   // )
 
   const toGradient = useMemo(() => {
@@ -140,9 +98,26 @@ export default function YearSplashScene() {
   useEffect(() => {
     if (!yearGroupRef.current) return
     const tl = yearSplashForwardTimeline(toGradient)
-    setTimeline(tl)
-    console.log(tl)
-    tl.play()
+
+    scenesStore.getState().setTimelines(RewindScene.YearSplash, {
+      forward: {
+        factory: () => tl,
+        id: 'ysp-forward'
+      }
+    })
+    useTimelineController.getState().setTimeline(tl)
+
+    if (useOrchestrator.getState().scene === RewindScene.YearSplash) {
+      useOrchestrator.getState().setIsTransitioning(true)
+      tl.play().then(() => {
+        useOrchestrator.getState().setIsTransitioning(false)
+      })
+    }
+
+    return () => {
+      tl.kill()
+    }
+
     // yearSplashForwardTimeline.play()
     // yearSplashForwardSheet.sequence.play()
     // return () => yearSplashForwardSheet.sequence.pause()
@@ -207,11 +182,13 @@ export default function YearSplashScene() {
         }
       />
       <BackImage
-        transform="2px"
         as={'div'}
+        className="back-image-4"
+        transform="-274px, -70px, -1px"
+        ref={backImage4Ref}
         style={{
           background: 'transparent',
-          transform: 'translate(-274px, -70px)',
+          transform: 'translate()',
           boxShadow: 'none'
         }}
         // src={

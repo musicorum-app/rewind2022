@@ -3,9 +3,16 @@ import {
   LastfmUserInfo
 } from '@musicorum/lastfm/dist/types/packages/user'
 import LastClient from '@musicorum/lastfm'
-import { getTopAlbums, getTopArtists, getTopTracks } from './finders/tops'
+import {
+  getTopAlbums,
+  getTopArtists,
+  getTopTracks,
+  parseTopTracks
+} from './finders/tops'
 import { RewindData, Track } from './types'
-import { removeDefaultTrackImage } from './modules/image'
+import { formatTrack } from './modules/image'
+import { parseScrobbles } from './finders/scrobbles'
+import parseFirstScrobbles from './finders/firstScrobbles'
 
 const from = new Date('2022-01-01 00:00')
 const to = new Date('2022-12-31 23:59')
@@ -58,7 +65,7 @@ export async function resolveRewindData(
       await pagination.fetchPage(i)
     }
 
-    recentTracks = pagination.getAll().map((t) => removeDefaultTrackImage(t))
+    recentTracks = pagination.getAll().map((t) => formatTrack(t))
     if (Date.now() > 2) {
       const storage = await caches.open('ScrobblesCache')
 
@@ -72,53 +79,31 @@ export async function resolveRewindData(
     }
   }
 
+  const lastYear = await lastClient.user.getRecentTracks(user.name, {
+    from: new Date('2021-01-01 00:00'),
+    to: new Date('2021-12-31 23:59'),
+    limit: 2
+  })
+
   statusCallback({
     step: ResolveStep.FETCHING_RESOURCES
   })
 
+  console.log(recentTracks)
+
   const topTracks = getTopTracks(recentTracks)
-  const topArtists = getTopArtists(recentTracks)
+  const topArtists = await getTopArtists(recentTracks)
   const topAlbums = getTopAlbums(recentTracks)
 
   console.log(recentTracks)
   console.log(topTracks)
 
-  const firstScrobblesList = [...recentTracks].reverse()
-
-  const firstScrobbles = [] as Track[]
-  for (let i = 0; i < firstScrobblesList.length; i++) {
-    const track = firstScrobblesList[i]
-    console.log(track.url)
-    if (firstScrobbles.length >= 5) {
-      break
-    } else if (
-      // make sure to include first scrobble
-      i === 0 ||
-      !firstScrobbles.find((t) => t.album.name === track.album.name)
-    ) {
-      console.log(i)
-      firstScrobbles.push(track)
-    }
-  }
-
-  const firstScrobblesOnTracks = topTracks.find((tracks) =>
-    tracks.find(
-      (t) => t.date!.toString() === firstScrobbles[0].date!.toString()
-    )
-  )
-
-  if (!firstScrobblesOnTracks) {
-    throw new Error('Could not find first scrobbles count through the year')
-  }
-
   const data: RewindData = {
-    firstScrobbles: {
-      items: firstScrobbles,
-      firstScrobbleTrackCount: firstScrobblesOnTracks.length
-    },
-    scrobbles: {
-      total: recentTracks.length
-    }
+    user: user.name,
+    firstScrobbles: await parseFirstScrobbles(recentTracks, topTracks),
+    scrobbles: parseScrobbles(recentTracks, lastYear),
+    artists: topArtists,
+    tracks: await parseTopTracks(topTracks)
   }
 
   if (import.meta.env.DEV) {

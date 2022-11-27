@@ -1,9 +1,13 @@
 import Stack from '@rewind/core/src/components/Stack'
 import { useEffect } from 'react'
 import { useOrchestrator } from '../hooks/useOrchestrator'
+import ArtistShareScene from '../scenes/ArtistShare/ArtistShareScene'
 import FirstStepScene from '../scenes/FirstStep/FirstStepScene'
-import { mainSheet, sceneTimings } from '../scenes/scenes'
 import ScrobblesScene from '../scenes/Scrobbles/ScrobblesScene'
+import ScrobblesChartScene from '../scenes/ScrobblesChart/ScrobblesChartScene'
+import ScrobblesDetailsScene from '../scenes/ScrobblesDetails/ScrobblesDetailsScene'
+import TopArtistsScene from '../scenes/TopArtists/TopArtistsScene'
+import TopTracksScene from '../scenes/TopTracks/TopTracksScene'
 import YearSplashScene from '../scenes/YearSplash/YearSplashScene'
 
 export default function SceneOrchestrator() {
@@ -21,9 +25,14 @@ export default function SceneOrchestrator() {
 
   return (
     <Stack>
-      <YearSplashScene />
+      {/* <YearSplashScene /> */}
       {/* <FirstStepScene /> */}
       {/* <ScrobblesScene /> */}
+      {/* <ScrobblesChartScene /> */}
+      {/* <ScrobblesDetailsScene /> */}
+      {/* <TopArtistsScene /> */}
+      <ArtistShareScene />
+      {/* <TopTracksScene /> */}
     </Stack>
   )
 }

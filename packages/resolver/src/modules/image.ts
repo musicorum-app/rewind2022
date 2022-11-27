@@ -3,7 +3,7 @@ import { Track } from '../types'
 
 const defaultTrackImageHash = '2a96cbd8b46e442fc41c2b86b821562f'
 
-export function removeDefaultTrackImage(track: LastfmRecentTracksTrack): Track {
+export function formatTrack(track: LastfmRecentTracksTrack): Track {
   let image = track.images?.[3]?.url as string | null
 
   if (image?.includes(defaultTrackImageHash)) {
@@ -11,7 +11,10 @@ export function removeDefaultTrackImage(track: LastfmRecentTracksTrack): Track {
   }
 
   return {
-    ...track,
+    name: track.name,
+    artist: track.artist.name,
+    album: track.album.name,
+    date: track.date!.getTime().toString(),
     image
   }
 }

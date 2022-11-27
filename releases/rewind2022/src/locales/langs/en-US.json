@@ -3,7 +3,10 @@
     "continue": "Continue",
     "back": "Back",
     "try_again": "Try again",
-    "start": "Start"
+    "start": "Start",
+    "scrobbles_zero": "no scrobbles",
+    "scrobbles_one": "one scrobble",
+    "scrobbles_other": "{{count}} scrobbles"
   },
   "begin": {
     "ready": "Everything done and ready!"
@@ -24,5 +27,37 @@
     "sub_text_zero": "This was your first scrobble of the year, on {{date, datetime}}. You only listened this song once this year.",
     "sub_text_one": "This was your first scrobble of the year, on {{date, datetime}}. You only listened this song one more time this year.",
     "sub_text_other": "This was your first scrobble of the year, on {{date, datetime}}. You also listened this song {{count, number}} more times this year."
+  },
+  "scrobbles": {
+    "top_text": "You also had",
+    "bottom_text": "scrobbles this year"
+  },
+  "scrobbles_details": {
+    "last_year_more": "<0>{{count}} ({{percent}}%)</0> more than 2021",
+    "last_year_same": "same as 2021",
+    "last_year_less": "<0>{{count}} ({{percent}}%)</0> less than 2021",
+    "details": {
+      "average": {
+        "label": "Daily Average",
+        "title": "{{count}} scrobbles",
+        "secondary": "per day"
+      },
+      "streak": {
+        "label": "Biggest streak",
+        "title_zero": "no streak",
+        "title_one": "one day",
+        "title_other": "{{count}} days",
+        "secondary": "{{from, datetime}} to {{to, datetime}}"
+      },
+      "golden_day": {
+        "label": "Golden day",
+        "title": "{{count}} scrobbles",
+        "secondary": "in one day ({{date, datetime}})"
+      }
+    }
+  },
+  "top_artists": {
+    "top": "And these were the artists you listened the most",
+    "bottom": "counting up to {{count}} tracks this year"
   }
 }

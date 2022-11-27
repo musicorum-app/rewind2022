@@ -1,4 +1,5 @@
 import { clearRewindDataCache } from '@rewind/resolver'
+import TimelineTool from '@rewind/core/src/components/timeline/TimelineTool'
 import { button, Leva, useControls } from 'leva'
 import { useEffect } from 'react'
 import { Portal } from 'react-portal'
@@ -11,12 +12,14 @@ import { useDataResolve, useRewindData } from '../scenes/Resolve/useDataResolve'
 const levaElement = document.querySelector('#overlay')
 
 export default function MainController() {
-  const [loadState, setLoadState, prev, next] = useOrchestrator((s) => [
-    s.state,
-    s.setState,
-    s.prev,
-    s.next
-  ])
+  const [loadState, isTransitioning, setLoadState, prev, next] =
+    useOrchestrator((s) => [
+      s.state,
+      s.isTransitioning,
+      s.setState,
+      s.prev,
+      s.next
+    ])
 
   const currentTimeline = useTimelineController((s) => s.currentTimeline)
 
@@ -46,6 +49,9 @@ export default function MainController() {
         currentTimeline?.play(0)
       })
     },
+    {
+      collapsed: true
+    },
     [currentTimeline]
   )
 
@@ -59,13 +65,25 @@ export default function MainController() {
     })
   })
 
-  const imagevalues = useControls('Image color extractor', {
-    image: { image: undefined }
-  })
+  const imagevalues = useControls(
+    'Image color extractor',
+    {
+      image: { image: undefined }
+    },
+    {
+      collapsed: true
+    }
+  )
 
-  const refValues = useControls('Reference objects', {
-    showObjects: false
-  })
+  const refValues = useControls(
+    'Reference objects',
+    {
+      showObjects: false
+    },
+    {
+      collapsed: true
+    }
+  )
 
   useEffect(() => {
     if (imagevalues.image) {
@@ -78,6 +96,14 @@ export default function MainController() {
   }, [imagevalues.image])
 
   useEffect(() => {
+    if (isTransitioning) {
+      console.info('Started transition')
+    } else {
+      console.info('Ended transition')
+    }
+  }, [isTransitioning])
+
+  useEffect(() => {
     setLoadState(values.loadState)
   }, [values.loadState])
 
@@ -87,6 +113,7 @@ export default function MainController() {
     )
     for (const object of objects) {
       object.style.opacity = refValues.showObjects ? '1' : '0'
+      object.style.borderWidth = refValues.showObjects ? '2px' : '0'
     }
   }, [refValues.showObjects])
 
@@ -101,7 +128,13 @@ export default function MainController() {
             root: '13px'
           }
         }}
-        collapsed={true}
+      />
+
+      <TimelineTool
+        timeline={currentTimeline}
+        canNavigate={!isTransitioning}
+        prev={prev}
+        next={next}
       />
     </Portal>
   )

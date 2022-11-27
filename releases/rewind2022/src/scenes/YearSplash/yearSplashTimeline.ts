@@ -2,13 +2,11 @@ import gsap from 'gsap'
 import CustomEase from 'gsap/CustomEase'
 import { stagger, timeline } from 'motion'
 import { Easings } from '../../modules/easings'
+import { interpolateBetweenReferenceElements } from '../../modules/referenceInterpolator'
 import { Gradient, Palettes } from '../../theme/colors'
+import { gradientToCss } from '../../utils/style'
 
 gsap.registerPlugin(CustomEase)
-
-function gradientToCss(gradient: Gradient) {
-  return `linear-gradient(135deg, ${gradient[0]}, ${gradient[1]})`
-}
 
 export const yearSplashForwardTimeline = (targetGradient: Gradient) =>
   gsap
@@ -91,6 +89,34 @@ export const yearSplashForwardTimeline = (targetGradient: Gradient) =>
       'backImages+=0.6'
     )
     .fromTo(
+      '#year-splash-track-ref',
+      {
+        y: -70
+      },
+      {
+        y: '+=20',
+        onUpdate: () => {
+          interpolateBetweenReferenceElements(
+            document.querySelector('#year-splash-track-ref')!,
+            document.querySelector('#first-track-ref')!,
+            document.querySelector('#fst-track-image')!,
+            0
+          )
+        }
+      },
+      'backImages+=0.8'
+    )
+    .fromTo(
+      '#fst-track-image',
+      {
+        opacity: 0
+      },
+      {
+        opacity: 1
+      },
+      'backImages+=0.8'
+    )
+    .fromTo(
       '#ysp .back-image-5',
       {
         opacity: 0,
@@ -100,7 +126,7 @@ export const yearSplashForwardTimeline = (targetGradient: Gradient) =>
         opacity: 1,
         x: '+=20'
       },
-      'backImages+=0.8'
+      'backImages+=1 '
     )
     .fromTo(
       '#ysp .bottom-text',

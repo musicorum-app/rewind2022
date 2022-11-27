@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 export interface CenteredProps {
   is3D?: boolean
   disablePointerEvents?: boolean
+  column?: boolean
 }
 
 const Centered = styled.div<CenteredProps>`
@@ -12,6 +13,7 @@ const Centered = styled.div<CenteredProps>`
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  flex-direction: ${(p) => (p.column ? 'column' : 'unset')};
   transform-style: ${(p) => (p.is3D ? 'preserve-3d' : 'unset')};
   perspective: ${(p) => (p.is3D ? '400px' : 'unset')};
   pointer-events: ${(p) => (p.disablePointerEvents ? 'none' : 'unset')}; ;

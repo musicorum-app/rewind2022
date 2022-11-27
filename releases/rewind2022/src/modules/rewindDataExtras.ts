@@ -1,5 +1,13 @@
 import { LastfmRecentTracksTrack } from '@musicorum/lastfm/dist/types/packages/user'
-import { RewindData, Track } from '@rewind/resolver/src/types'
+import {
+  ArtistWithResource,
+  RewindData,
+  TopArtists,
+  TopTracks,
+  Track,
+  TrackWithResource,
+  WithScrobbles
+} from '@rewind/resolver/src/types'
 import chroma from 'chroma-js'
 import { Palettes, PaletteType } from '../theme/colors'
 import { extractImageColor, loadImage, preloadImage } from './image'
@@ -11,24 +19,40 @@ export interface Image {
   url: string | null
 }
 
+export type WithImage<T> = Omit<T, 'image'> & {
+  image: Image
+}
+
 export interface RewindTrack extends Omit<Track, 'image'> {
   image: Image
 }
 
+export interface RewindTrackWithResource
+  extends Omit<TrackWithResource, 'image'> {
+  image: Image
+}
+
 export interface FirstScrobblesData {
-  items: RewindTrack[]
+  items: WithImage<TrackWithResource>[]
   firstScrobbleTrackCount: number
 }
 
-export interface RewindData2022 extends Omit<RewindData, 'firstScrobbles'> {
+export interface RewindData2022
+  extends Omit<RewindData, 'firstScrobbles' | 'tracks' | 'artists'> {
   firstScrobbles: FirstScrobblesData
+  tracks: Omit<TopTracks, 'items'> & {
+    items: WithImage<WithScrobbles<TrackWithResource>>[]
+  }
+  artists: Omit<TopArtists, 'items'> & {
+    items: WithImage<WithScrobbles<ArtistWithResource>>[]
+  }
 }
 
-async function convertTrack(
-  old: Track,
+async function convertTrack<T extends { image: string | null }>(
+  old: T,
   preLoadImage = false,
   getPalette = false
-): Promise<RewindTrack> {
+): Promise<WithImage<T>> {
   const url = old.image
   let color = null
 
@@ -59,11 +83,31 @@ export async function sanitizeRewindData(
     )
   )
 
+  const topTracks = await Promise.all(
+    rewindData.tracks.items.map((track, i) =>
+      convertTrack(track, true, i === 0)
+    )
+  )
+
+  const topArtists = await Promise.all(
+    rewindData.artists.items.map((artist, i) =>
+      convertTrack(artist, true, i === 0)
+    )
+  )
+
   return {
     ...rewindData,
     firstScrobbles: {
       items: firstScrobbles,
       firstScrobbleTrackCount: rewindData.firstScrobbles.firstScrobbleTrackCount
+    },
+    tracks: {
+      ...rewindData.tracks,
+      items: topTracks
+    },
+    artists: {
+      ...rewindData.artists,
+      items: topArtists
     }
   }
 }
