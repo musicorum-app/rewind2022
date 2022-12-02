@@ -1,6 +1,8 @@
 import { LastfmRecentTracksTrack } from '@musicorum/lastfm/dist/types/packages/user'
 import {
+  Album,
   ArtistWithResource,
+  EntityTop,
   RewindData,
   TopArtists,
   TopTracks,
@@ -38,13 +40,16 @@ export interface FirstScrobblesData {
 }
 
 export interface RewindData2022
-  extends Omit<RewindData, 'firstScrobbles' | 'tracks' | 'artists'> {
+  extends Omit<RewindData, 'firstScrobbles' | 'tracks' | 'artists' | 'albums'> {
   firstScrobbles: FirstScrobblesData
   tracks: Omit<TopTracks, 'items'> & {
     items: WithImage<WithScrobbles<TrackWithResource>>[]
   }
   artists: Omit<TopArtists, 'items'> & {
     items: WithImage<WithScrobbles<ArtistWithResource>>[]
+  }
+  albums: Omit<EntityTop<Album>, 'items'> & {
+    items: WithImage<WithScrobbles<Album>>[]
   }
 }
 
@@ -57,11 +62,19 @@ async function convertTrack<T extends { image: string | null }>(
   let color = null
 
   if (preLoadImage && url) {
-    await preloadImage(url)
+    try {
+      await preloadImage(url)
+    } catch (err) {
+      console.error('could not load image', url)
+    }
   }
 
   if (getPalette && url) {
-    color = await extractImageColor(url)
+    try {
+      color = await extractImageColor(url)
+    } catch (err) {
+      console.error('could not parse image color', url)
+    }
   }
 
   return {
@@ -95,6 +108,12 @@ export async function sanitizeRewindData(
     )
   )
 
+  const topAlbums = await Promise.all(
+    rewindData.albums.items.map((album, i) =>
+      convertTrack(album, false, i === 0)
+    )
+  )
+
   return {
     ...rewindData,
     firstScrobbles: {
@@ -108,6 +127,10 @@ export async function sanitizeRewindData(
     artists: {
       ...rewindData.artists,
       items: topArtists
+    },
+    albums: {
+      total: rewindData.albums.total,
+      items: topAlbums
     }
   }
 }

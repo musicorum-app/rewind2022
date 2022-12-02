@@ -2,6 +2,7 @@ import { Map } from 'immutable'
 import create from 'zustand'
 import { scenesStore } from '../scenes/scenes'
 import { RewindScene, rewindScenes } from '../types'
+import { usePlayer } from './usePlayer'
 import { useTimelineController } from './useTimelineController'
 
 export enum LoadState {
@@ -58,6 +59,8 @@ export const useOrchestrator = create<OrchestratorStore>((set, get) => ({
           isTransitioning: false
         })
       })
+      const { playAudio } = usePlayer.getState()
+      playAudio(nextScene)
     }
   },
 
@@ -91,6 +94,8 @@ export const useOrchestrator = create<OrchestratorStore>((set, get) => ({
           isTransitioning: false
         })
       })
+      const { playAudio } = usePlayer.getState()
+      playAudio(prevScene)
     }
   }
 }))

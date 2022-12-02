@@ -66,7 +66,7 @@ export async function resolveRewindData(
     }
 
     recentTracks = pagination.getAll().map((t) => formatTrack(t))
-    if (Date.now() > 2) {
+    if (Date.now() > 2 && caches.open) {
       const storage = await caches.open('ScrobblesCache')
 
       const response = new Response(JSON.stringify(recentTracks), {
@@ -103,7 +103,8 @@ export async function resolveRewindData(
     firstScrobbles: await parseFirstScrobbles(recentTracks, topTracks),
     scrobbles: parseScrobbles(recentTracks, lastYear),
     artists: topArtists,
-    tracks: await parseTopTracks(topTracks)
+    tracks: await parseTopTracks(topTracks),
+    albums: getTopAlbums(recentTracks)
   }
 
   if (import.meta.env.DEV) {

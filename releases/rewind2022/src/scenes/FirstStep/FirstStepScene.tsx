@@ -20,6 +20,8 @@ import {
   firstStepBackwardTimeline,
   firstStepForwardTimeline
 } from './firstStepTimeline'
+import { usePlayer } from '../../hooks/usePlayer'
+import { useSceneAudio } from '../../hooks/useSceneAudio'
 
 const TrackImageRefWrapper = styled.div`
   height: auto;
@@ -84,6 +86,12 @@ export default function FirstStepScene() {
   const rewindData = useRewindData()
   const trackImageRef = useRef<HTMLImageElement>(null)
   const setTimelines = scenesStore((s) => s.setTimelines)
+
+  useSceneAudio(
+    RewindScene.FirstTrack,
+    rewindData?.firstScrobbles.items[0].resource?.preview,
+    rewindData?.firstScrobbles.items[0].name
+  )
 
   const { t } = useTranslation()
 

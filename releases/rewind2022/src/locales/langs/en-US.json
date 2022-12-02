@@ -58,6 +58,14 @@
   },
   "top_artists": {
     "top": "And these were the artists you listened the most",
+    "bottom": "counting up to {{count}} artists this year"
+  },
+  "top_tracks": {
+    "top": "And these were the tracks you listened the most",
     "bottom": "counting up to {{count}} tracks this year"
+  },
+  "top_albums": {
+    "top": "Finally, these were the albums you listened the most",
+    "bottom": "counting up to {{count}} albums this year"
   }
 }

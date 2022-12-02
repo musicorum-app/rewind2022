@@ -5,7 +5,7 @@ export interface Track {
   name: string
   artist: string
   album: string
-  date: string
+  date: number
   image: string | null
 }
 
@@ -32,6 +32,12 @@ export interface ArtistWithResource extends Artist {
     popularity: number | null
     images: Image[]
   } | null
+}
+
+export interface Album {
+  name: string
+  artist?: string
+  image: string | null
 }
 
 export type WithScrobbles<T> = T & { scrobbles: number }
@@ -104,4 +110,5 @@ export interface RewindData {
   scrobbles: ScrobblesData
   artists: TopArtists
   tracks: TopTracks
+  albums: EntityTop<Album>
 }

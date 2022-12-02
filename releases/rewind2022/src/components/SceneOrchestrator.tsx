@@ -6,6 +6,7 @@ import FirstStepScene from '../scenes/FirstStep/FirstStepScene'
 import ScrobblesScene from '../scenes/Scrobbles/ScrobblesScene'
 import ScrobblesChartScene from '../scenes/ScrobblesChart/ScrobblesChartScene'
 import ScrobblesDetailsScene from '../scenes/ScrobblesDetails/ScrobblesDetailsScene'
+import TopAlbumsScene from '../scenes/TopAlbums/TopAlbumsScene'
 import TopArtistsScene from '../scenes/TopArtists/TopArtistsScene'
 import TopTracksScene from '../scenes/TopTracks/TopTracksScene'
 import YearSplashScene from '../scenes/YearSplash/YearSplashScene'
@@ -25,14 +26,15 @@ export default function SceneOrchestrator() {
 
   return (
     <Stack>
-      {/* <YearSplashScene /> */}
-      {/* <FirstStepScene /> */}
-      {/* <ScrobblesScene /> */}
+      <YearSplashScene />
+      <FirstStepScene />
+      <ScrobblesScene />
       {/* <ScrobblesChartScene /> */}
       {/* <ScrobblesDetailsScene /> */}
       {/* <TopArtistsScene /> */}
-      <ArtistShareScene />
+      {/* <ArtistShareScene /> */}
       {/* <TopTracksScene /> */}
+      {/* <TopAlbumsScene /> */}
     </Stack>
   )
 }

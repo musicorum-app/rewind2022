@@ -9,6 +9,7 @@ const Container = styled.div<{ color: string }>`
     z-index: 10;
     border-radius: 8px;
     object-fit: cover;
+    transition: transform 150ms ease-in-out;
   }
 
   & > div {
@@ -20,6 +21,17 @@ const Container = styled.div<{ color: string }>`
     right: 0;
     z-index: -1;
     border-radius: 11px;
+
+    transition: transform 150ms ease-in-out;
+  }
+
+  &:hover {
+    & > img {
+      transform: translate(-2px, -2px);
+    }
+    & > div {
+      transform: translate(2px, 2px);
+    }
   }
 `
 

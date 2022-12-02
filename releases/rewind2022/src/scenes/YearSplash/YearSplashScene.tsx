@@ -19,6 +19,7 @@ import useReferenceObjectUpdater from '../../hooks/useReferenceObjectUpdater'
 import { scenesStore } from '../scenes'
 import { RewindScene } from '../../types'
 import { useOrchestrator } from '../../hooks/useOrchestrator'
+import { usePlayer } from '../../hooks/usePlayer'
 
 const MainYear = styled.div`
   font-variation-settings: 'wght' 800;
@@ -60,6 +61,17 @@ const defaultTrackImage = imageTypeDefaultImages[ImageType.TRACK]
 
 export default function YearSplashScene() {
   const rewindData = useRewindData()
+  const [setAudio, playAudio] = usePlayer((s) => [s.setAudio, s.playAudio])
+
+  useEffect(() => {
+    if (rewindData) {
+      const item = rewindData?.firstScrobbles.items[1]
+      const preview = item.resource?.preview
+      if (preview) {
+        setAudio(RewindScene.YearSplash, preview, item.name)
+      }
+    }
+  }, [])
 
   const setTimeline = useTimelineController((s) => s.setTimeline)
 
@@ -109,6 +121,7 @@ export default function YearSplashScene() {
 
     if (useOrchestrator.getState().scene === RewindScene.YearSplash) {
       useOrchestrator.getState().setIsTransitioning(true)
+      playAudio(RewindScene.YearSplash)
       tl.play().then(() => {
         useOrchestrator.getState().setIsTransitioning(false)
       })

@@ -14,7 +14,7 @@ export function formatTrack(track: LastfmRecentTracksTrack): Track {
     name: track.name,
     artist: track.artist.name,
     album: track.album.name,
-    date: track.date!.getTime().toString(),
+    date: track.date!.getTime(),
     image
   }
 }

@@ -15,9 +15,10 @@ export enum PaletteType {
   Yellow = 'Yellow',
   Red = 'Red',
   DarkBlue = 'DarkBlue',
-  LightBlue = 'LightBlue',
+  WeirdSky = 'WeirdSky',
   Chuu = 'Chuu',
-  Wine = 'Wine'
+  Wine = 'Wine',
+  Orange = 'Orange'
 }
 
 export const Palettes: Record<PaletteType, Palette> = {
@@ -52,7 +53,7 @@ export const Palettes: Record<PaletteType, Palette> = {
     gradient: ['#2723E1', '#010750'],
     color: '#4E4AFF'
   },
-  LightBlue: {
+  WeirdSky: {
     gradient: ['#2EB7E2', '#00667C'],
     color: '#002E41',
     targetColors: ['#2EB7E2', '#00667C']
@@ -66,5 +67,9 @@ export const Palettes: Record<PaletteType, Palette> = {
     gradient: ['#B42946', '#54001E'],
     color: '#32000A',
     targetColors: ['#B42946', '#32000A']
+  },
+  Orange: {
+    gradient: ['#F37724', '#AD1E0A'],
+    color: '#482803'
   }
 }

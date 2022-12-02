@@ -2,6 +2,7 @@ import { useMediaQuery } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import Centered from '@rewind/core/src/components/Centered'
 import { useTranslation } from 'react-i18next'
+import { usePlayer } from '../hooks/usePlayer'
 import { interpolateBackgroundGradient } from '../modules/backgroundGradient'
 import { Image } from '../modules/rewindDataExtras'
 import { Palettes, PaletteType } from '../theme/colors'
@@ -34,7 +35,9 @@ interface TopSceneTemplateProps {
     name: string
     scrobbles: number
     image: Image
+    preview?: string | null
   }[]
+  ableToPlay?: boolean
   topText: string
   bottomText: string
 }
@@ -53,11 +56,11 @@ export default function TopSceneTemplate(props: TopSceneTemplateProps) {
   const color =
     Palettes[props.items[0].image.palette ?? PaletteType.Black].color
 
-  // interpolateBackgroundGradient(
-  //   Palettes[props.items[0].image.palette ?? PaletteType.Black].gradient,
-  //   Palettes[props.items[0].image.palette ?? PaletteType.Black].gradient,
-  //   1
-  // )
+  interpolateBackgroundGradient(
+    Palettes[props.items[0].image.palette ?? PaletteType.Black].gradient,
+    Palettes[props.items[0].image.palette ?? PaletteType.Black].gradient,
+    1
+  )
 
   return (
     <Centered column>
@@ -72,6 +75,7 @@ export default function TopSceneTemplate(props: TopSceneTemplateProps) {
             })}
             image={track.image.url}
             color={color || 'black'}
+            preview={track.preview ?? null}
           />
         ))}
       </Container>

@@ -3,6 +3,7 @@ import { ResolveStep } from '..'
 import { getArtistsResources, getTracksResources } from '../api/musicorum'
 import { ArtistResource, TrackResource } from '../api/types'
 import {
+  Album,
   EntityTop,
   TopArtists,
   TopTracks,
@@ -41,7 +42,7 @@ export async function parseTopTracks(top: Track[][]): Promise<TopTracks> {
         album: tracks[0].album,
         artist: tracks[0].artist,
         scrobbles: tracks.length,
-        date: 'none',
+        date: 0,
         image: resource?.resources[0]?.images[0]?.url || null,
         resource
       }
@@ -91,15 +92,13 @@ export async function getTopArtists(
               images: resource.resources[0]?.images
             }
           : null,
-        image: resource?.resources[0]?.images[0]?.url
+        image: resource?.resources[0]?.images[0]?.url ?? null
       }
     })
 
   const sorted = artists
     .filter((a) => !!a.resource?.popularity)
     .sort((a, b) => b.resource!.popularity! - a.resource!.popularity!)
-
-  console.log(sorted)
 
   return {
     total: top.length,
@@ -111,6 +110,20 @@ export async function getTopArtists(
   }
 }
 
-export function getTopAlbums(recentTracks: Track[]) {
-  return getTop(recentTracks, (track) => `${track.album}_${track.artist}`)
+export function getTopAlbums(recentTracks: Track[]): EntityTop<Album> {
+  const top = getTop(recentTracks, (track) => `${track.album}_${track.artist}`)
+
+  console.log(top)
+
+  const items = top.slice(0, 100).map((tracks) => ({
+    name: tracks[0].album,
+    artist: tracks[0].artist,
+    image: tracks.find((t) => !!t.image)?.image ?? null,
+    scrobbles: tracks.length
+  }))
+
+  return {
+    total: top.length,
+    items
+  }
 }

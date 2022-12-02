@@ -13,3 +13,12 @@ export function mapValue(
 export function clamp(v: number, min: number, max: number) {
   return Math.min(Math.max(v, min), max)
 }
+
+export function downloadFile(blob: Blob, name: string) {
+  const a = document.createElement('a')
+  a.href = URL.createObjectURL(blob)
+  a.download = name
+  document.getElementById('preload')?.appendChild(a)
+  a.click()
+  document.getElementById('preload')?.removeChild(a)
+}

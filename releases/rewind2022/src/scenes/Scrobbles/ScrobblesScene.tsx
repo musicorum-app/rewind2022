@@ -10,6 +10,7 @@ import { scrobblesForwardTimeline } from './scrobblesTimeline'
 import { scenesStore } from '../scenes'
 import Flex from '@react-css/flex'
 import { useTranslation } from 'react-i18next'
+import { useSceneAudio } from '../../hooks/useSceneAudio'
 
 /**
  *    | 9 | 9 | 8
@@ -135,6 +136,12 @@ export default function ScrobblesScene() {
       }
     })
   }, [originGradient, scrobblesForwardTimeline])
+
+  useSceneAudio(
+    RewindScene.Scrobbles,
+    rewindData?.tracks.resources[7].preview,
+    rewindData?.tracks.resources[7].name
+  )
 
   if (!rewindData) {
     return null
