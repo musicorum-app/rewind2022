@@ -4,7 +4,6 @@ import Centered from '@rewind/core/src/components/Centered'
 import { sheetObjectValuesToStyle } from '@rewind/core/src/modules/sheetObject'
 import Button from '../../components/Button'
 import { TextInput } from '../../components/Input'
-import { useResolveSheet } from './useResolveSheet'
 import { useEffect, useRef, useState } from 'react'
 import { lastfmClient } from '../../modules/lastfm'
 import { Collapse } from 'react-collapse'
@@ -43,7 +42,6 @@ interface ErrorValue {
 }
 
 export default function UserInput() {
-  const startValues = useResolveSheet((s) => s.startValues)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<ErrorValue>({
     show: false,

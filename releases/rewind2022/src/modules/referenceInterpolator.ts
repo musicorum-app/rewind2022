@@ -12,6 +12,10 @@ export function interpolateBetweenReferenceElements(
   const originMeasurements = originElement.getBoundingClientRect()
   const targetMeasurements = targetElement.getBoundingClientRect()
 
+  elementToInterpolate.setAttribute(
+    'data-interpolation-value',
+    value.toString()
+  )
   elementToInterpolate.style.position = 'absolute'
 
   const x = interpolatePx(originMeasurements.x, targetMeasurements.x, value)

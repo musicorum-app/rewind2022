@@ -1,27 +1,56 @@
-import { getProject } from '@theatre/core'
-import projectState from '../assets/projectState.json'
+import create from 'zustand'
+import { Map } from 'immutable'
 import { RewindScene } from '../types'
+import { useTimelineController } from '../hooks/useTimelineController'
 
-const rewindProject = getProject('Rewind 2022', {
-  state: projectState
-})
-
-export const mainSheet = rewindProject.sheet('Main Sheet')
-
-type Range = [number, number]
-
-export interface SceneTiming {
-  forward: Range
-  back: Range
+export interface Timeline {
+  id: string
+  factory: () => gsap.core.Timeline
 }
 
-export const sceneTimings: Record<RewindScene, SceneTiming> = {
-  YearSplash: {
-    forward: [0, 3.1],
-    back: [6, 7]
-  },
-  FirstTrack: {
-    forward: [4, 5],
-    back: [0, 3]
-  }
+export interface SceneTimelines {
+  forward?: Timeline
+  backward?: Timeline
 }
+
+interface ScenesStore {
+  timelines: Map<RewindScene, SceneTimelines>
+
+  setTimelines: (scene: RewindScene, timelines: SceneTimelines) => void
+}
+
+const getTimelineId = (tl?: gsap.core.Timeline | null) =>
+  tl?.data?.id as string | undefined
+
+export const scenesStore = create<ScenesStore>((set) => ({
+  timelines: Map(),
+
+  setTimelines: (scene, timelines) =>
+    set((p) => {
+      if (import.meta.env.DEV) {
+        const timelineController = useTimelineController.getState()
+        console.log(timelineController.currentTimeline)
+        console.log(getTimelineId(timelineController.currentTimeline))
+
+        if (
+          timelines.forward &&
+          getTimelineId(timelineController.currentTimeline) ===
+            timelines.forward.id
+        ) {
+          const tl = timelines.forward.factory()
+          timelineController.setTimeline(tl)
+          tl.play()
+        } else if (
+          timelines.backward &&
+          getTimelineId(timelineController.currentTimeline) ===
+            timelines.backward.id
+        ) {
+          const tl = timelines.backward.factory()
+          timelineController.setTimeline(tl)
+          tl.play()
+        }
+      }
+
+      return { timelines: p.timelines.set(scene, timelines) }
+    })
+}))

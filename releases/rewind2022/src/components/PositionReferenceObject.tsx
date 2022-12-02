@@ -4,7 +4,7 @@ import styled from '@emotion/styled'
 const Element = styled.div<{ isOrigin: boolean }>`
   width: 100%;
   height: 100%;
-  border: 2px dashed ${(p) => (p.isOrigin ? 'yellow' : 'red')};
+  border: 0 dashed ${(p) => (p.isOrigin ? 'yellow' : 'red')};
   opacity: 0;
   background: ${(p) =>
     p.isOrigin ? 'rgb(255, 255, 0, 0.2)' : 'rgb(255,0, 0, 0.2)'};

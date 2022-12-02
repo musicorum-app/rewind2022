@@ -14,6 +14,8 @@ import {
   RewindData2022,
   sanitizeRewindData
 } from '../../modules/rewindDataExtras'
+import { RewindCache } from '../../types'
+import { RewindData } from '@rewind/resolver/src/types'
 
 export enum DataResolveStep {
   USER_INPUT,
@@ -74,19 +76,45 @@ export const useDataResolve = create<DataResolveStore>((set, get) => ({
     set({ step: DataResolveStep.LOADING })
 
     try {
-      const data = await resolveRewindData(
-        user,
-        lastfmClient,
-        (loadingStatus) => {
-          set({ loadingStatus })
+      const cached = localStorage.getItem('Rewind22Cache')
+
+      let data: RewindData | null = null
+
+      try {
+        if (cached) {
+          const parsed = JSON.parse(cached) as RewindCache
+          if (
+            parsed &&
+            parsed.version &&
+            parsed.version === import.meta.env.VITE_CACHE_VERSION
+          ) {
+            data = parsed.data
+          }
         }
-      )
+      } catch (err) {
+        console.warn('Could not get cache data:', err)
+      }
+
+      if (!data) {
+        data = await resolveRewindData(user, lastfmClient, (loadingStatus) => {
+          set({ loadingStatus })
+        })
+
+        localStorage.setItem(
+          'Rewind22Cache',
+          JSON.stringify({
+            data,
+            version: import.meta.env.VITE_CACHE_VERSION
+          } as RewindCache)
+        )
+      }
 
       const rewindData = await sanitizeRewindData(data)
 
       if (import.meta.env.DEV) {
         // @ts-expect-error force global var
         window.rewindData = rewindData
+        console.log('rewind data done')
       }
 
       set({ rewindData, step: DataResolveStep.DONE })
@@ -100,6 +128,7 @@ export const useDataResolve = create<DataResolveStore>((set, get) => ({
         }
       }
       set({ error: 'errors.generic' })
+      alert(err)
       console.error(err)
     }
   }

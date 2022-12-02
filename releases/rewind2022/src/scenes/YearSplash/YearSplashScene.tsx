@@ -12,8 +12,14 @@ import {
 } from '../../modules/lastfmImage'
 import PositionReferenceObject from '../../components/PositionReferenceObject'
 import { useDomSheetObjectValueUpdate } from '@rewind/core/src/hooks/useDomSheetObjectValueUpdate'
-import { yearSplashObjects } from './yearSplashObjects'
 import { interpolateBackgroundGradient } from '../../modules/backgroundGradient'
+import { yearSplashForwardTimeline } from './yearSplashTimeline'
+import { useTimelineController } from '../../hooks/useTimelineController'
+import useReferenceObjectUpdater from '../../hooks/useReferenceObjectUpdater'
+import { scenesStore } from '../scenes'
+import { RewindScene } from '../../types'
+import { useOrchestrator } from '../../hooks/useOrchestrator'
+import { usePlayer } from '../../hooks/usePlayer'
 
 const MainYear = styled.div`
   font-variation-settings: 'wght' 800;
@@ -24,21 +30,27 @@ const MainYear = styled.div`
   text-shadow: 0px 3px 20px #00000055;
 `
 
-const BackImage = styled.img`
-  &,
-  & > div {
+const BackImage = styled.img<{ transform: string }>`
+  & {
     position: absolute;
     transform-origin: right bottom;
     width: 110px;
     height: 110px;
     border-radius: 4px;
+    transform: translate3d(${(p) => p.transform});
+    box-shadow: 0px 3px 20px #00000088;
   }
 `
 
-const YearDigit = styled.div``
+const YearDigit = styled.div<{ z?: number }>`
+  --weight: 300;
+  font-variation-settings: 'wght' var(--weight);
+  transform: translateZ(${(p) => p.z || 0}px);
+`
 
 const BottomText = styled.h2`
   text-shadow: 0px 3px 20px #000000cc;
+  font-size: 1.8em;
 `
 
 const digitChangeCallback = (values: { weight: number }, el: HTMLElement) => {
@@ -49,6 +61,20 @@ const defaultTrackImage = imageTypeDefaultImages[ImageType.TRACK]
 
 export default function YearSplashScene() {
   const rewindData = useRewindData()
+  const [setAudio, playAudio] = usePlayer((s) => [s.setAudio, s.playAudio])
+
+  useEffect(() => {
+    if (rewindData) {
+      const item = rewindData?.firstScrobbles.items[1]
+      const preview = item.resource?.preview
+      if (preview) {
+        setAudio(RewindScene.YearSplash, preview, item.name)
+      }
+    }
+  }, [])
+
+  const setTimeline = useTimelineController((s) => s.setTimeline)
+
   const containerRef = useRef<HTMLDivElement>(null)
 
   const yearGroupRef = useRef<HTMLHeadingElement>(null)
@@ -67,57 +93,12 @@ export default function YearSplashScene() {
 
   const { t } = useTranslation()
 
-  useDomSheetObjectValueUpdate(yearGroupRef, yearSplashObjects.yearGroupObject)
-  useDomSheetObjectValueUpdate(
-    bottomTextRef,
-    yearSplashObjects.bottomTextObject
-  )
-
-  useDomSheetObjectValueUpdate(
-    yearDigit1Ref,
-    yearSplashObjects.yearDigit1Object,
-    digitChangeCallback
-  )
-
-  useDomSheetObjectValueUpdate(
-    yearDigit2Ref,
-    yearSplashObjects.yearDigit2Object,
-    digitChangeCallback
-  )
-
-  useDomSheetObjectValueUpdate(
-    yearDigit3Ref,
-    yearSplashObjects.yearDigit3Object,
-    digitChangeCallback
-  )
-
-  useDomSheetObjectValueUpdate(
-    yearDigit4Ref,
-    yearSplashObjects.yearDigit4Object,
-    digitChangeCallback
-  )
-
-  useDomSheetObjectValueUpdate(
-    backImage1Ref,
-    yearSplashObjects.backImage1Object
-  )
-
-  useDomSheetObjectValueUpdate(
-    backImage2Ref,
-    yearSplashObjects.backImage2Object
-  )
-  useDomSheetObjectValueUpdate(
-    backImage3Ref,
-    yearSplashObjects.backImage3Object
-  )
-  useDomSheetObjectValueUpdate(
-    backImage4Ref,
-    yearSplashObjects.backImage4Object
-  )
-  useDomSheetObjectValueUpdate(
-    backImage5Ref,
-    yearSplashObjects.backImage5Object
-  )
+  // useReferenceObjectUpdater(
+  //   '#year-splash-track-ref',
+  //   '#first-track-ref',
+  //   '#fst-track-image',
+  //   [backImage4Ref]
+  // )
 
   const toGradient = useMemo(() => {
     const targetPalette = rewindData?.firstScrobbles.items[0].image.palette
@@ -126,18 +107,34 @@ export default function YearSplashScene() {
       : Palettes.Burn.gradient
   }, [rewindData])
 
-  useSheetObjectValueUpdate(yearSplashObjects.mainObject, (values) => {
-    interpolateBackgroundGradient(
-      Palettes.MidnightSky.gradient,
-      toGradient,
-      values.backgroundInterpolation
-    )
-  })
-
   useEffect(() => {
+    if (!yearGroupRef.current) return
+    const tl = yearSplashForwardTimeline(toGradient)
+
+    scenesStore.getState().setTimelines(RewindScene.YearSplash, {
+      forward: {
+        factory: () => tl,
+        id: 'ysp-forward'
+      }
+    })
+    useTimelineController.getState().setTimeline(tl)
+
+    if (useOrchestrator.getState().scene === RewindScene.YearSplash) {
+      useOrchestrator.getState().setIsTransitioning(true)
+      playAudio(RewindScene.YearSplash)
+      tl.play().then(() => {
+        useOrchestrator.getState().setIsTransitioning(false)
+      })
+    }
+
+    return () => {
+      tl.kill()
+    }
+
+    // yearSplashForwardTimeline.play()
     // yearSplashForwardSheet.sequence.play()
     // return () => yearSplashForwardSheet.sequence.pause()
-  }, [])
+  }, [yearGroupRef.current])
 
   if (!rewindData) return null
 
@@ -149,17 +146,30 @@ export default function YearSplashScene() {
         flexDirection: 'column'
       }}
       ref={containerRef}
+      id="ysp"
     >
-      <MainYear ref={yearGroupRef}>
-        <YearDigit ref={yearDigit1Ref}>2</YearDigit>
-        <YearDigit ref={yearDigit2Ref}>0</YearDigit>
-        <YearDigit ref={yearDigit3Ref}>2</YearDigit>
-        <YearDigit ref={yearDigit4Ref}>2</YearDigit>
+      <MainYear className="main-year" ref={yearGroupRef}>
+        <YearDigit className="digit" ref={yearDigit1Ref}>
+          2
+        </YearDigit>
+        <YearDigit z={2} className="digit" ref={yearDigit2Ref}>
+          0
+        </YearDigit>
+        <YearDigit className="digit" ref={yearDigit3Ref}>
+          2
+        </YearDigit>
+        <YearDigit z={-2} className="digit" ref={yearDigit4Ref}>
+          2
+        </YearDigit>
       </MainYear>
-      <BottomText ref={bottomTextRef}>{t('year_splash.welcome')}</BottomText>
+      <BottomText className="bottom-text" ref={bottomTextRef}>
+        {t('year_splash.welcome')}
+      </BottomText>
 
       <BackImage
         ref={backImage1Ref}
+        transform="165px, -134px, -1px"
+        className="back-image-1"
         src={
           getImage(rewindData.firstScrobbles.items[3].image) ??
           defaultTrackImage
@@ -168,6 +178,8 @@ export default function YearSplashScene() {
 
       <BackImage
         ref={backImage2Ref}
+        transform="-210px, 85px, -10px"
+        className="back-image-2"
         src={
           getImage(rewindData.firstScrobbles.items[1].image) ??
           defaultTrackImage
@@ -175,6 +187,8 @@ export default function YearSplashScene() {
       />
       <BackImage
         ref={backImage3Ref}
+        transform="5px, -35px, 0px"
+        className="back-image-3"
         src={
           getImage(rewindData.firstScrobbles.items[2].image) ??
           defaultTrackImage
@@ -182,9 +196,13 @@ export default function YearSplashScene() {
       />
       <BackImage
         as={'div'}
+        className="back-image-4"
+        transform="-274px, -70px, -1px"
+        ref={backImage4Ref}
         style={{
           background: 'transparent',
-          transform: 'translate(-274px, -70px)'
+          transform: 'translate()',
+          boxShadow: 'none'
         }}
         // src={
         //   getImage(rewindData.firstScrobbles[0].image, 700) ?? defaultTrackImage
@@ -197,6 +215,8 @@ export default function YearSplashScene() {
       </BackImage>
       <BackImage
         ref={backImage5Ref}
+        transform="310px, 49px, -3px"
+        className="back-image-5"
         src={
           getImage(rewindData.firstScrobbles.items[4].image) ??
           defaultTrackImage

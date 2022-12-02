@@ -10,23 +10,31 @@ import {
   ImageType,
   imageTypeDefaultImages
 } from '../../modules/lastfmImage'
-import { useWindowSize } from '../../hooks/useWindowSize'
-import usePositionedReferenceObjectInterpolation from '../../hooks/useSheetObjectValueUpdateWithReferencedInterpolation'
-import useSheetObjectValueUpdateWithReferencedInterpolation from '../../hooks/useSheetObjectValueUpdateWithReferencedInterpolation'
-import { useDomSheetObjectValueUpdate } from '@rewind/core/src/hooks/useDomSheetObjectValueUpdate'
-import { firstTrackObjects } from './firstStepObjects'
+import { useEffect } from 'react'
 import { Textfit } from 'react-textfit'
 import { useTranslation } from 'react-i18next'
+import useReferenceObjectUpdater from '../../hooks/useReferenceObjectUpdater'
+import { scenesStore } from '../scenes'
+import { RewindScene } from '../../types'
+import {
+  firstStepBackwardTimeline,
+  firstStepForwardTimeline
+} from './firstStepTimeline'
+import { usePlayer } from '../../hooks/usePlayer'
+import { useSceneAudio } from '../../hooks/useSceneAudio'
 
 const TrackImageRefWrapper = styled.div`
+  height: auto;
+  max-width: min(40vw, 80vh);
+  min-width: 300px;
   width: 100%;
-  max-height: calc(100vh - 300px);
-  height: calc(100vh - 300px);
+  position: absolute;
+  right: var(--margin);
+  bottom: var(--margin);
+  aspect-ratio: 1 / 1;
 
   & > div {
-    object-fit: contain;
-    width: 100%;
-    height: 100%;
+    margin-left: auto;
   }
 `
 
@@ -46,6 +54,10 @@ const TextContainer = styled.div`
   flex-direction: column;
   justify-content: flex-end;
   gap: 10px;
+
+  & > * {
+    opacity: 0;
+  }
 `
 
 const TrackImage = styled.img`
@@ -54,8 +66,8 @@ const TrackImage = styled.img`
   top: 0;
   z-index: -2;
   border-radius: 4px;
-  object-fit: contain;
   object-position: bottom;
+  object-fit: cover;
 `
 
 const FirstText = styled.span`
@@ -65,6 +77,7 @@ const FirstText = styled.span`
   margin: 0;
   font-variation-settings: 'wght' 750;
   font-size: 3em;
+  opacity: 0;
 `
 
 const defaultTrackImage = imageTypeDefaultImages[ImageType.TRACK]
@@ -72,32 +85,49 @@ const defaultTrackImage = imageTypeDefaultImages[ImageType.TRACK]
 export default function FirstStepScene() {
   const rewindData = useRewindData()
   const trackImageRef = useRef<HTMLImageElement>(null)
+  const setTimelines = scenesStore((s) => s.setTimelines)
 
-  const titleRef = useRef<HTMLSpanElement>(null)
-  const trackNameRef = useRef<HTMLHeadingElement>(null)
-  const trackDetailsRef = useRef<HTMLHeadingElement>(null)
+  useSceneAudio(
+    RewindScene.FirstTrack,
+    rewindData?.firstScrobbles.items[0].resource?.preview,
+    rewindData?.firstScrobbles.items[0].name
+  )
 
   const { t } = useTranslation()
 
-  useSheetObjectValueUpdateWithReferencedInterpolation(
-    'year-splash-track-ref',
-    'first-track-ref',
-    trackImageRef,
-    firstTrackObjects.trackObject,
-    'transitionInterpolation'
-  )
+  // useSheetObjectValueUpdateWithReferencedInterpolation(
+  //   'year-splash-track-ref',
+  //   'first-track-ref',
+  //   trackImageRef,
+  //   firstTrackObjects.trackObject,
+  //   'transitionInterpolation'
+  // )
 
-  useDomSheetObjectValueUpdate(titleRef, firstTrackObjects.titleObject)
-  useDomSheetObjectValueUpdate(trackNameRef, firstTrackObjects.trackNameObject)
-  useDomSheetObjectValueUpdate(
-    trackDetailsRef,
-    firstTrackObjects.trackDetailsObject
+  useReferenceObjectUpdater(
+    '#year-splash-track-ref',
+    '#first-track-ref',
+    '#fst-track-image',
+    [trackImageRef]
   )
 
   const color = useMemo(() => {
     const targetPalette = rewindData?.firstScrobbles.items[0].image.palette
     return targetPalette ? Palettes[targetPalette].color : Palettes.Burn.color
   }, [rewindData])
+
+  useEffect(() => {
+    console.log('timeline changed')
+    setTimelines(RewindScene.FirstTrack, {
+      forward: {
+        id: 'fst-forward',
+        factory: firstStepForwardTimeline
+      },
+      backward: {
+        id: 'fst-backward',
+        factory: firstStepBackwardTimeline
+      }
+    })
+  }, [firstStepForwardTimeline])
 
   if (!rewindData) return null
 
@@ -106,18 +136,20 @@ export default function FirstStepScene() {
       style={{
         width: ''
       }}
+      id="fst"
     >
       <FirstText
         style={{
           color
         }}
-        ref={titleRef}
+        className="first-one"
       >
         The first one
       </FirstText>
       <Container>
         <TextContainer>
           <h1
+            className="track-name"
             // todo
             style={{
               lineHeight: '1.1em',
@@ -127,16 +159,15 @@ export default function FirstStepScene() {
               fontVariationSettings: "'wght' 900",
               margin: 0
             }}
-            ref={trackNameRef}
           >
             {rewindData.firstScrobbles.items[0].name}
           </h1>
           <h3
+            className="sub-text"
             style={{
               color,
-              fontVariationSettings: "'wght' 600"
+              fontVariationSettings: "'wght' 800"
             }}
-            ref={trackDetailsRef}
           >
             {t('first_track.sub_text', {
               count: rewindData.firstScrobbles.firstScrobbleTrackCount - 1,
@@ -159,6 +190,7 @@ export default function FirstStepScene() {
       </Container>
       <TrackImage
         ref={trackImageRef}
+        id="fst-track-image"
         src={
           getImage(rewindData.firstScrobbles.items[0].image, 500) ??
           defaultTrackImage
