@@ -51,7 +51,8 @@ export default async function parseFirstScrobbles(
         ? {
             preview: resource.preview,
             deezer_id: resource.deezer_id,
-            spotify_id: resource.spotify_id
+            spotify_id: resource.spotify_id,
+            tags: resource.tags
           }
         : null
     }

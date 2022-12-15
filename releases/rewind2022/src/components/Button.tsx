@@ -11,13 +11,14 @@ const Button = styled.button<ButtonProps>`
   background: ${(p) => p.background ?? Palettes.MidnightSky.color};
   border-radius: 200px;
   color: ${(p) => p.color ?? 'white'};
-  font-size: 18px;
-  font-variation-settings: 'wght' 800;
-  padding: 10px 35px;
+  font-size: 17px;
+  font-variation-settings: 'wght' 900;
+  padding: 6px 30px;
   text-transform: uppercase;
   border: 2px solid transparent;
   cursor: pointer;
   transition: all 140ms linear;
+  box-sizing: border-box;
 
   &:hover {
     background: ${(p) =>

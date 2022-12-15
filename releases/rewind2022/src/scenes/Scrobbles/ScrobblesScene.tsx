@@ -43,7 +43,7 @@ const ScrobbleList = styled.div`
   position: absolute;
   align-items: flex-end;
   bottom: 0;
-  padding-bottom: calc(50vh - 6rem);
+  padding-bottom: calc(var(--vh) * 50 - 6rem);
 
   /* ; */
 `

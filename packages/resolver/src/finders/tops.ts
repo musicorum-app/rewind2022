@@ -33,7 +33,7 @@ export async function parseTopTracks(top: Track[][]): Promise<TopTracks> {
   )
 
   const tracks: WithScrobbles<TrackWithResource>[] = top
-    .slice(0, 100)
+    .slice(0, 150)
     .map((tracks, index) => {
       const resource = trackResources[index] as TrackResource | null
 
@@ -49,14 +49,15 @@ export async function parseTopTracks(top: Track[][]): Promise<TopTracks> {
     })
 
   const resources: TopTracks['resources'] = tracks
-    .slice(0, 100)
+    .slice(0, 150)
     .map((track) => ({
       name: track.name,
       artist: track.artist,
       album: track.album,
       spotify_id: track.resource?.spotify_id || null,
       deezer_id: track.resource?.deezer_id || null,
-      preview: track.resource?.preview || null
+      preview: track.resource?.preview || null,
+      tags: track.resource?.tags || []
     }))
 
   return {
@@ -100,12 +101,19 @@ export async function getTopArtists(
     .filter((a) => !!a.resource?.popularity)
     .sort((a, b) => b.resource!.popularity! - a.resource!.popularity!)
 
+  console.log(sorted.map((a) => a.resource!.popularity!))
+
+  const average =
+    sorted.map((a) => a.resource!.popularity!).reduce((a, b) => a + b, 0) /
+    sorted.length
+
   return {
     total: top.length,
     items: artists.slice(0, 6),
     popularity: {
       high: sorted.at(0) || null,
-      low: sorted.at(-1) || null
+      low: sorted.at(-1) || null,
+      average
     }
   }
 }

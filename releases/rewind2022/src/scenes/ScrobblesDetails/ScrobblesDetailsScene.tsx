@@ -70,6 +70,7 @@ const ComplementaryText = styled.h2`
   font-size: 1.6em;
   margin: 0;
   margin-bottom: 1rem;
+  text-align: center;
 `
 
 const Details = styled.div`

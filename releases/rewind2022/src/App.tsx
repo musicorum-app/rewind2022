@@ -8,13 +8,15 @@ import SceneOrchestrator from './components/SceneOrchestrator'
 
 import './satoshi.css'
 import './App.css'
+import GlobalHeight from '@rewind/core/src/components/GlobalHeight'
 
-const isDev = import.meta.env.DEV
+const isDev = import.meta.env.DEV || true
 const MainControls = lazy(() => import('./components/MainController'))
 
 export default function App() {
   return (
     <>
+      <GlobalHeight />
       <StateDisplay />
       <Overlay />
       {isDev && <MainControls />}

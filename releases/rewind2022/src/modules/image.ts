@@ -54,6 +54,30 @@ function printImage(img: HTMLImageElement) {
   )
 }
 
+export async function extractImageColors(
+  img: HTMLImageElement | string,
+  amount: number
+) {
+  if (typeof img === 'string') {
+    img = await loadImage(img)
+  }
+
+  const canvas = document.createElement('canvas')
+  canvas.width = 400
+  canvas.height = 400
+
+  const ctx = canvas.getContext('2d')
+  ctx?.drawImage(img, 0, 0, canvas.width, canvas.height)
+
+  const imageData = ctx?.getImageData(0, 0, canvas.width, canvas.height)
+
+  if (!imageData) return null
+
+  return extractColorsFromImageData(imageData, {
+    pixels: canvas.width * canvas.height
+  }).slice(0, amount)
+}
+
 export async function extractImageColor(img: HTMLImageElement | string) {
   if (typeof img === 'string') {
     img = await loadImage(img)

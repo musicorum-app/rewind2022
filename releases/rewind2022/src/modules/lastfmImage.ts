@@ -1,5 +1,5 @@
 import { LastfmImage } from '@musicorum/lastfm/dist/types/packages/common'
-import defaultUserImage from '../assets/defaultUser.svg'
+import defaultUserImage from '../assets/defaultUser.svg?inline'
 import { Image } from './rewindDataExtras'
 
 export enum ImageType {

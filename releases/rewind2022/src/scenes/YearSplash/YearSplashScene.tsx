@@ -21,6 +21,24 @@ import { RewindScene } from '../../types'
 import { useOrchestrator } from '../../hooks/useOrchestrator'
 import { usePlayer } from '../../hooks/usePlayer'
 
+const Container = styled(Centered)`
+  @media only screen and (max-width: 770px) {
+    scale: 0.7;
+  }
+
+  @media only screen and (max-width: 520px) {
+    scale: 0.6;
+  }
+
+  @media only screen and (max-width: 430px) {
+    scale: 0.5;
+  }
+
+  @media only screen and (max-width: 320px) {
+    scale: 0.35;
+  }
+`
+
 const MainYear = styled.div`
   font-variation-settings: 'wght' 800;
   display: flex !important;
@@ -51,6 +69,7 @@ const YearDigit = styled.div<{ z?: number }>`
 const BottomText = styled.h2`
   text-shadow: 0px 3px 20px #000000cc;
   font-size: 1.8em;
+  text-align: center;
 `
 
 const digitChangeCallback = (values: { weight: number }, el: HTMLElement) => {
@@ -139,7 +158,7 @@ export default function YearSplashScene() {
   if (!rewindData) return null
 
   return (
-    <Centered
+    <Container
       is3D
       style={{
         overflow: 'unset',
@@ -222,6 +241,6 @@ export default function YearSplashScene() {
           defaultTrackImage
         }
       />
-    </Centered>
+    </Container>
   )
 }

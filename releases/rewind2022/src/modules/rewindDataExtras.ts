@@ -1,4 +1,8 @@
-import { LastfmRecentTracksTrack } from '@musicorum/lastfm/dist/types/packages/user'
+import {
+  LastfmRecentTracksTrack,
+  LastfmUserInfo
+} from '@musicorum/lastfm/dist/types/packages/user'
+import { loadFont } from '@rewind/core/src/utils/canvas'
 import {
   Album,
   ArtistWithResource,
@@ -12,7 +16,16 @@ import {
 } from '@rewind/resolver/src/types'
 import chroma from 'chroma-js'
 import { Palettes, PaletteType } from '../theme/colors'
-import { extractImageColor, loadImage, preloadImage } from './image'
+import {
+  extractImageColor,
+  extractImageColors,
+  loadImage,
+  preloadImage
+} from './image'
+import { getClosestPalette, getImagePalettes } from './image/palette'
+import { renderPlaylistImage } from './image/playlist'
+import { renderSquareShareImage } from './image/squareShare'
+import { renderStoriesShareImage } from './image/storiesShare'
 import { getLargeLastfmImage } from './lastfm'
 
 export interface Image {
@@ -39,17 +52,33 @@ export interface FirstScrobblesData {
   firstScrobbleTrackCount: number
 }
 
+export interface GeneratedImage {
+  url: string
+  palette: PaletteType
+}
+
 export interface RewindData2022
   extends Omit<RewindData, 'firstScrobbles' | 'tracks' | 'artists' | 'albums'> {
   firstScrobbles: FirstScrobblesData
   tracks: Omit<TopTracks, 'items'> & {
     items: WithImage<WithScrobbles<TrackWithResource>>[]
   }
-  artists: Omit<TopArtists, 'items'> & {
+  artists: {
+    total: number
     items: WithImage<WithScrobbles<ArtistWithResource>>[]
+    popularity: {
+      high: WithImage<ArtistWithResource> | null
+      low: WithImage<ArtistWithResource> | null
+      average: number
+    }
   }
   albums: Omit<EntityTop<Album>, 'items'> & {
     items: WithImage<WithScrobbles<Album>>[]
+  }
+  images: {
+    playlist: GeneratedImage[]
+    squareShare: GeneratedImage[]
+    storiesShare: GeneratedImage[]
   }
 }
 
@@ -88,7 +117,8 @@ async function convertTrack<T extends { image: string | null }>(
 }
 
 export async function sanitizeRewindData(
-  rewindData: RewindData
+  rewindData: RewindData,
+  user: LastfmUserInfo
 ): Promise<RewindData2022> {
   const firstScrobbles = await Promise.all(
     rewindData.firstScrobbles.items.map((track, i) =>
@@ -114,6 +144,8 @@ export async function sanitizeRewindData(
     )
   )
 
+  const { popularity } = rewindData.artists
+
   return {
     ...rewindData,
     firstScrobbles: {
@@ -125,81 +157,59 @@ export async function sanitizeRewindData(
       items: topTracks
     },
     artists: {
-      ...rewindData.artists,
-      items: topArtists
+      total: rewindData.artists.total,
+      items: topArtists,
+      popularity: {
+        high: popularity.high
+          ? await convertTrack(popularity.high, true, true)
+          : null,
+        low: popularity.low
+          ? await convertTrack(popularity.low, true, true)
+          : null,
+        average: rewindData.artists.popularity.average
+      }
     },
     albums: {
       total: rewindData.albums.total,
       items: topAlbums
-    }
+    },
+    images: await generateImages(user, rewindData)
   }
 }
 
-export function getClosestPalette(color: string, ignoreMain = true) {
-  let availablePalettes = Object.values(PaletteType) as PaletteType[]
-  if (ignoreMain) {
-    availablePalettes = availablePalettes.filter(
-      (p) =>
-        ![
-          PaletteType.Burn,
-          PaletteType.MidnightSky,
-          PaletteType.DisplacedOcean
-        ].includes(p)
-    )
-  }
+async function generateImages(
+  user: LastfmUserInfo,
+  rewindData: RewindData
+): Promise<RewindData2022['images']> {
+  console.log(user)
+  const userPalettes = await getImagePalettes(user.images[3]?.url)
+  const playlistImages: GeneratedImage[] = []
+  const storiesShareImages: GeneratedImage[] = []
+  const squareShareImages: GeneratedImage[] = []
 
-  if (import.meta.env.DEV) {
-    console.log('* Distances')
-  }
-
-  const distances = availablePalettes
-    .map((p) => {
-      const palette = Palettes[p]
-      const targetColors = palette.targetColors ?? [palette.color]
-
-      const distances = targetColors.map((c) => chroma.deltaE(color, c))
-
-      if (import.meta.env.DEV) {
-        const colors = palette.gradient.join(', ')
-        const textColor =
-          chroma(palette.gradient[0]).luminance() > 0.5 ? 'black' : 'white'
-
-        for (const c of targetColors) {
-          const textColor2 = chroma(c).luminance() > 0.5 ? 'black' : 'white'
-          console.log(
-            `%c${p}%c <-> %c${chroma.deltaE(color, c).toFixed(2)}`,
-            `color: ${textColor};background: linear-gradient(90deg, ${colors}); padding: 2px 5px`,
-            'color: inherit',
-            `color: ${textColor2};background: ${c}; padding: 2px 5px`
-          )
-        }
-
-        console.log('Dist:', distances.sort((a, b) => a - b)[0])
-      }
-
-      return {
-        palette: p,
-        // get the lowest distance from the distances from target colors (if present)
-        distance: distances.sort((a, b) => a - b)[0]
-      }
+  for (const p of userPalettes) {
+    const playlistBlob = await renderPlaylistImage(user, p)
+    playlistImages.push({
+      palette: p,
+      url: URL.createObjectURL(playlistBlob)
     })
-    .sort((a, b) => a.distance - b.distance)
 
-  const palette = distances[0].palette
+    const shareBlob = await renderStoriesShareImage(user, rewindData, p)
+    storiesShareImages.push({
+      palette: p,
+      url: URL.createObjectURL(shareBlob)
+    })
 
-  if (import.meta.env.DEV) {
-    console.log('Distances:', distances)
-    const p = Palettes[palette]
-    const colors = p.gradient.join(', ')
-    const textColor =
-      chroma(p.gradient[0]).luminance() > 0.5 ? 'black' : 'white'
-
-    console.log(
-      `Picked palette: %c${palette}%c - ${distances[0].distance}`,
-      `color: ${textColor};background: linear-gradient(90deg, ${colors}); padding: 2px 14px`,
-      'color: inherit'
-    )
+    const squareBlob = await renderSquareShareImage(user, rewindData, p)
+    squareShareImages.push({
+      palette: p,
+      url: URL.createObjectURL(squareBlob)
+    })
   }
 
-  return palette
+  return {
+    playlist: playlistImages,
+    squareShare: squareShareImages,
+    storiesShare: storiesShareImages
+  }
 }

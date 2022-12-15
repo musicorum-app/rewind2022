@@ -1,18 +1,18 @@
 import styled from '@emotion/styled'
-import { clamp } from '@rewind/core/src/utils'
+import { clamp, mapValue, mapValueAndClamp } from '@rewind/core/src/utils'
 import gsap from 'gsap'
 import { useEffect, useRef, useState } from 'react'
-import { mapValueBetweenRanges } from '../utils/math'
 
 const Container = styled.div`
   position: relative;
   height: 100%;
   transform-style: preserve-3d;
-  perspective: 2000px;
+  perspective: 3000px;
+  pointer-events: none;
 `
 
 const Image = styled.img`
-  border-radius: 12px;
+  border-radius: 8px;
   box-sizing: border-box;
   object-fit: cover;
 
@@ -50,16 +50,17 @@ export default function SwitcheableImage<
     for (const image of images) {
       const choice = image.getAttribute('data-choice')
       if (choice === prevChoiceRef.current) {
+        image.style.opacity = '1'
         image.style.transform = 'translateZ(1px)'
         interpolateMask(image, 0)
         props.onTransitionChange(true)
 
         const obj = {
-          value: 0
+          value: 1
         }
         gsap.to(obj, {
-          value: 1,
-          duration: 0.3,
+          value: 0,
+          duration: 0.5,
           onUpdate: () => {
             interpolateMask(image, obj.value)
           },
@@ -71,8 +72,10 @@ export default function SwitcheableImage<
           }
         })
       } else if (choice === props.choice) {
+        image.style.opacity = '1'
         image.style.transform = 'translateZ(0px)'
       } else {
+        image.style.opacity = '0'
         image.style.transform = 'translateZ(-2px)'
       }
     }
@@ -93,18 +96,15 @@ export default function SwitcheableImage<
 }
 
 function interpolateMask(element: HTMLElement, value: number) {
-  const percent = mapValueBetweenRanges([0, 1], [50, 0], value) + '%'
-  const px =
-    clamp(mapValueBetweenRanges([0.7, 1], [80, 0], value), 0, 80) + 'px'
-
-  const alpha =
-    clamp(mapValueBetweenRanges([0.8, 1], [100, 60], value), 60, 100) + '%'
+  const percent = mapValue(value, [0, 1], [50, 0]) + '%'
+  const px = mapValueAndClamp(value, [1, 0.8], [0, 100]) + 'px'
+  const alpha = clamp(mapValue(value, [1, 0.9], [1, 0]), 0, 1)
 
   const maskValue = `linear-gradient(
-    transparent calc(50% - ${px} - ${percent}),
-    rgb(0 0 0 / ${alpha}) calc(50% - ${percent}),
-    rgb(0 0 0 / ${alpha}) calc(50% + ${percent}),
-    transparent calc(50% + ${px} + ${percent})
+    black calc(50% - ${px} - ${percent}),
+    rgba(0, 0, 0, ${alpha}) calc(50% - ${percent}),
+    rgba(0, 0, 0, ${alpha}) calc(50% + ${percent}),
+    black calc(50% + ${px} + ${percent})
   )`
 
   element.style.maskImage = maskValue

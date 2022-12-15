@@ -22,19 +22,29 @@ import {
 } from './firstStepTimeline'
 import { usePlayer } from '../../hooks/usePlayer'
 import { useSceneAudio } from '../../hooks/useSceneAudio'
+import ImageWithBorder from '../../components/ImageWithBorder'
 
 const TrackImageRefWrapper = styled.div`
   height: auto;
-  max-width: min(40vw, 80vh);
+  max-width: min(40vw, calc(var(--vh) * 70), 1000px);
   min-width: 300px;
   width: 100%;
   position: absolute;
   right: var(--margin);
-  bottom: var(--margin);
+  bottom: 60px;
   aspect-ratio: 1 / 1;
 
   & > div {
     margin-left: auto;
+  }
+
+  @media only screen and (max-width: 700px) {
+    position: fixed;
+    max-width: 300px;
+    bottom: unset;
+    top: 130px;
+    max-width: min(80vw, calc(var(--vh) * 60 - 300px));
+    right: var(--margin);
   }
 `
 
@@ -45,8 +55,17 @@ const Container = styled.div`
   position: absolute;
   bottom: 0;
   width: calc(100% - var(--margin) * 2);
-  padding-bottom: var(--margin);
-  max-width: 1324px;
+  padding-bottom: 60px;
+  padding-left: var(--margin);
+  padding-right: var(--margin);
+  max-width: 2024px;
+  box-sizing: border-box;
+
+  @media only screen and (max-width: 700px) {
+    width: 100%;
+    padding-left: var(--margin);
+    grid-template-columns: 1fr;
+  }
 `
 
 const TextContainer = styled.div`
@@ -57,6 +76,29 @@ const TextContainer = styled.div`
 
   & > * {
     opacity: 0;
+  }
+
+  & h1 {
+    font-size: 6em;
+    text-shadow: 1px 1px 20px rgba(0, 0, 0, 0.6);
+  }
+
+  @media only screen and (max-width: 700px) {
+    & h1 {
+      font-size: 4.5em;
+    }
+    & h3 {
+      font-size: 1em;
+    }
+  }
+
+  @media only screen and (max-height: 820px) {
+    & h1 {
+      font-size: 3em;
+    }
+    & h3 {
+      font-size: 0.8em;
+    }
   }
 `
 
@@ -153,7 +195,6 @@ export default function FirstStepScene() {
             // todo
             style={{
               lineHeight: '1.1em',
-              fontSize: '6em',
               display: 'flex',
               alignItems: 'flex-end',
               fontVariationSettings: "'wght' 900",

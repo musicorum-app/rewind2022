@@ -14,6 +14,7 @@ export interface TrackWithResource extends Track {
     spotify_id: string | null
     deezer_id: number | null
     preview: string | null
+    tags: string[]
   } | null
 }
 
@@ -51,6 +52,7 @@ export interface TopArtists extends EntityTop<ArtistWithResource> {
   popularity: {
     high: ArtistWithResource | null
     low: ArtistWithResource | null
+    average: number
   }
 }
 
@@ -62,6 +64,7 @@ export interface TopTracks extends EntityTop<TrackWithResource> {
     spotify_id: string | null
     preview: string | null
     deezer_id: number | null
+    tags: string[]
   }[]
 }
 

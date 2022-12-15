@@ -30,4 +30,5 @@ export interface ArtistResource extends ResourceItem {
 
 export interface TrackResource extends ResourceItem {
   preview: string | null
+  tags: string[]
 }

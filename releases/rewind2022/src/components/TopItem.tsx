@@ -20,8 +20,8 @@ const MediaButton = styled.button<{ color: string }>`
   }
 
   @media only screen and (max-width: 600px) {
-    width: 26px;
-    height: 26px;
+    width: 32px;
+    height: 32px;
   }
 
   &:hover {
@@ -79,6 +79,7 @@ const Container = styled.div`
 
     & ${Texts} {
       margin-left: 12px;
+      flex: 1;
       width: 30vw;
     }
 
@@ -99,7 +100,7 @@ const Container = styled.div`
     }
   }
 
-  @media only screen and (max-width: 760px) and (max-height: 650px) {
+  @media only screen and (max-width: 760px) and (max-height: 690px) {
     --width: 60px;
   }
 `

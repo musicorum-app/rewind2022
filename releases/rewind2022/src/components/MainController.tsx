@@ -6,8 +6,8 @@ import { Portal } from 'react-portal'
 import { LoadState, useOrchestrator } from '../hooks/useOrchestrator'
 import { useTimelineController } from '../hooks/useTimelineController'
 import { extractImageColor } from '../modules/image'
-import { getClosestPalette } from '../modules/rewindDataExtras'
 import { useDataResolve, useRewindData } from '../scenes/Resolve/useDataResolve'
+import { getClosestPalette } from '../modules/image/palette'
 
 const levaElement = document.querySelector('#overlay')
 

@@ -32,7 +32,8 @@ const CountCopy = styled(Digit)`
 const ComplementaryText = styled.h2`
   font-size: 1.6em;
   margin: 0;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+  text-align: center;
 `
 
 export default function ScrobblesChartScene() {

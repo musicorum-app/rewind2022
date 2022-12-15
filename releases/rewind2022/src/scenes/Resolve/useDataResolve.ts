@@ -109,7 +109,7 @@ export const useDataResolve = create<DataResolveStore>((set, get) => ({
         )
       }
 
-      const rewindData = await sanitizeRewindData(data)
+      const rewindData = await sanitizeRewindData(data, user)
 
       if (import.meta.env.DEV) {
         // @ts-expect-error force global var

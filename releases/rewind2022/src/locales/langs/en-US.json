@@ -67,5 +67,44 @@
   "top_albums": {
     "top": "Finally, these were the albums you listened the most",
     "bottom": "counting up to {{count}} albums this year"
+  },
+  "popularity": {
+    "low": "<0>{{name}}</0> was your least popular artist of the year, with {{value}}% of popularity",
+    "high": "<0>{{name}}</0> was your most popular artist of the year, with {{value}}% of popularity",
+    "subtitle": "is how mainstream you were this year*",
+    "note": "* based on the average of your top 100 artists of the year, with Spotify's popularity score"
+  },
+  "end_splash": {
+    "text": "And this was your year on music!"
+  },
+  "share": {
+    "title": "Share your rewind!",
+    "text": "Show to your friends your 2022 in music!"
+  },
+  "finish": {
+    "title": "That was it!",
+    "text1": "This was your year in music rewinded! We hope you enjoyed this experience!",
+    "text2": "This website was done by one person. If you liked this and want to see more, share this and give it a feedback! Also, consider joining our Patreon to help fund the development :D",
+    "text3": "Happy 2023!",
+    "buttons": {
+      "tweet": "Tweet",
+      "thanks": "Thanks",
+      "feedback": "Feedback"
+    },
+    "tweet_text": "This year I had {{count}} scrobbles on #Lastfm. Take a look at your rewind on #MusicorumRewind by @MusicorumApp"
+  },
+  "playlist": {
+    "save_on": "Save on {{service}}",
+    "download": "Download image",
+    "creation": {
+      "name": "My 2023 rewind",
+      "description": "My most listened trakcs from 2023, based on my Last.fm profile, by #MusicorumRewind"
+    },
+    "generic_error": "Couldn't create playlist",
+    "created": {
+      "title": "Here's your playlist!",
+      "missing_one": "One song could not be found on {{service}} and is missing: {{names}}" ,
+      "missing_other": "Some songs were not found on {{service}} and are missing: {{names}}" 
+    }
   }
 }

@@ -28,6 +28,12 @@ const ComplementaryText = styled.h2`
   text-shadow: 0px 3px 20px #000000cc;
   font-size: 1.6em;
   margin: 0;
+  text-align: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+  @media only screen and (max-width: 1060px) {
+    font-size: 1.2em;
+  }
 `
 
 interface TopSceneTemplateProps {
