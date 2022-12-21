@@ -12,6 +12,17 @@ import Flex from '@react-css/flex'
 import { useTranslation } from 'react-i18next'
 import { useSceneAudio } from '../../hooks/useSceneAudio'
 
+const Container = styled(Centered)`
+  font-size: 182px;
+  @media only screen and (max-width: 700px) {
+    font-size: 120px;
+  }
+
+  @media only screen and (max-width: 460px) {
+    font-size: 90px;
+  }
+`
+
 /**
  *    | 9 | 9 | 8
  *    | 9 | 9 | 9
@@ -43,7 +54,7 @@ const ScrobbleList = styled.div`
   position: absolute;
   align-items: flex-end;
   bottom: 0;
-  padding-bottom: calc(var(--vh) * 50 - 6rem);
+  padding-bottom: calc(var(--vh) * 50 - 0.5em);
 
   /* ; */
 `
@@ -52,27 +63,35 @@ const Line = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  transform: translateY(-20rem);
+  transform: translateY(-10em);
 `
 
 const Digit = styled.h1`
-  font-size: 12rem;
+  font-size: 1em;
   font-variation-settings: 'wght' 900;
   margin: 0;
-  line-height: 12rem;
-  width: 112px;
+  line-height: 1em;
+  width: 115px;
   display: flex;
   justify-content: center;
+
+  @media only screen and (max-width: 700px) {
+    width: 78px;
+  }
+
+  @media only screen and (max-width: 460px) {
+    width: 58px;
+  }
 `
 
 const CountCopy = styled(Digit)`
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, calc(-50% + 9px));
   opacity: 0;
   display: flex;
-  width: unset;
+  width: auto !important;
 `
 
 const TextsCentered = styled(Centered)`
@@ -85,10 +104,14 @@ const TextsCentered = styled(Centered)`
 `
 
 const ComplementaryText = styled.h2`
-  text-shadow: 0px 3px 20px #000000cc;
-  font-size: 1.6em;
+  text-shadow: 0px 3px 20px #00000099;
+  font-size: 20px;
   margin: 0;
   opacity: 0;
+
+  @media only screen and (max-width: 700px) {
+    font-size: 18px;
+  }
 `
 
 export default function ScrobblesScene() {
@@ -148,7 +171,7 @@ export default function ScrobblesScene() {
   }
 
   return (
-    <Centered id="scr">
+    <Container id="scr">
       <Stack>
         {scrobblesList && (
           <ScrobbleListContainer className="list-container">
@@ -189,6 +212,6 @@ export default function ScrobblesScene() {
           </CountCopy>
         </Centered>
       </Stack>
-    </Centered>
+    </Container>
   )
 }

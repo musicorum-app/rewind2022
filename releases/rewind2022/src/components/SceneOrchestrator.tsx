@@ -22,10 +22,10 @@ export default function SceneOrchestrator() {
 
   return (
     <Stack>
-      <YearSplashScene />
-      <FirstStepScene />
-      <ScrobblesScene />
-      {/* <ScrobblesChartScene /> */}
+      {/* <YearSplashScene /> */}
+      {/* <FirstStepScene /> */}
+      {/* <ScrobblesScene /> */}
+      <ScrobblesChartScene />
       {/* <ScrobblesDetailsScene /> */}
       {/* <TopArtistsScene /> */}
       {/* <TopTracksScene /> */}

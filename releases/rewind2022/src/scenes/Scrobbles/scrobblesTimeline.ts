@@ -111,17 +111,22 @@ export const scrobblesForwardTimeline = (originGradient: Gradient) => {
 
   const lines = document.querySelectorAll<HTMLDivElement>('#scr .scrobble-line')
   const indexLimit = lines.length - 1
-  const originY = 132 - 12 * indexLimit
+  const lineHeight = 1 /*parseInt(
+    getComputedStyle(lines[0].children[0]).getPropertyValue('font-size')
+  )*/
+
+  console.log(lineHeight)
+  const originY = 11 - lineHeight * indexLimit
 
   for (let i = 0; i < lines.length; i++) {
-    const targetY = originY + i * 12
+    const targetY = originY + i
     tl.fromTo(
       lines[i],
       {
-        y: '-20rem'
+        y: '-4.5em'
       },
       {
-        y: targetY + 'rem',
+        y: targetY + 'em',
         duration: 4,
         ease: 'power4.out'
       },
