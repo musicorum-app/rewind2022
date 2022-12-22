@@ -4,20 +4,20 @@ import { useRewindData } from '../Resolve/useDataResolve'
 import { Chart } from './Chart'
 
 const Digit = styled.span`
-  font-size: 0.5em;
+  font-size: 0.7em;
   font-variation-settings: 'wght' 900;
   margin: 0;
-  line-height: 0.5em;
-  width: calc(115px / 2);
+  line-height: 0.7em;
+  width: 60px;
   display: flex;
   justify-content: center;
 
   @media only screen and (max-width: 700px) {
-    width: calc(78px / 2);
+    width: 40px;
   }
 
   @media only screen and (max-width: 460px) {
-    width: calc(58px / 2);
+    width: 30px;
   }
 `
 

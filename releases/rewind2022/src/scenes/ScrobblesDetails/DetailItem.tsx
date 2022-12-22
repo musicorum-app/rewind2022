@@ -27,7 +27,7 @@ const IconContainer = styled.div`
     stroke: ${Palettes.DisplacedOcean.color};
   }
 
-  @media only screen and (max-width: 1030px) and (max-height: 680px) {
+  @media only screen and (max-width: 1030px) and (max-height: 730px) {
     width: 32px;
     height: 32px;
   }
@@ -80,7 +80,7 @@ const Box = styled.div`
     }
   }
 
-  @media only screen and (max-width: 1030px) and (max-height: 680px) {
+  @media only screen and (max-width: 1030px) and (max-height: 730px) {
     & {
       padding: 18px 2px 2px;
     }

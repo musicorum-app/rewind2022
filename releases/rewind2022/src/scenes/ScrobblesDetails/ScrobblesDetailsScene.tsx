@@ -16,6 +16,7 @@ import DetailItem from './DetailItem'
 const LastYearLabel = styled.div`
   display: flex;
   align-items: center;
+  font-size: 16px;
 
   & b {
     font-variation-settings: 'wght' 700;
@@ -40,13 +41,21 @@ const LastYearIcon = styled.div<{ color: string }>`
 `
 
 const Digit = styled.span`
-  font-size: calc(12rem / 2);
+  font-size: 0.7em;
   font-variation-settings: 'wght' 900;
   margin: 0;
-  line-height: calc(12rem / 2);
-  width: calc(112px / 2);
+  line-height: 0.7em;
+  width: 60px;
   display: flex;
   justify-content: center;
+
+  @media only screen and (max-width: 700px) {
+    width: 40px;
+  }
+
+  @media only screen and (max-width: 460px) {
+    width: 30px;
+  }
 `
 
 const CountContainer = styled.div`
@@ -59,15 +68,28 @@ const CountContainer = styled.div`
   @media only screen and (max-width: 1030px) {
     top: 60px;
   }
+  @media only screen and (max-height: 730px) {
+    top: 60px;
+  }
+
+  font-size: 182px;
+
+  @media only screen and (max-width: 700px) {
+    font-size: 120px;
+  }
+
+  @media only screen and (max-width: 460px) {
+    font-size: 90px;
+  }
 `
 
 const CountCopy = styled(Digit)`
   display: flex;
-  width: unset;
+  width: auto !important;
 `
 
 const ComplementaryText = styled.h2`
-  font-size: 1.6em;
+  font-size: 20px;
   margin: 0;
   margin-bottom: 1rem;
   text-align: center;
@@ -89,7 +111,11 @@ const Details = styled.div`
     flex-direction: column;
     margin-top: 40px;
     gap: 18px;
-    top: calc(100px + 60px);
+    top: calc(100px + 20px);
+  }
+
+  @media only screen and (max-width: 700px) {
+    top: calc(100px);
   }
 `
 
