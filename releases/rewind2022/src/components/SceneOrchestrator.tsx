@@ -26,10 +26,10 @@ export default function SceneOrchestrator() {
       <FirstStepScene />
       <ScrobblesScene />
       <ScrobblesChartScene />
-      {/* <ScrobblesDetailsScene /> */}
-      {/* <TopArtistsScene /> */}
-      {/* <TopTracksScene /> */}
-      {/* <TopAlbumsScene /> */}
+      <ScrobblesDetailsScene />
+      <TopArtistsScene />
+      <TopTracksScene />
+      <TopAlbumsScene />
       {/* <CollageScene /> */}
       {/* <TagCloudScene /> */}
       {/* <PopularityScene /> */}

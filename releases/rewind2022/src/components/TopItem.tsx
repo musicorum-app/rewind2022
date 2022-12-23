@@ -35,6 +35,7 @@ const Texts = styled.div`
 `
 
 const Container = styled.div`
+  opacity: 0;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -139,7 +140,7 @@ export default function TopItem(props: TopItemProps) {
   }
 
   return (
-    <Container>
+    <Container className="top-item">
       <ImageWithBorder src={props.image ?? ''} color={props.color} />
       <Texts>
         <h2>{props.title}</h2>

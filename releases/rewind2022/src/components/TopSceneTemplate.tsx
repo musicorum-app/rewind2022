@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { usePlayer } from '../hooks/usePlayer'
 import { interpolateBackgroundGradient } from '../modules/backgroundGradient'
 import { Image } from '../modules/rewindDataExtras'
-import { Palettes, PaletteType } from '../theme/colors'
+import { Gradient, Palettes, PaletteType } from '../theme/colors'
 import TopItem from './TopItem'
 
 const Container = styled.div`
@@ -25,6 +25,7 @@ const Container = styled.div`
 `
 
 const ComplementaryText = styled.h2`
+  opacity: 0;
   text-shadow: 0px 3px 20px #000000cc;
   font-size: 1.6em;
   margin: 0;
@@ -46,6 +47,7 @@ interface TopSceneTemplateProps {
   ableToPlay?: boolean
   topText: string
   bottomText: string
+  id?: string
 }
 
 export default function TopSceneTemplate(props: TopSceneTemplateProps) {
@@ -62,15 +64,9 @@ export default function TopSceneTemplate(props: TopSceneTemplateProps) {
   const color =
     Palettes[props.items[0].image.palette ?? PaletteType.Black].color
 
-  interpolateBackgroundGradient(
-    Palettes[props.items[0].image.palette ?? PaletteType.Black].gradient,
-    Palettes[props.items[0].image.palette ?? PaletteType.Black].gradient,
-    1
-  )
-
   return (
-    <Centered column>
-      <ComplementaryText>{props.topText}</ComplementaryText>
+    <Centered column id={props.id}>
+      <ComplementaryText className="text">{props.topText}</ComplementaryText>
       <Container>
         {props.items.slice(0, count).map((track, index) => (
           <TopItem
@@ -85,7 +81,7 @@ export default function TopSceneTemplate(props: TopSceneTemplateProps) {
           />
         ))}
       </Container>
-      <ComplementaryText>{props.bottomText}</ComplementaryText>
+      <ComplementaryText className="text">{props.bottomText}</ComplementaryText>
     </Centered>
   )
 }

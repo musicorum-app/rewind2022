@@ -85,6 +85,10 @@ const MonthName = styled.div`
 
 const SVGLayer = styled.svg`
   position: absolute;
+
+  & polyline {
+    stroke-dasharray: 1;
+  }
 `
 
 export interface ChartProps {
@@ -162,6 +166,7 @@ export function Chart({ rewindData }: ChartProps) {
             stroke={Palettes.DisplacedOcean.color}
             strokeLinecap="round"
             strokeLinejoin="round"
+            pathLength={1}
           />
           {points.map((p, index) => (
             <circle

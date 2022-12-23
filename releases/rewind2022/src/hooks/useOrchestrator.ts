@@ -43,14 +43,14 @@ export const useOrchestrator = create<OrchestratorStore>((set, get) => ({
     }
 
     console.debug('Start transition')
-    set({
-      scene: nextScene,
-      isTransitioning: true
-    })
 
     const timelines = scenesStore.getState().timelines.get(nextScene)
 
     if (timelines?.forward) {
+      set({
+        scene: nextScene,
+        isTransitioning: true
+      })
       const tl = timelines.forward.factory()
       useTimelineController.getState().setTimeline(tl)
       tl.play(0).then(() => {
@@ -76,16 +76,13 @@ export const useOrchestrator = create<OrchestratorStore>((set, get) => ({
       return
     }
 
-    set({
-      scene: prevScene,
-      isTransitioning: true
-    })
-
     const timelines = scenesStore.getState().timelines.get(currentScene)
 
-    console.log(timelines)
-
     if (timelines?.backward) {
+      set({
+        scene: prevScene,
+        isTransitioning: true
+      })
       const tl = timelines.backward.factory()
       useTimelineController.getState().setTimeline(tl)
       tl.play(0).then(() => {

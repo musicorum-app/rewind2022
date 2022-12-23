@@ -5,7 +5,10 @@ import { RewindScene } from '../../types'
 import { useRewindData } from '../Resolve/useDataResolve'
 import { scenesStore } from '../scenes'
 import { Chart } from './Chart'
-import { createScrobblesChartTimeline } from './scrobblesChartTimeline'
+import {
+  createScrobblesChartTimelineBackward,
+  createScrobblesChartTimelineForward
+} from './scrobblesChartTimeline'
 
 const Digit = styled.span`
   font-size: 0.7em;
@@ -70,7 +73,11 @@ export default function ScrobblesChartScene() {
     setTimelines(RewindScene.ScrobblesChartScene, {
       forward: {
         id: 'scc-forward',
-        factory: () => createScrobblesChartTimeline()
+        factory: createScrobblesChartTimelineForward
+      },
+      backward: {
+        id: 'scc-backward',
+        factory: createScrobblesChartTimelineBackward
       }
     })
   }, [])

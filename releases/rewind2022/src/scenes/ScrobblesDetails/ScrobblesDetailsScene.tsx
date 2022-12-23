@@ -12,6 +12,14 @@ import {
 } from 'react-icons/fi'
 import { IconType } from 'react-icons'
 import DetailItem from './DetailItem'
+import { useEffect } from 'react'
+import { scenesStore } from '../scenes'
+import { RewindScene } from '../../types'
+import {
+  createScrobblesDetailsTimelineBackward,
+  createScrobblesDetailsTimelineForward
+} from './scrobbleDetailsTimeline'
+import { createScrobblesChartTimelineBackward } from '../ScrobblesChart/scrobblesChartTimeline'
 
 const LastYearLabel = styled.div`
   display: flex;
@@ -59,6 +67,7 @@ const Digit = styled.span`
 `
 
 const CountContainer = styled.div`
+  opacity: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -107,6 +116,10 @@ const Details = styled.div`
   position: absolute;
   top: calc(100px + 100px);
 
+  & > div {
+    opacity: 0;
+  }
+
   @media only screen and (max-width: 1030px) {
     flex-direction: column;
     margin-top: 40px;
@@ -133,8 +146,22 @@ const colors: Record<DifferenceType, string> = {
 
 export default function ScrobblesDetailsScene() {
   const rewindData = useRewindData()
+  const setTimelines = scenesStore((s) => s.setTimelines)
 
   const { t } = useTranslation()
+
+  useEffect(() => {
+    setTimelines(RewindScene.ScrobblesDetailsScene, {
+      forward: {
+        id: 'scd-forward',
+        factory: createScrobblesDetailsTimelineForward
+      },
+      backward: {
+        id: 'scd-backward',
+        factory: createScrobblesDetailsTimelineBackward
+      }
+    })
+  }, [])
 
   if (!rewindData) {
     return null
@@ -152,8 +179,8 @@ export default function ScrobblesDetailsScene() {
   const streak = rewindData.scrobbles.biggestStreak
 
   return (
-    <Centered column>
-      <CountContainer>
+    <Centered column id="scd">
+      <CountContainer className="info">
         <CountCopy>
           {rewindData.scrobbles.total
             .toString()
@@ -164,7 +191,7 @@ export default function ScrobblesDetailsScene() {
         </CountCopy>
         <ComplementaryText>scrobbles this year</ComplementaryText>
 
-        <LastYearLabel>
+        <LastYearLabel className="label">
           <LastYearIcon color={color}>
             <Icon />
           </LastYearIcon>
@@ -179,7 +206,7 @@ export default function ScrobblesDetailsScene() {
         </LastYearLabel>
       </CountContainer>
 
-      <Details>
+      <Details className="details">
         <DetailItem
           label={t('scrobbles_details.details.average.label')}
           title={t('scrobbles_details.details.average.title', {
