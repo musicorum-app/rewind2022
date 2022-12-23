@@ -16,6 +16,7 @@ const Container = styled.div`
   padding-left: 40px;
   padding-right: 40px;
   box-sizing: border-box;
+  opacity: 0;
 
   @media only screen and (max-height: 700px) {
     position: absolute;
@@ -134,7 +135,7 @@ export function Chart({ rewindData }: ChartProps) {
   }, [windowSize, svgRef, lineRef, maxValue])
 
   return (
-    <Container>
+    <Container className="chart">
       <div className="max-value">
         {maxValue} <div />
       </div>
@@ -143,7 +144,7 @@ export function Chart({ rewindData }: ChartProps) {
           {monthNames.map((m, index) => (
             <Line key={index}>
               <div className="line" />
-              <MonthName>{m}</MonthName>
+              <MonthName className="month-name">{m}</MonthName>
             </Line>
           ))}
         </MonthsList>

@@ -1,7 +1,11 @@
 import styled from '@emotion/styled'
 import Centered from '@rewind/core/src/components/Centered'
+import { useEffect } from 'react'
+import { RewindScene } from '../../types'
 import { useRewindData } from '../Resolve/useDataResolve'
+import { scenesStore } from '../scenes'
 import { Chart } from './Chart'
+import { createScrobblesChartTimeline } from './scrobblesChartTimeline'
 
 const Digit = styled.span`
   font-size: 0.7em;
@@ -39,6 +43,7 @@ const CountContainer = styled.div`
   @media only screen and (max-width: 460px) {
     font-size: 90px;
   }
+  opacity: 0;
 `
 
 const CountCopy = styled(Digit)`
@@ -55,14 +60,24 @@ const ComplementaryText = styled.h2`
 
 export default function ScrobblesChartScene() {
   const rewindData = useRewindData()
+  const setTimelines = scenesStore((s) => s.setTimelines)
 
   if (!rewindData) {
     return null
   }
 
+  useEffect(() => {
+    setTimelines(RewindScene.ScrobblesChartScene, {
+      forward: {
+        id: 'scc-forward',
+        factory: () => createScrobblesChartTimeline()
+      }
+    })
+  }, [])
+
   return (
-    <Centered column>
-      <CountContainer>
+    <Centered column id="scc">
+      <CountContainer className="info">
         <CountCopy>
           {rewindData.scrobbles.total
             .toString()
