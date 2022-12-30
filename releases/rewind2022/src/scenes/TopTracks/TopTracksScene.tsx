@@ -55,6 +55,7 @@ export default function TopTracksScene() {
   return (
     <TopSceneTemplate
       id="ttr"
+      scene={RewindScene.TopTracksScene}
       ableToPlay
       items={items}
       topText={t('top_tracks.top')}

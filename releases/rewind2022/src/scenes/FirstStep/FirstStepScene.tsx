@@ -38,7 +38,7 @@ const TrackImageRefWrapper = styled.div`
     margin-left: auto;
   }
 
-  @media only screen and (max-width: 700px) {
+  @media only screen and (max-width: 1000px) {
     position: fixed;
     max-width: 300px;
     bottom: unset;
@@ -154,7 +154,7 @@ export default function FirstStepScene() {
 
   const color = useMemo(() => {
     const targetPalette = rewindData?.firstScrobbles.items[0].image.palette
-    return targetPalette ? Palettes[targetPalette].color : Palettes.Burn.color
+    return targetPalette ? Palettes[targetPalette].color : Palettes.Chuu.color
   }, [rewindData])
 
   useEffect(() => {

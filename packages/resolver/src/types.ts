@@ -5,7 +5,7 @@ export interface Track {
   name: string
   artist: string
   album: string
-  date: number
+  date?: number
   image: string | null
 }
 

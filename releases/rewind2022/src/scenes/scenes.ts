@@ -16,7 +16,11 @@ export interface SceneTimelines {
 interface ScenesStore {
   timelines: Map<RewindScene, SceneTimelines>
 
-  setTimelines: (scene: RewindScene, timelines: SceneTimelines) => void
+  setTimelines: (
+    scene: RewindScene,
+    timelines: SceneTimelines,
+    autoReplace?: boolean
+  ) => void
 }
 
 const getTimelineId = (tl?: gsap.core.Timeline | null) =>
@@ -25,7 +29,7 @@ const getTimelineId = (tl?: gsap.core.Timeline | null) =>
 export const scenesStore = create<ScenesStore>((set) => ({
   timelines: Map(),
 
-  setTimelines: (scene, timelines) =>
+  setTimelines: (scene, timelines, autoReplace = true) =>
     set((p) => {
       if (import.meta.env.DEV) {
         const timelineController = useTimelineController.getState()
@@ -33,6 +37,7 @@ export const scenesStore = create<ScenesStore>((set) => ({
         console.log(getTimelineId(timelineController.currentTimeline))
 
         if (
+          autoReplace &&
           timelines.forward &&
           getTimelineId(timelineController.currentTimeline) ===
             timelines.forward.id
@@ -41,6 +46,7 @@ export const scenesStore = create<ScenesStore>((set) => ({
           timelineController.setTimeline(tl)
           tl.play()
         } else if (
+          autoReplace &&
           timelines.backward &&
           getTimelineId(timelineController.currentTimeline) ===
             timelines.backward.id

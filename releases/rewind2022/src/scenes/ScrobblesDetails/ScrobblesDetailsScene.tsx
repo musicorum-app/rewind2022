@@ -20,6 +20,7 @@ import {
   createScrobblesDetailsTimelineForward
 } from './scrobbleDetailsTimeline'
 import { createScrobblesChartTimelineBackward } from '../ScrobblesChart/scrobblesChartTimeline'
+import { useSceneAudio } from '../../hooks/useSceneAudio'
 
 const LastYearLabel = styled.div`
   display: flex;
@@ -28,6 +29,7 @@ const LastYearLabel = styled.div`
 
   & b {
     font-variation-settings: 'wght' 700;
+    margin-right: 3px;
   }
 `
 
@@ -149,6 +151,12 @@ export default function ScrobblesDetailsScene() {
   const setTimelines = scenesStore((s) => s.setTimelines)
 
   const { t } = useTranslation()
+
+  useSceneAudio(
+    RewindScene.ScrobblesDetailsScene,
+    rewindData?.tracks.resources[8].preview,
+    rewindData?.tracks.resources[8].name
+  )
 
   useEffect(() => {
     setTimelines(RewindScene.ScrobblesDetailsScene, {

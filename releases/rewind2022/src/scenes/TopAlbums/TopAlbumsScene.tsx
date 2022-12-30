@@ -1,10 +1,11 @@
 import { useMediaQuery } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import Centered from '@rewind/core/src/components/Centered'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import TopItem from '../../components/TopItem'
 import TopSceneTemplate from '../../components/TopSceneTemplate'
+import { useSceneAudio } from '../../hooks/useSceneAudio'
 import { Palettes, PaletteType } from '../../theme/colors'
 import { RewindScene } from '../../types'
 import { useRewindData } from '../Resolve/useDataResolve'
@@ -19,6 +20,24 @@ export default function TopAlbumsScene() {
   const setTimelines = scenesStore((s) => s.setTimelines)
 
   const { t } = useTranslation()
+
+  const selectedResource = useMemo(() => {
+    if (!rewindData) return
+
+    const topAlbum = rewindData.albums.items[0].name
+
+    return (
+      rewindData.tracks.resources.find(
+        (r) => r.album?.toLowerCase() === topAlbum.toLowerCase()
+      ) || rewindData?.tracks.resources[9]
+    )
+  }, [rewindData])
+
+  useSceneAudio(
+    RewindScene.TopAlbumsScene,
+    selectedResource?.preview,
+    selectedResource?.name
+  )
 
   useEffect(() => {
     if (!rewindData) return
@@ -49,6 +68,7 @@ export default function TopAlbumsScene() {
   return (
     <TopSceneTemplate
       id="tal"
+      scene={RewindScene.TopAlbumsScene}
       items={rewindData.albums.items}
       topText={t('top_albums.top')}
       bottomText={t('top_albums.bottom', {

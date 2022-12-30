@@ -15,9 +15,17 @@ import ImageWithBorder from '../../components/ImageWithBorder'
 import SwitcheableImage from '../../components/SwitcheableImage'
 import TopItem from '../../components/TopItem'
 import TopSceneTemplate from '../../components/TopSceneTemplate'
+import { useOrchestrator } from '../../hooks/useOrchestrator'
+import { useSceneAudio } from '../../hooks/useSceneAudio'
 import { interpolateBackgroundGradient } from '../../modules/backgroundGradient'
 import { Palette, Palettes, PaletteType } from '../../theme/colors'
+import { RewindScene } from '../../types'
 import { useRewindData } from '../Resolve/useDataResolve'
+import { scenesStore } from '../scenes'
+import {
+  createCollageSceneTimelineBackward,
+  createCollageSceneTimelineForward
+} from './collageSceneTimeline'
 
 const Container = styled.div`
   display: grid;
@@ -28,10 +36,20 @@ const Container = styled.div`
   padding: 32px 32px;
   height: calc(var(--h) - 120px);
   max-height: calc(var(--h) - 120px);
+  & #collage-image {
+    position: absolute;
+    opacity: 0;
+    left: 0;
+    top: 0;
+    width: 1px;
+    height: 1px;
+    border-radius: 12px;
+  }
 
   & h2 {
     text-align: center;
     font-size: 2rem;
+    opacity: 0;
   }
 
   @media only screen and (max-width: 1000px) {
@@ -68,13 +86,8 @@ const ImageContainer = styled.div`
     ); */
   }
 
-  & #collage-image {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 1px;
-    height: 1px;
-    border-radius: 12px;
+  & button {
+    opacity: 0;
   }
 
   @media only screen and (max-width: 1000px) {
@@ -90,8 +103,17 @@ export default function CollageScene() {
   const windowSize = useWindowSize()
   const imageRef = useRef<HTMLImageElement>(null)
   const imageContainerRef = useRef<HTMLDivElement>(null)
+  const setTimelines = scenesStore((s) => s.setTimelines)
+  const scene = useOrchestrator((s) => s.scene)
+  const [text, setText] = useState('Loading...')
 
   const { t } = useTranslation()
+
+  useSceneAudio(
+    RewindScene.CollageScene,
+    rewindData?.tracks.resources[12].preview,
+    rewindData?.tracks.resources[12].name
+  )
 
   if (!rewindData) {
     return null
@@ -100,17 +122,22 @@ export default function CollageScene() {
   const load = async () => {
     try {
       const tiles = rewindData.albums.items.map((album) => ({
-        name: album.name,
+        name: album.name + ' fix',
         image: album.image.url
       }))
       const result = await generateRewindGrid(tiles)
       if (result.url) {
         setImageUrl(result.url)
+      } else {
+        throw new Error()
       }
     } catch (err) {
+      setText('Could not create your collage :(')
       console.error(err)
     }
   }
+
+  console.log(text)
 
   useEffect(() => {
     if (rewindData && !imageUrl) {
@@ -121,7 +148,7 @@ export default function CollageScene() {
   const download = async () => {
     if (!imageUrl) return
     const blob = await fetch(imageUrl).then((r) => r.blob())
-    downloadFile(blob, 'Musicorum Rewind Artist.jpg')
+    downloadFile(blob, 'Musicorum Rewind collage.jpg')
   }
 
   useEffect(() => {
@@ -136,7 +163,7 @@ export default function CollageScene() {
         y = refBounding.top
       } else {
         size = refBounding.width
-        x = refBounding.left
+        x = refBounding.left + (refBounding.width - size) / 2
         y = refBounding.top + (refBounding.height - size) / 2
       }
 
@@ -147,34 +174,45 @@ export default function CollageScene() {
     }
   }, [windowSize, imageRef.current, imageContainerRef.current])
 
+  useEffect(() => {
+    setTimelines(RewindScene.CollageScene, {
+      forward: {
+        id: 'clg-forward',
+        factory: createCollageSceneTimelineForward
+      },
+      backward: {
+        id: 'clg-backward',
+        factory: createCollageSceneTimelineBackward
+      }
+    })
+  }, [])
+
   return (
-    <Centered>
+    <Centered id="clg" pointerEvents={scene === RewindScene.CollageScene}>
       <Container>
-        <h2>
-          You spent so much time with this artist that you should spread your
-          love for them
-        </h2>
+        <h2>{t('collage.text')}</h2>
         <ImageContainer>
           {imageUrl ? (
             <Fragment>
               <div id="collage-image-ref" ref={imageContainerRef}></div>
+
               <Button
                 onClick={download}
                 background={Palettes.MidnightSky.color}
               >
                 DOWNLOAD
               </Button>
-              <ImageWithBorder
-                id="collage-image"
-                color={Palettes.MidnightSky.color}
-                ref={imageRef}
-                src={imageUrl}
-              />
             </Fragment>
           ) : (
-            'Loading...'
+            <span>{scene === RewindScene.CollageScene ? text : ''}</span>
           )}
         </ImageContainer>
+        <ImageWithBorder
+          id="collage-image"
+          color={Palettes.MidnightSky.color}
+          ref={imageRef}
+          src={imageUrl!}
+        />
       </Container>
     </Centered>
   )

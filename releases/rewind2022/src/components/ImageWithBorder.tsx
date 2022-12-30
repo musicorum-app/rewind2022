@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import { forwardRef } from 'react'
+import { ImageType, imageTypeDefaultImages } from '../modules/lastfmImage'
 
 const Container = styled.div<{ color: string }>`
   position: relative;
-  pointer-events: all;
   display: flex;
 
   & > img {
@@ -35,10 +35,10 @@ const Container = styled.div<{ color: string }>`
 
   &:hover {
     & > img {
-      transform: translate(-2px, -2px) scale(0.98);
+      transform: translate(-2%, -2%) scale(0.98);
     }
     & > div {
-      transform: translate(2px, 2px) scale(0.98);
+      transform: translate(2%, 2%) scale(0.98);
     }
   }
 `
@@ -54,7 +54,7 @@ const ImageWithBorder = forwardRef<HTMLDivElement, ImageWithBorderProps>(
     return (
       <Container ref={ref} id={props.id} color={props.color} className="image">
         <div />
-        <img src={props.src} />
+        <img src={props.src || imageTypeDefaultImages[ImageType.TRACK]} />
       </Container>
     )
   }

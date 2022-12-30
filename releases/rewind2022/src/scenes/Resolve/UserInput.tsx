@@ -15,6 +15,7 @@ import { ReactComponent as WarnIcon } from '../../assets/icons/warn.svg'
 import { DataResolveStep, useDataResolve } from './useDataResolve'
 import { animate } from 'motion'
 import { Palettes } from '../../theme/colors'
+import { useTranslation } from 'react-i18next'
 
 const UserTextInput = styled(TextInput)`
   width: 100%;
@@ -54,6 +55,8 @@ export default function UserInput() {
     s.step
   ])
 
+  const { t } = useTranslation()
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const inputs = event.target as unknown as HTMLInputElement[]
@@ -89,13 +92,13 @@ export default function UserInput() {
         if (err.error === LastfmErrorCode.INVALID_PARAMETER) {
           setError({
             show: true,
-            text: 'User not found'
+            text: t('errors.user_not_found')
           })
         } else {
           console.error(err)
           setError({
             show: true,
-            text: 'Something wrong happened: ' + err.error
+            text: t('errors.generic')
           })
         }
       }
@@ -121,7 +124,7 @@ export default function UserInput() {
   }, [])
 
   return (
-    <Centered>
+    <Centered pointerEvents>
       <form onSubmit={handleSubmit} ref={formRef}>
         <div
           style={{
@@ -145,9 +148,9 @@ export default function UserInput() {
             maxWidth: '260px'
           }}
         >
-          <UserTextInput name="user" placeholder="Last.fm username" />
+          <UserTextInput name="user" placeholder={t('begin.lastfm_user')} />
           <Button disabled={loading} type="submit">
-            Continue
+            {t('common.continue')}
           </Button>
         </Flex>
       </form>

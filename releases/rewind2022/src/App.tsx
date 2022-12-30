@@ -3,23 +3,42 @@ import ResolveScene from './scenes/Resolve/ResolveScene'
 import { LoadState, useOrchestrator } from './hooks/useOrchestrator'
 import './locales/i18n'
 import Overlay from './components/Overlay'
-import { lazy } from 'react'
+import { lazy, useEffect, useState } from 'react'
 import SceneOrchestrator from './components/SceneOrchestrator'
 
 import './satoshi.css'
 import './App.css'
 import GlobalHeight from '@rewind/core/src/components/GlobalHeight'
+import Dialog from './components/Dialog'
 
-const isDev = import.meta.env.DEV || true
+const isDev = import.meta.env.DEV
 const MainControls = lazy(() => import('./components/MainController'))
 
 export default function App() {
+  const [firefoxDialog, setFirefoxDialog] = useState(false)
+
+  useEffect(() => {
+    if (window.navigator.userAgent.match(/firefox|fxios/i)) {
+      setFirefoxDialog(true)
+    }
+  }, [])
+
   return (
     <>
       <GlobalHeight />
       <StateDisplay />
       <Overlay />
       {isDev && <MainControls />}
+      <Dialog open={firefoxDialog} onClose={() => setFirefoxDialog(false)}>
+        <p
+          style={{
+            margin: 18
+          }}
+        >
+          There are some weird known issues with firefox not working for this
+          website, please try another browser for now
+        </p>
+      </Dialog>
     </>
   )
 }

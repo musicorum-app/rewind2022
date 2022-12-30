@@ -17,11 +17,15 @@ function parseStatus(status: StatusUpdatePayload) {
   if (status.step === ResolveStep.FETCHING_PAGES) {
     title = 'loading.fetching_pages'
     subTitle = `${status.value}/${status.maxValue}`
-    value =
-      status.value && status.maxValue
-        ? (status.value / status.maxValue) * 100
-        : 0
+  } else if (status.step === ResolveStep.FETCHING_RESOURCES) {
+    title = 'loading.fetching_resources'
+    subTitle = `loading.wait`
+  } else if (status.step === ResolveStep.FINALIZING) {
+    title = 'loading.drawing'
+    subTitle = `loading.wait`
   }
+  value =
+    status.value && status.maxValue ? (status.value / status.maxValue) * 100 : 0
 
   console.log({ value, title, subTitle })
   return { value, title, subTitle }
@@ -45,7 +49,7 @@ export default function UserLoading() {
   }
 
   return (
-    <Centered>
+    <Centered pointerEvents>
       <div
         style={{
           maxWidth: 350,
@@ -94,10 +98,18 @@ export default function UserLoading() {
               marginBottom: 6
             }}
           >
-            {subTitle}
+            {subTitle?.includes('loading.') ? t(subTitle) : subTitle}
           </p>
 
           <ProgressBar value={value} />
+          <p
+            style={{
+              fontSize: 14,
+              opacity: 0.9
+            }}
+          >
+            {t('loading.note')}
+          </p>
         </Collapse>
       </div>
     </Centered>

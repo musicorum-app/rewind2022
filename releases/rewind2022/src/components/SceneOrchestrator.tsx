@@ -16,12 +16,28 @@ import TopArtistsScene from '../scenes/TopArtists/TopArtistsScene'
 import TopTracksScene from '../scenes/TopTracks/TopTracksScene'
 import YearSplashScene from '../scenes/YearSplash/YearSplashScene'
 import FinishScene from '../scenes/Finish/FinishScene'
+import { useSwipeable } from 'react-swipeable'
 
 export default function SceneOrchestrator() {
-  const setIsTransitioning = useOrchestrator((s) => s.setIsTransitioning)
+  const [prev, next, setIsTransitioning] = useOrchestrator((s) => [
+    s.prev,
+    s.next,
+    s.setIsTransitioning
+  ])
+
+  const handlers = useSwipeable({
+    onSwipedUp: next,
+    onSwipedDown: prev
+  })
+
+  const handleScrollEvent = (event: React.WheelEvent<HTMLDivElement>) => {
+    // return 0
+    if (event.deltaY > 0) next()
+    else prev()
+  }
 
   return (
-    <Stack>
+    <Stack {...handlers} onWheel={handleScrollEvent}>
       <YearSplashScene />
       <FirstStepScene />
       <ScrobblesScene />
@@ -30,13 +46,13 @@ export default function SceneOrchestrator() {
       <TopArtistsScene />
       <TopTracksScene />
       <TopAlbumsScene />
-      {/* <CollageScene /> */}
-      {/* <TagCloudScene /> */}
-      {/* <PopularityScene /> */}
-      {/* <EndSplashScene /> */}
-      {/* <PlaylistScene /> */}
-      {/* <ShareScene /> */}
-      {/* <FinishScene /> */}
+      <CollageScene />
+      <TagCloudScene />
+      <PopularityScene />
+      <EndSplashScene />
+      <PlaylistScene />
+      <ShareScene />
+      <FinishScene />
     </Stack>
   )
 }

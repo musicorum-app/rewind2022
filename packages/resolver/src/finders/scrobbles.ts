@@ -76,6 +76,10 @@ function calculateStreak(
     }
   }
 
+  if (streak.length > biggestStreak.length) {
+    biggestStreak = streak
+  }
+
   return {
     daysCount: biggestStreak.length,
     from: new Date(biggestStreak[0].date!).getTime(),

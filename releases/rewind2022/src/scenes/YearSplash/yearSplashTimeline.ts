@@ -13,6 +13,7 @@ export const yearSplashForwardTimeline = (targetGradient: Gradient) =>
     .timeline({
       paused: true
     })
+    .add('start', '2')
     .fromTo(
       'body',
       {
@@ -21,7 +22,8 @@ export const yearSplashForwardTimeline = (targetGradient: Gradient) =>
       {
         background: gradientToCss(targetGradient),
         duration: 1
-      }
+      },
+      'start'
     )
     .fromTo(
       '#ysp .main-year',
@@ -35,7 +37,7 @@ export const yearSplashForwardTimeline = (targetGradient: Gradient) =>
         ease: 'circ.out',
         duration: 0.7
       },
-      '0.1'
+      'start+=0.1'
     )
     .add('yearIntro')
     .fromTo(
@@ -49,7 +51,7 @@ export const yearSplashForwardTimeline = (targetGradient: Gradient) =>
         duration: 0.4,
         ease: 'power1.inOut'
       },
-      '0'
+      'start'
     )
     .add('backImages', 'yearIntro')
     .fromTo(

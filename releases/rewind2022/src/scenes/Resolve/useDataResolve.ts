@@ -21,6 +21,7 @@ export enum DataResolveStep {
   USER_INPUT,
   USER_CONFIRM,
   LOADING,
+  CACHE_CONFIRM,
   DONE
 }
 
@@ -79,6 +80,7 @@ export const useDataResolve = create<DataResolveStore>((set, get) => ({
       const cached = localStorage.getItem('Rewind22Cache')
 
       let data: RewindData | null = null
+      let fromCached = false
 
       try {
         if (cached) {
@@ -86,9 +88,11 @@ export const useDataResolve = create<DataResolveStore>((set, get) => ({
           if (
             parsed &&
             parsed.version &&
-            parsed.version === import.meta.env.VITE_CACHE_VERSION
+            parsed.version === import.meta.env.VITE_CACHE_VERSION &&
+            parsed.data.user === user.name
           ) {
             data = parsed.data
+            fromCached = true
           }
         }
       } catch (err) {
@@ -117,7 +121,11 @@ export const useDataResolve = create<DataResolveStore>((set, get) => ({
         console.log('rewind data done')
       }
 
-      set({ rewindData, step: DataResolveStep.DONE })
+      const nextStep = fromCached
+        ? DataResolveStep.CACHE_CONFIRM
+        : DataResolveStep.DONE
+
+      set({ rewindData, step: nextStep })
     } catch (err) {
       if (err instanceof LastfmError) {
         console.log('lfm error', err.error)

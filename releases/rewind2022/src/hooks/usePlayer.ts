@@ -1,9 +1,14 @@
 import gsap from 'gsap'
 import { Map } from 'immutable'
 import create from 'zustand'
+import { Howl } from 'howler'
+
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
 
 interface AudioEntry {
-  audio: HTMLAudioElement
+  audio: Howl
   name: string
 }
 
@@ -11,6 +16,8 @@ export interface PlayerStore {
   active: boolean
   isPlaying: boolean
   setActive: (value: boolean) => void
+
+  transitioning: boolean
 
   audios: Map<string, AudioEntry>
   nowPlaying: string | null
@@ -22,43 +29,35 @@ export interface PlayerStore {
 export const usePlayer = create<PlayerStore>((set, get) => ({
   active: true,
   isPlaying: false,
+  transitioning: false,
 
-  setActive: (value) => {
-    const { audios, nowPlaying } = get()
+  setActive: async (value) => {
+    const { audios, nowPlaying, transitioning } = get()
+    if (transitioning) return
     set({ active: value })
     if (value && nowPlaying) {
       const currentPlayingAudio = audios.get(nowPlaying)
       if (currentPlayingAudio) {
         const audio = currentPlayingAudio?.audio
-        if (audio.currentTime > audio.duration - 2) {
-          audio.currentTime = 0
-        }
 
-        audio.volume = 0
+        audio.seek(0)
+        audio.fade(0, 1, 500)
         audio.play()
-        gsap.to(audio, {
-          volume: 1,
-          duration: 0.7
-        })
-
-        gsap.to(audio, {
-          volume: 0,
-          duration: 0.7,
-          delay: audio.duration - audio.currentTime - 1
-        })
+        console.log(audio)
+        set({ transitioning: true })
+        await delay(500)
+        set({ transitioning: false })
       }
     } else if (nowPlaying) {
       const currentPlayingAudio = audios.get(nowPlaying)
       if (currentPlayingAudio) {
         const audio = currentPlayingAudio?.audio
 
-        gsap.to(audio, {
-          volume: 0,
-          duration: 0.7,
-          onComplete: () => {
-            audio.pause()
-          }
-        })
+        set({ transitioning: true })
+        audio.fade(1, 0, 500)
+        await delay(500)
+        audio.pause()
+        set({ transitioning: false })
       }
     }
   },
@@ -73,7 +72,11 @@ export const usePlayer = create<PlayerStore>((set, get) => ({
       } else {
         return {
           audios: s.audios.set(key, {
-            audio: new Audio(url),
+            audio: new Howl({
+              src: url,
+              html5: true,
+              preload: true
+            }),
             name
           })
         }
@@ -81,7 +84,8 @@ export const usePlayer = create<PlayerStore>((set, get) => ({
     })
   },
   playAudio: async (key) => {
-    const { audios, active, nowPlaying } = get()
+    const { audios, active, nowPlaying, transitioning } = get()
+    if (transitioning) return
     console.log([...audios.entries()])
     const audio = audios.get(key)
 
@@ -94,31 +98,21 @@ export const usePlayer = create<PlayerStore>((set, get) => ({
         const nowPlayingAudio = audios.get(nowPlaying)
         console.log(nowPlayingAudio)
         if (nowPlayingAudio) {
-          await gsap
-            .to(nowPlayingAudio.audio, {
-              volume: 0,
-              duration: 0.7
-            })
-            .then()
-          audio.audio.pause()
+          set({ transitioning: true })
+          nowPlayingAudio.audio.fade(1, 0, 500)
+          await delay(500)
+          nowPlayingAudio.audio.stop()
+          set({ transitioning: false })
         }
       }
-      audio.audio.currentTime = 0
-      audio.audio.volume = 0
+      // audio.audio.currentTime = 0
+      // audio.audio.volume = 0
       if (active) {
+        set({ transitioning: true })
+        audio.audio.fade(0, 1, 500)
         audio.audio.play()
-        gsap.to(audio.audio, {
-          volume: 1,
-          duration: 0.7
-        })
-
-        console.log(audio.audio.duration - 1)
-
-        gsap.to(audio.audio, {
-          volume: 0,
-          duration: 0.7,
-          delay: (audio.audio.duration || 30) - 1
-        })
+        await delay(500)
+        set({ transitioning: false })
       }
     }
   }

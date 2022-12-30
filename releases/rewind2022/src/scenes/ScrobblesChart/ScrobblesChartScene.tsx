@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import Centered from '@rewind/core/src/components/Centered'
 import { useEffect } from 'react'
+import { useSceneAudio } from '../../hooks/useSceneAudio'
 import { RewindScene } from '../../types'
 import { useRewindData } from '../Resolve/useDataResolve'
 import { scenesStore } from '../scenes'
@@ -68,6 +69,12 @@ export default function ScrobblesChartScene() {
   if (!rewindData) {
     return null
   }
+
+  useSceneAudio(
+    RewindScene.ScrobblesChartScene,
+    rewindData?.tracks.resources[11].preview,
+    rewindData?.tracks.resources[11].name
+  )
 
   useEffect(() => {
     setTimelines(RewindScene.ScrobblesChartScene, {

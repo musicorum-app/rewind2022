@@ -1,19 +1,20 @@
+import Flex from '@react-css/flex'
 import Centered from '@rewind/core/src/components/Centered'
+import { animate } from 'motion'
+import { useTranslation } from 'react-i18next'
 import Button from '../../components/Button'
 import { DataResolveStep, useDataResolve } from './useDataResolve'
-import { animate } from 'motion'
-import { useEffect, useRef } from 'react'
-import Flex from '@react-css/flex'
-import { useTranslation } from 'react-i18next'
-import UserCard from './UserCard'
+import { useRef, useEffect } from 'react'
+import { LoadState, useOrchestrator } from '../../hooks/useOrchestrator'
 
-export default function UserConfirm() {
-  const [setStep, user, step, resolve] = useDataResolve((s) => [
+export default function CacheConfirm() {
+  const [setStep, user, step] = useDataResolve((s) => [
     s.setStep,
     s.user,
-    s.step,
-    s.resolve
+    s.step
   ])
+
+  const setLoadState = useOrchestrator((s) => s.setState)
 
   const { t } = useTranslation()
 
@@ -31,12 +32,13 @@ export default function UserConfirm() {
         duration: 0.4
       }
     ).finished.then(() => {
-      setStep(DataResolveStep.USER_INPUT)
+      localStorage.removeItem('Rewind22Cache')
+      setStep(DataResolveStep.USER_CONFIRM)
     })
   }
 
   useEffect(() => {
-    if (step === DataResolveStep.USER_CONFIRM && containerRef.current) {
+    if (step === DataResolveStep.CACHE_CONFIRM && containerRef.current) {
       animate(
         containerRef.current,
         {
@@ -54,7 +56,13 @@ export default function UserConfirm() {
   return (
     <Centered pointerEvents>
       <div ref={containerRef}>
-        {user && <UserCard user={user} />}
+        <p
+          style={{
+            maxWidth: 320
+          }}
+        >
+          {t('loading.previous_found')}
+        </p>
         <Flex>
           <Button background="rgba(255, 255, 255, 0.2)" onClick={goBack}>
             {t('common.back')}
@@ -63,7 +71,7 @@ export default function UserConfirm() {
             style={{
               marginLeft: 10
             }}
-            onClick={resolve}
+            onClick={() => setLoadState(LoadState.PLAY)}
           >
             {t('common.continue')}
           </Button>

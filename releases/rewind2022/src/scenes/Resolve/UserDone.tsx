@@ -28,6 +28,7 @@ export default function UserDone() {
 
   return (
     <Centered
+      pointerEvents
       style={{
         flexDirection: 'column'
       }}

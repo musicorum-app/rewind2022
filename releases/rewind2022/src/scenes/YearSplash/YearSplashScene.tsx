@@ -84,8 +84,10 @@ export default function YearSplashScene() {
 
   useEffect(() => {
     if (rewindData) {
-      const item = rewindData?.firstScrobbles.items[1]
-      const preview = item.resource?.preview
+      const item = rewindData.firstScrobbles.items
+        .slice(1)
+        .find((t) => t?.resource?.preview)
+      const preview = item?.resource?.preview
       if (preview) {
         setAudio(RewindScene.YearSplash, preview, item.name)
       }
@@ -123,7 +125,7 @@ export default function YearSplashScene() {
     const targetPalette = rewindData?.firstScrobbles.items[0].image.palette
     return targetPalette
       ? Palettes[targetPalette].gradient
-      : Palettes.Burn.gradient
+      : Palettes.Chuu.gradient
   }, [rewindData])
 
   useEffect(() => {

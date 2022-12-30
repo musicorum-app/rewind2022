@@ -16,6 +16,14 @@ import { ReactComponent as MusicorumLogo } from './assets/musicorum.svg'
 import { Modal, ModalContent, ModalOverlay } from '@chakra-ui/modal'
 import Dialog from '../../components/Dialog'
 import { patronsList } from './patrons'
+import { RewindScene } from '../../types'
+import { useOrchestrator } from '../../hooks/useOrchestrator'
+import { scenesStore } from '../scenes'
+import {
+  createFinishTimelineBackward,
+  createFinishTimelineForward
+} from './finishTimeline'
+import { useSceneAudio } from '../../hooks/useSceneAudio'
 
 const Container = styled.div`
   position: absolute;
@@ -32,23 +40,27 @@ const Container = styled.div`
   justify-content: space-between;
 
   & h1 {
+    opacity: 0;
     margin: 0;
     font-variation-settings: 'wght' 900;
     font-size: 4em;
   }
 
   & h2 {
+    opacity: 0;
     font-size: 2.3em;
     margin: 0;
     font-variation-settings: 'wght' 700;
   }
 
   & p {
+    opacity: 0;
     margin: 0.6em;
     font-size: 1.05em;
   }
 
   & h3 {
+    opacity: 0;
     font-size: 1.4em;
     font-variation-settings: 'wght' 400;
     margin: 1em 0 0.5em;
@@ -65,6 +77,11 @@ const Container = styled.div`
       width: 20px;
       height: auto;
     }
+  }
+
+  & button,
+  & a {
+    opacity: 0;
   }
 
   @media only screen and (max-height: 700px) {
@@ -97,7 +114,7 @@ const IconButton = styled.a`
   padding: 10px;
   border: none;
   background: transparent;
-  transition: all 150ms ease-in-out;
+  transition: background 150ms ease-in-out;
   cursor: pointer;
 
   &:hover {
@@ -143,16 +160,33 @@ const DialogContent = styled.div`
 export default function FinishScene() {
   const rewindData = useRewindData()
   const [thanksDialogOpen, setThanksDialogOpen] = useState(false)
+  const setTimelines = scenesStore((s) => s.setTimelines)
+  const scene = useOrchestrator((s) => s.scene)
 
   const { t } = useTranslation()
 
+  useSceneAudio(
+    RewindScene.FinishScene,
+    rewindData?.tracks.resources[16].preview,
+    rewindData?.tracks.resources[16].name
+  )
+
   useEffect(() => {
-    interpolateBackgroundGradient(
-      Palettes.MidnightSky.gradient,
-      Palettes.MidnightSky.gradient,
-      1
+    setTimelines(
+      RewindScene.FinishScene,
+      {
+        forward: {
+          id: 'fns-forward',
+          factory: createFinishTimelineForward
+        },
+        backward: {
+          id: 'fns-backward',
+          factory: createFinishTimelineBackward
+        }
+      },
+      false
     )
-  }, [rewindData])
+  }, [])
 
   if (!rewindData) {
     return null
@@ -164,7 +198,12 @@ export default function FinishScene() {
   const tweetLink = `https://twitter.com/intent/tweet?text=${tweetText}`
 
   return (
-    <Container>
+    <Container
+      id="fns"
+      style={{
+        pointerEvents: scene === RewindScene.FinishScene ? 'unset' : 'none'
+      }}
+    >
       <h1>2022</h1>
       <div>
         <h2>{t('finish.title')}</h2>
@@ -190,7 +229,7 @@ export default function FinishScene() {
           <div />
           <div />
 
-          <Flex justifyCenter gap="8px">
+          <Flex justifyCenter gap="8px" className="social-buttons">
             <IconButton href="https://twitter.com/MusicorumApp" target="_blank">
               <TwitterLogo />
             </IconButton>
@@ -220,7 +259,14 @@ export default function FinishScene() {
             <Button onClick={() => setThanksDialogOpen(true)}>
               {t('finish.buttons.thanks')}
             </Button>
-            <Button>{t('finish.buttons.feedback')}</Button>
+            <Button
+              as="a"
+              onClick={() => {
+                window.open('https://forms.gle/fdthihSKr969sJme7', '_blank')
+              }}
+            >
+              {t('finish.buttons.feedback')}
+            </Button>
           </Flex>
         </Flex>
       </div>

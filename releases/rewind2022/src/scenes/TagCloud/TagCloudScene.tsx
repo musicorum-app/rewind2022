@@ -7,7 +7,14 @@ import useWindowSize from '@rewind/core/src/hooks/useWindowSize'
 import WordCloud from 'wordcloud'
 import { clamp, mapValue, mapValueAndClamp } from '@rewind/core/src/utils'
 import { interpolateBackgroundGradient } from '../../modules/backgroundGradient'
-import { Palettes } from '../../theme/colors'
+import { Palettes, PaletteType } from '../../theme/colors'
+import { scenesStore } from '../scenes'
+import { RewindScene } from '../../types'
+import {
+  createTagTimelineBackward,
+  createTagTimelineForward
+} from './tagCloudTimeline'
+import { useSceneAudio } from '../../hooks/useSceneAudio'
 
 const Container = styled.div`
   display: flex;
@@ -18,10 +25,15 @@ const Container = styled.div`
 
   box-sizing: border-box;
 
+  & h2 {
+    opacity: 0;
+  }
+
   & canvas {
     position: absolute;
     left: 0;
     top: 0;
+    mask-image: linear-gradient(transparent, transparent);
   }
 `
 
@@ -36,8 +48,15 @@ export default function TagCloudScene() {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const windowSize = useWindowSize()
+  const setTimelines = scenesStore((s) => s.setTimelines)
 
   const { t } = useTranslation()
+
+  useSceneAudio(
+    RewindScene.TagCloudScene,
+    rewindData?.tracks.resources[13].preview,
+    rewindData?.tracks.resources[13].name
+  )
 
   useEffect(() => {
     if (canvasRef.current && wrapperRef.current && rewindData) {
@@ -95,12 +114,31 @@ export default function TagCloudScene() {
     }
   }, [rewindData, windowSize, canvasRef.current, wrapperRef.current])
 
+  useEffect(() => {
+    if (!rewindData) return
+
+    const targetGradient =
+      Palettes[rewindData.albums.items[0].image.palette ?? PaletteType.Black]
+        .gradient
+
+    setTimelines(RewindScene.TagCloudScene, {
+      forward: {
+        id: 'tag-forward',
+        factory: () => createTagTimelineForward(targetGradient)
+      },
+      backward: {
+        id: 'tag-backward',
+        factory: () => createTagTimelineBackward(targetGradient)
+      }
+    })
+  }, [rewindData, canvasRef.current])
+
   if (!rewindData) {
     return null
   }
 
   return (
-    <Centered>
+    <Centered id="tag">
       <Container>
         <h2>{t('tag_cloud.title')}</h2>
         <CloudWrapper ref={wrapperRef}></CloudWrapper>

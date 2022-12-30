@@ -24,6 +24,15 @@ import Dialog from '../../components/Dialog'
 import { LoadingIndicator } from '../../components/LoadingIndicator'
 import { DialogContent } from './DialogContent'
 import { launchDeezerLogin } from './services/deezer'
+import { scenesStore } from '../scenes'
+import { RewindScene } from '../../types'
+import {
+  createPlaylistTimelineBackward,
+  createPlaylistTimelineForward
+} from './playlistTimeline'
+import { lastBackground } from '../Share/shareTimeline'
+import { gradientToCss } from '../../utils/style'
+import { useOrchestrator } from '../../hooks/useOrchestrator'
 
 const SocialButton = styled(Button)`
   display: flex;
@@ -48,13 +57,14 @@ const SocialButton = styled(Button)`
 `
 
 const Container = styled.div`
+  opacity: 0;
   display: flex;
   align-items: center;
   gap: 30px;
 
   & #button-group {
     padding-bottom: calc(42px + 10px);
-    width: 250px;
+    width: 280px;
 
     & button {
       width: 100%;
@@ -105,6 +115,7 @@ export default function PlaylistScene() {
   const [error, setError] = useState<string | null>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const setTimelines = scenesStore((s) => s.setTimelines)
 
   const choices = useMemo(() => {
     const obj = {} as Record<PaletteType, string>
@@ -118,6 +129,7 @@ export default function PlaylistScene() {
 
   const [style, setStyle] = useState<PaletteType>(Object.keys(choices)[0])
   const [transitioning, setTransitioning] = useState(false)
+  const scene = useOrchestrator((s) => s.scene)
 
   const { t } = useTranslation()
 
@@ -162,9 +174,32 @@ export default function PlaylistScene() {
     }
   }, [style])
 
+  useEffect(() => {
+    if (!rewindData) return
+
+    const targetGradient = Palettes[style].gradient
+
+    setTimelines(
+      RewindScene.PlaylistScene,
+      {
+        forward: {
+          id: 'pll-forward',
+          factory: () => createPlaylistTimelineForward(targetGradient)
+        },
+        backward: {
+          id: 'pll-backward',
+          factory: () => createPlaylistTimelineBackward(targetGradient)
+        }
+      },
+      false
+    )
+  }, [style])
+
   if (!rewindData) {
     return null
   }
+
+  lastBackground.value = Palettes[style].gradient
 
   const changeStyle = (palette: PaletteType) => () => {
     if (transitioning) return
@@ -184,8 +219,8 @@ export default function PlaylistScene() {
   }
 
   return (
-    <Centered>
-      <Container>
+    <Centered pointerEvents={scene === RewindScene.PlaylistScene}>
+      <Container id="pll">
         <ImageContainer>
           <SwitcheableImage
             choices={choices}

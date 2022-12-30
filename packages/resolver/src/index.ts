@@ -39,11 +39,11 @@ export async function resolveRewindData(
     step: ResolveStep.STARTUP
   })
   let recentTracks: Track[] = []
-  const cache = await caches.match('/scrobbles_cache.json')
+  // const cache = await caches.match('/scrobbles_cache.json')
 
-  if (cache) {
-    recentTracks = await cache.json()
-  }
+  // if (cache && import.meta.env.DEV && Date.now() < 2) {
+  //   recentTracks = await cache.json()
+  // }
 
   if (!recentTracks.length) {
     const pagination = await lastClient.user.getRecentTracksPaginated(
@@ -51,7 +51,7 @@ export async function resolveRewindData(
       {
         from,
         to,
-        extended: true,
+        extended: false,
         limit: 1000
       }
     )
@@ -66,17 +66,17 @@ export async function resolveRewindData(
     }
 
     recentTracks = pagination.getAll().map((t) => formatTrack(t))
-    if (Date.now() > 2 && caches.open) {
-      const storage = await caches.open('ScrobblesCache')
+    // if (import.meta.env.DEV && caches.open) {
+    //   const storage = await caches.open('ScrobblesCache')
 
-      const response = new Response(JSON.stringify(recentTracks), {
-        headers: {
-          'content-type': 'application/json'
-        }
-      })
+    //   const response = new Response(JSON.stringify(recentTracks), {
+    //     headers: {
+    //       'content-type': 'application/json'
+    //     }
+    //   })
 
-      await storage.put('/scrobbles_cache.json', response)
-    }
+    //   await storage.put('/scrobbles_cache.json', response)
+    // }
   }
 
   const lastYear = await lastClient.user.getRecentTracks(user.name, {
@@ -86,26 +86,47 @@ export async function resolveRewindData(
   })
 
   statusCallback({
-    step: ResolveStep.FETCHING_RESOURCES
+    step: ResolveStep.FETCHING_RESOURCES,
+    maxValue: 2,
+    value: 0
   })
 
   console.log(recentTracks)
 
   const topTracks = getTopTracks(recentTracks)
   const topArtists = await getTopArtists(recentTracks)
-  const topAlbums = getTopAlbums(recentTracks)
+  statusCallback({
+    step: ResolveStep.FETCHING_RESOURCES,
+    maxValue: 2,
+    value: 1
+  })
+  const tracks = await parseTopTracks(topTracks)
+  statusCallback({
+    step: ResolveStep.FETCHING_RESOURCES,
+    maxValue: 2,
+    value: 2
+  })
 
-  console.log(recentTracks)
-  console.log(topTracks)
+  statusCallback({
+    step: ResolveStep.FINALIZING,
+    maxValue: 3,
+    value: 1
+  })
 
   const data: RewindData = {
     user: user.name,
     firstScrobbles: await parseFirstScrobbles(recentTracks, topTracks),
     scrobbles: parseScrobbles(recentTracks, lastYear),
     artists: topArtists,
-    tracks: await parseTopTracks(topTracks),
+    tracks,
     albums: getTopAlbums(recentTracks)
   }
+
+  statusCallback({
+    step: ResolveStep.FINALIZING,
+    maxValue: 3,
+    value: 2
+  })
 
   if (import.meta.env.DEV) {
     // @ts-expect-error force global var

@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 
 export interface CenteredProps {
   is3D?: boolean
-  disablePointerEvents?: boolean
+  pointerEvents?: boolean
   column?: boolean
 }
 
@@ -16,7 +16,7 @@ const Centered = styled.div<CenteredProps>`
   flex-direction: ${(p) => (p.column ? 'column' : 'unset')};
   transform-style: ${(p) => (p.is3D ? 'preserve-3d' : 'unset')};
   perspective: ${(p) => (p.is3D ? '400px' : 'unset')};
-  pointer-events: ${(p) => (p.disablePointerEvents ? 'none' : 'unset')}; ;
+  pointer-events: ${(p) => (p.pointerEvents ? 'unset' : 'none')}; ;
 `
 
 export default Centered

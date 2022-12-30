@@ -4,8 +4,10 @@ import Stack from '@rewind/core/src/components/Stack'
 import useWindowSize from '@rewind/core/src/hooks/useWindowSize'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSceneAudio } from '../../hooks/useSceneAudio'
 import { interpolateBackgroundGradient } from '../../modules/backgroundGradient'
 import { Palettes } from '../../theme/colors'
+import { RewindScene } from '../../types'
 import { useRewindData } from '../Resolve/useDataResolve'
 import { ReactComponent as YearComponent } from './assets/year.svg'
 
@@ -17,6 +19,7 @@ const Container = styled.div`
   padding: 60px;
 
   & svg {
+    opacity: 0;
     width: 100%;
     min-width: 200px;
     height: auto;
@@ -27,6 +30,7 @@ const Container = styled.div`
       stroke-width: 6px;
       stroke-linejoin: round;
       stroke-linecap: round;
+      stroke-dasharray: 1;
       /* stroke-dasharray: 1000;
     stroke-dashoffset: 1000; */
     }
@@ -40,6 +44,7 @@ const Container = styled.div`
 const Text = styled.span`
   text-align: center;
   font-size: 28px;
+  opacity: 0;
 
   @media only screen and (max-width: 700px) {
     font-size: 20px;
@@ -50,6 +55,12 @@ export default function EndSplashScene() {
   const rewindData = useRewindData()
 
   const { t } = useTranslation()
+
+  useSceneAudio(
+    RewindScene.EndSplashScene,
+    rewindData?.tracks.resources[14].preview,
+    rewindData?.tracks.resources[14].name
+  )
 
   // useEffect(() => {
   //   interpolateBackgroundGradient(
@@ -64,7 +75,7 @@ export default function EndSplashScene() {
   }
 
   return (
-    <Centered>
+    <Centered id="end">
       <Centered>
         <Container>
           <YearComponent />

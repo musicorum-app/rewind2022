@@ -3,6 +3,7 @@ import ImageWithBorder from './ImageWithBorder'
 import { FiPlay, FiPause } from 'react-icons/fi'
 import { usePlayer } from '../hooks/usePlayer'
 import { useEffect } from 'react'
+import { RewindScene } from '../types'
 
 const MediaButton = styled.button<{ color: string }>`
   margin-top: 12px;
@@ -107,6 +108,7 @@ const Container = styled.div`
 `
 
 export interface TopItemProps {
+  index: number
   image?: string | null
   color: string
   title: string
@@ -118,7 +120,9 @@ export default function TopItem(props: TopItemProps) {
   const [setAudio, nowPlaying, playAudio, setActive, active] = usePlayer(
     (s) => [s.setAudio, s.nowPlaying, s.playAudio, s.setActive, s.active]
   )
-  const audioKey = 'topTracks_' + props.title
+
+  const audioKey =
+    props.index === 0 ? RewindScene.TopTracksScene : 'topTracks_' + props.title
 
   useEffect(() => {
     if (props.preview) {

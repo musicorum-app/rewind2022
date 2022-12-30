@@ -1,4 +1,6 @@
 export const patronsList = [
+  'Yubal',
+  'Elaine M.',
   'Josue Velasquez',
   'Pedro Fracassi',
   'George Bounacos',

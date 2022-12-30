@@ -7,6 +7,7 @@ import useWindowSize from '@rewind/core/src/hooks/useWindowSize'
 import { mapValue } from '@rewind/core/src/utils'
 import { Palettes } from '../../theme/colors'
 import { useMediaQuery } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
 
 const Container = styled.div`
   display: flex;
@@ -105,13 +106,15 @@ export function Chart({ rewindData }: ChartProps) {
   const [small] = useMediaQuery('(max-width: 600px)')
 
   const windowSize = useWindowSize()
+  const { t } = useTranslation()
 
   const maxValue = useMemo(
     () => Object.values(rewindData.scrobbles.months).sort((a, b) => b - a)[0],
     [rewindData]
   )
 
-  const monthNames = small ? months.map((m) => m.at(0)) : months
+  let monthNames = months.map((m) => t(`months.${m}`))
+  monthNames = small ? monthNames.map((m) => m.at(0)!) : monthNames
 
   useLayoutEffect(() => {
     const svg = svgRef.current

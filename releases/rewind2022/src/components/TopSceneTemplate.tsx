@@ -2,10 +2,12 @@ import { useMediaQuery } from '@chakra-ui/react'
 import styled from '@emotion/styled'
 import Centered from '@rewind/core/src/components/Centered'
 import { useTranslation } from 'react-i18next'
+import { useOrchestrator } from '../hooks/useOrchestrator'
 import { usePlayer } from '../hooks/usePlayer'
 import { interpolateBackgroundGradient } from '../modules/backgroundGradient'
 import { Image } from '../modules/rewindDataExtras'
 import { Gradient, Palettes, PaletteType } from '../theme/colors'
+import { RewindScene } from '../types'
 import TopItem from './TopItem'
 
 const Container = styled.div`
@@ -47,11 +49,13 @@ interface TopSceneTemplateProps {
   ableToPlay?: boolean
   topText: string
   bottomText: string
+  scene: RewindScene
   id?: string
 }
 
 export default function TopSceneTemplate(props: TopSceneTemplateProps) {
   const { t } = useTranslation()
+  const scene = useOrchestrator((s) => s.scene)
 
   const [medium, small, rellySmall] = useMediaQuery([
     '(max-width: 1300px)',
@@ -65,12 +69,13 @@ export default function TopSceneTemplate(props: TopSceneTemplateProps) {
     Palettes[props.items[0].image.palette ?? PaletteType.Black].color
 
   return (
-    <Centered column id={props.id}>
+    <Centered column id={props.id} pointerEvents={scene === props.scene}>
       <ComplementaryText className="text">{props.topText}</ComplementaryText>
       <Container>
         {props.items.slice(0, count).map((track, index) => (
           <TopItem
             key={index}
+            index={index}
             title={track.name}
             secondary={t('common.scrobbles', {
               count: track.scrobbles

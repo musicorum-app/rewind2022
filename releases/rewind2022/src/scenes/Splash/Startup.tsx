@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import Centered from '@rewind/core/src/components/Centered'
 import { animate } from 'motion'
 import { CSSProperties, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import Button from '../../components/Button'
 import { LoadState, useOrchestrator } from '../../hooks/useOrchestrator'
 import { Palettes } from '../../theme/colors'
@@ -30,6 +31,8 @@ export default function Startup() {
     ]
   )
 
+  const { t } = useTranslation()
+
   const setOrchestratorState = useOrchestrator((s) => s.setState)
 
   const createStyle = (values: typeof topText): CSSProperties => ({
@@ -45,6 +48,7 @@ export default function Startup() {
 
   return (
     <Centered
+      pointerEvents
       style={{
         flexDirection: 'column',
         transform: `translateX(${loadValues.x}px)`,
@@ -52,8 +56,8 @@ export default function Startup() {
         overflow: 'hidden'
       }}
     >
-      <Text style={createStyle(topText)}>The time to rewind your</Text>
-      <Text style={createStyle(bottomText)}>2022 in music has come</Text>
+      <Text style={createStyle(topText)}>{t('splash.text1')}</Text>
+      <Text style={createStyle(bottomText)}>{t('splash.text2')}</Text>
 
       <ContinueButton
         style={{
@@ -63,7 +67,7 @@ export default function Startup() {
         background={Palettes.MidnightSky.color}
         onClick={handleContinue}
       >
-        Continue
+        {t('common.continue')}
       </ContinueButton>
     </Centered>
   )

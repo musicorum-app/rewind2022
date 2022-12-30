@@ -6,8 +6,11 @@ import { ReactComponent as ArrowIcon } from '../assets/icons/arrow.svg'
 import { usePlayer } from '../hooks/usePlayer'
 import { FiGlobe, FiVolume2, FiVolumeX } from 'react-icons/fi'
 import Flex from '@react-css/flex'
-import { useEffect } from 'react'
-import { useOrchestrator } from '../hooks/useOrchestrator'
+import { useState } from 'react'
+import { LoadState, useOrchestrator } from '../hooks/useOrchestrator'
+import { rewindScenes } from '../types'
+import { LanguageSelector } from './LanguageSelector'
+import { useTranslation } from 'react-i18next'
 
 const Container = styled.div`
   position: absolute;
@@ -134,6 +137,10 @@ const NextIconButton = styled.button`
     width: 24px;
     height: 24px;
   }
+
+  &:disabled {
+    opacity: 0.2;
+  }
 `
 
 const ControlsContainer = styled.div`
@@ -187,10 +194,21 @@ export default function Overlay() {
     s.active,
     s.setActive
   ])
-  const [prev, next] = useOrchestrator((s) => [s.prev, s.next])
+  const [prev, next, state, scene, isTransitioning] = useOrchestrator((s) => [
+    s.prev,
+    s.next,
+    s.state,
+    s.scene,
+    s.isTransitioning
+  ])
   const nowPlayingName = nowPlaying ? audios.get(nowPlaying)?.name : null
+  const [languageDialogOpen, setLanguageDialogOpen] = useState(false)
 
   const toggleActive = () => setActive(!active)
+
+  const currentIndex = rewindScenes.indexOf(scene)
+
+  const { t } = useTranslation()
 
   return (
     <>
@@ -201,14 +219,17 @@ export default function Overlay() {
         <Flex row alignItemsCenter gap="6px">
           {active && (
             <NowPlaying>
-              <h5>{nowPlayingName && 'NOW PLAYING'}</h5>
+              <h5>{nowPlayingName && t('common.now_playing')}</h5>
               <h3>{nowPlayingName}</h3>
             </NowPlaying>
           )}
           <IconButton aria-label="mute audio" onClick={toggleActive}>
             {active ? <FiVolume2 /> : <FiVolumeX />}
           </IconButton>
-          <IconButton aria-label="change language" onClick={console.log}>
+          <IconButton
+            aria-label="change language"
+            onClick={() => setLanguageDialogOpen(true)}
+          >
             <FiGlobe />
           </IconButton>
         </Flex>
@@ -221,26 +242,35 @@ export default function Overlay() {
           padding: '16px 20px'
         }}
       >
-        <BottomRow>
-          <div></div>
-          <div>
-            <NextIconButton onClick={next}>
-              <NextIcon />
-            </NextIconButton>
-          </div>
-          <div>
-            <ControlsContainer>
-              <button onClick={prev}>
-                <ArrowIcon />
-              </button>
-              <span>4/23</span>
-              <button onClick={next}>
-                <ArrowIcon />
-              </button>
-            </ControlsContainer>
-          </div>
-        </BottomRow>
+        {state === LoadState.PLAY && (
+          <BottomRow>
+            <div></div>
+            <div>
+              <NextIconButton onClick={next} disabled={isTransitioning}>
+                <NextIcon />
+              </NextIconButton>
+            </div>
+            <div>
+              <ControlsContainer>
+                <button onClick={prev}>
+                  <ArrowIcon />
+                </button>
+                <span>
+                  {currentIndex + 1}/{rewindScenes.length}
+                </span>
+                <button onClick={next}>
+                  <ArrowIcon />
+                </button>
+              </ControlsContainer>
+            </div>
+          </BottomRow>
+        )}
       </Container>
+
+      <LanguageSelector
+        open={languageDialogOpen}
+        onClose={() => setLanguageDialogOpen(false)}
+      />
     </>
   )
 }

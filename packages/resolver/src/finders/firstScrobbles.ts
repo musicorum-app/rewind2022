@@ -25,7 +25,10 @@ export default async function parseFirstScrobbles(
 
   const firstScrobblesOnTracks = topTracks.find((tracks) =>
     tracks.find(
-      (t) => t.date!.toString() === firstScrobbles[0].date!.toString()
+      (t) =>
+        firstScrobbles[0].date &&
+        t.date &&
+        t.date.toString() === firstScrobbles[0].date?.toString()
     )
   )
 

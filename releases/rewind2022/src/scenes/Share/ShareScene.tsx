@@ -9,16 +9,25 @@ import {
   mapValueAndClamp
 } from '@rewind/core/src/utils'
 import gsap from 'gsap'
-import { useMemo, useState, useRef } from 'react'
+import { useMemo, useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import Button from '../../components/Button'
 import { GradientSelect } from '../../components/GradientSelect'
 import SwitcheableImage from '../../components/SwitcheableImage'
 import TopItem from '../../components/TopItem'
 import TopSceneTemplate from '../../components/TopSceneTemplate'
+import { useOrchestrator } from '../../hooks/useOrchestrator'
+import { useSceneAudio } from '../../hooks/useSceneAudio'
 import { interpolateBackgroundGradient } from '../../modules/backgroundGradient'
 import { Palette, Palettes, PaletteType } from '../../theme/colors'
+import { RewindScene } from '../../types'
+import { lastShareBackground } from '../Finish/finishTimeline'
 import { useRewindData } from '../Resolve/useDataResolve'
+import { scenesStore } from '../scenes'
+import {
+  createShareTimelineBackward,
+  createShareTimelineForward
+} from './shareTimeline'
 
 const Container = styled.div`
   display: grid;
@@ -48,6 +57,11 @@ const Container = styled.div`
 
   & .side-select {
     padding-bottom: 125px;
+  }
+
+  & .text,
+  & .image-share {
+    opacity: 0;
   }
 
   @media only screen and (max-width: 1000px) {
@@ -134,6 +148,7 @@ enum ImageMode {
 
 export default function ShareScene() {
   const rewindData = useRewindData()
+  const scene = useOrchestrator((s) => s.scene)
 
   const { t } = useTranslation()
   const squareImageRef = useRef<HTMLDivElement>(null)
@@ -159,12 +174,42 @@ export default function ShareScene() {
   )
   const [transitioning, setTransitioning] = useState(false)
   const [mode, setMode] = useState(ImageMode.Stories)
+  const setTimelines = scenesStore((s) => s.setTimelines)
+
+  useEffect(() => {
+    if (!rewindData) return
+
+    const targetGradient = Palettes[style].gradient
+
+    setTimelines(
+      RewindScene.ShareScene,
+      {
+        forward: {
+          id: 'shr-forward',
+          factory: () => createShareTimelineForward(targetGradient)
+        },
+        backward: {
+          id: 'shr-backward',
+          factory: () => createShareTimelineBackward(targetGradient)
+        }
+      },
+      false
+    )
+  }, [style])
+
+  useSceneAudio(
+    RewindScene.ShareScene,
+    rewindData?.tracks.resources[15].preview,
+    rewindData?.tracks.resources[15].name
+  )
 
   if (!rewindData) {
     return null
   }
 
   const palette = Palettes[style]
+
+  lastShareBackground.value = palette.gradient
 
   // interpolateBackgroundGradient(palette.gradient, palette.gradient, 1)
 
@@ -270,16 +315,14 @@ export default function ShareScene() {
     downloadFile(blob, 'Musicorum Rewind Share.jpg')
   }
 
-  console.log(storiesChoices)
-
   return (
-    <Centered>
+    <Centered id="shr" pointerEvents={scene === RewindScene.ShareScene}>
       <Container>
-        <div>
+        <div className="text">
           <h2>{t('share.title')}</h2>
           <h3>{t('share.text')}</h3>
         </div>
-        <ImageContainer>
+        <ImageContainer className="image-share">
           <Flex row alignItemsCenter gap="15px">
             <Flex column gap="10px" className="side-select">
               {Object.keys(storiesChoices).map((choice) => (
@@ -317,7 +360,7 @@ export default function ShareScene() {
                 ))}
               </Flex>
               <Button onClick={download} background={palette.color}>
-                DOWNLOAD
+                {t('common.download')}
               </Button>
               <Button
                 onClick={changeMode}
@@ -327,7 +370,7 @@ export default function ShareScene() {
                   padding: '6px 14px'
                 }}
               >
-                Change mode
+                {t('share.change_mode')}
               </Button>
             </Flex>
           </Flex>

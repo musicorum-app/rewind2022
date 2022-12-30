@@ -8,6 +8,7 @@ import UserLoading from './UserLoading'
 import { useTranslation } from 'react-i18next'
 import UserDone from './UserDone'
 import { Palettes } from '../../theme/colors'
+import CacheConfirm from './CacheConfirm'
 
 const preload = document.querySelector<HTMLDivElement>('#preload')!
 const app = document.querySelector<HTMLDivElement>('#root')!
@@ -41,6 +42,8 @@ export default function ResolveScene() {
       {currentStep === DataResolveStep.USER_CONFIRM && <UserConfirm />}
 
       {currentStep === DataResolveStep.LOADING && <UserLoading />}
+
+      {currentStep === DataResolveStep.CACHE_CONFIRM && <CacheConfirm />}
 
       {currentStep === DataResolveStep.DONE && <UserDone />}
     </Stack>

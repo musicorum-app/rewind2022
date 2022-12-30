@@ -6,7 +6,10 @@ import { useEffect, useMemo } from 'react'
 import { interpolateBackgroundGradient } from '../../modules/backgroundGradient'
 import { Palettes } from '../../theme/colors'
 import { RewindScene } from '../../types'
-import { scrobblesForwardTimeline } from './scrobblesTimeline'
+import {
+  scrobblesBackwardTimeline,
+  scrobblesForwardTimeline
+} from './scrobblesTimeline'
 import { scenesStore } from '../scenes'
 import Flex from '@react-css/flex'
 import { useTranslation } from 'react-i18next'
@@ -148,7 +151,7 @@ export default function ScrobblesScene() {
     const targetPalette = rewindData?.firstScrobbles.items[0].image.palette
     return targetPalette
       ? Palettes[targetPalette].gradient
-      : Palettes.Burn.gradient
+      : Palettes.Chuu.gradient
   }, [rewindData])
 
   useEffect(() => {
@@ -156,6 +159,10 @@ export default function ScrobblesScene() {
       forward: {
         id: 'scr-forward',
         factory: () => scrobblesForwardTimeline(originGradient)
+      },
+      backward: {
+        id: 'scr-backward',
+        factory: () => scrobblesBackwardTimeline(originGradient)
       }
     })
   }, [originGradient, scrobblesForwardTimeline])
