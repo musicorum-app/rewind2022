@@ -14,7 +14,12 @@ function request<R = unknown>(
       'content-type': 'application/json'
     },
     body: JSON.stringify(body)
-  }).then((r) => r.json() as unknown as R)
+  })
+    .then((r) => r.json() as unknown as R)
+    .catch((err) => {
+      console.error('musicorum resources error', err)
+      return []
+    })
 }
 
 export function getArtistsResources(artists: string[]) {

@@ -132,7 +132,7 @@
     "save_on": "Save on {{service}}",
     "download": "Download image",
     "creation": {
-      "name": "My 2023 rewind",
+      "name": "My 2022 rewind",
       "description": "My most listened tracks from 2022, based on my Last.fm profile, by #MusicorumRewind"
     },
     "generic_error": "Couldn't create playlist",

@@ -14,8 +14,14 @@ import { formatTrack } from './modules/image'
 import { parseScrobbles } from './finders/scrobbles'
 import parseFirstScrobbles from './finders/firstScrobbles'
 
-const from = new Date('2022-01-01 00:00')
-const to = new Date('2022-12-31 23:59')
+let from = new Date('202-01-01T00:00')
+const to = new Date('2022-12-31T23:59')
+
+if (from.getFullYear() !== 2022) {
+  from = new Date(1640995200000)
+}
+
+console.log(from)
 
 export enum ResolveStep {
   STARTUP,

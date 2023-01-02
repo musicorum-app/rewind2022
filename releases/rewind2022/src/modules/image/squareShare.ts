@@ -189,12 +189,14 @@ export async function renderSquareShareImage(
   const list = [...weights.entries()]
   const sortedList = list.sort((a, b) => b[1] - a[1]).map((f) => f[0])
 
-  qdr.writeTextLine(
-    sortedList[0].toLowerCase(),
-    size / 2,
-    textsY + titleActualSize,
-    (size - (padding + margin) * 2) / 2
-  )
+  if (sortedList[0]) {
+    qdr.writeTextLine(
+      sortedList[0].toLowerCase(),
+      size / 2,
+      textsY + titleActualSize,
+      (size - (padding + margin) * 2) / 2
+    )
+  }
 
   const cardsY = textsY + spacing + 62
   const remainingSpace = size - cardsY - margin - padding - barHeight - spacing

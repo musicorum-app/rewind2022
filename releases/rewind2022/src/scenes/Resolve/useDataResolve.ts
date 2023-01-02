@@ -16,6 +16,7 @@ import {
 } from '../../modules/rewindDataExtras'
 import { RewindCache } from '../../types'
 import { RewindData } from '@rewind/resolver/src/types'
+import * as Sentry from '@sentry/react'
 
 export enum DataResolveStep {
   USER_INPUT,
@@ -137,6 +138,7 @@ export const useDataResolve = create<DataResolveStore>((set, get) => ({
       }
       set({ error: 'errors.generic' })
       alert(err)
+      Sentry.captureException(err)
       console.error(err)
     }
   }

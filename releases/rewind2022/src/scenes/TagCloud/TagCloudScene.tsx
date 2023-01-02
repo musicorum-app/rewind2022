@@ -78,6 +78,10 @@ export default function TagCloudScene() {
       const tags = rewindData.tracks.resources.flatMap((t) => t.tags)
       const weights = new Map<string, number>()
 
+      if (tags.length === 0) {
+        tags[0] = 'could not find any tag :('
+      }
+
       for (const tag of tags) {
         const weight = 1 + (weights.get(tag) || 0)
         weights.set(tag, weight)

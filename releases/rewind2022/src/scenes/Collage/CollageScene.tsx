@@ -126,7 +126,7 @@ export default function CollageScene() {
         image: album.image.url
       }))
       const result = await generateRewindGrid(tiles)
-      if (result.url) {
+      if (!Array.isArray(result) && result.url) {
         setImageUrl(result.url)
       } else {
         throw new Error()
