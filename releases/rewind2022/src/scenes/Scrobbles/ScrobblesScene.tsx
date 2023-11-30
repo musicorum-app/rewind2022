@@ -14,6 +14,7 @@ import { scenesStore } from '../scenes'
 import Flex from '@react-css/flex'
 import { useTranslation } from 'react-i18next'
 import { useSceneAudio } from '../../hooks/useSceneAudio'
+import 'core-js/features/array/at';
 
 const Container = styled(Centered)`
   font-size: 182px;

@@ -12,6 +12,7 @@ import {
 } from '../types'
 import { Artist, ArtistWithResource, Track } from '../types'
 import { aggregate, sortMapWithArray } from '../utils'
+import 'core-js/features/array/at';
 
 function getTop(recentTracks: Track[], hashFn: (track: Track) => string) {
   const aggregator = aggregate(recentTracks, hashFn)
@@ -111,8 +112,8 @@ export async function getTopArtists(
     total: top.length,
     items: artists.slice(0, 6),
     popularity: {
-      high: sorted?.at(0) || null,
-      low: sorted?.at(-1) || null,
+      high: sorted?.at?.(0) || null,
+      low: sorted?.at?.(-1) || null,
       average
     }
   }

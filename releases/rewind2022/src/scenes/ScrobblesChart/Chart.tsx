@@ -8,6 +8,7 @@ import { mapValue } from '@rewind/core/src/utils'
 import { Palettes } from '../../theme/colors'
 import { useMediaQuery } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
+import 'core-js/features/array/at';
 
 const Container = styled.div`
   display: flex;

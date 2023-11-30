@@ -1,4 +1,4 @@
-const normalize = (str: string) => str.toLowerCase().replaceAll(' ', '')
+const normalize = (str: string) => (str || '').toLowerCase().replaceAll(' ', '')
 
 export function aggregate<I>(items: I[], hashFn: (item: I) => string) {
   const aggregator = new Map<string, I[]>()

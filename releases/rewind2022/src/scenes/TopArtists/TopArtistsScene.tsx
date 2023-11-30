@@ -15,6 +15,7 @@ import {
 import { Palettes, PaletteType } from '../../theme/colors'
 import useWindowSize from '@rewind/core/src/hooks/useWindowSize'
 import { useSceneAudio } from '../../hooks/useSceneAudio'
+import 'core-js/features/array/at';
 
 export default function TopArtistsScene() {
   const rewindData = useRewindData()

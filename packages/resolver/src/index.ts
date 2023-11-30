@@ -14,10 +14,10 @@ import { formatTrack } from './modules/image'
 import { parseScrobbles } from './finders/scrobbles'
 import parseFirstScrobbles from './finders/firstScrobbles'
 
-let from = new Date('202-01-01T00:00')
+let from = new Date('2022-01-01T00:00')
 const to = new Date('2022-12-31T23:59')
 
-if (from.getFullYear() !== 2022) {
+if (isNaN(from.getTime()) || from.getTime() < 1640908800000) {
   from = new Date(1640995200000)
 }
 
@@ -44,6 +44,7 @@ export async function resolveRewindData(
   statusCallback({
     step: ResolveStep.STARTUP
   })
+  console.log('Starting fetching for', user.name)
   let recentTracks: Track[] = []
   // const cache = await caches.match('/scrobbles_cache.json')
 
@@ -69,6 +70,8 @@ export async function resolveRewindData(
         maxValue: pagination.totalResults
       })
       await pagination.fetchPage(i)
+        .catch(() => pagination.fetchPage(i))
+        .catch(() => pagination.fetchPage(i))
     }
 
     recentTracks = pagination.getAll().map((t) => formatTrack(t))

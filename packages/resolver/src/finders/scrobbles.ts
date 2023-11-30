@@ -2,6 +2,7 @@ import { LastfmRecentTracksResponse } from '@musicorum/lastfm/dist/types/package
 import { Month, RewindData, ScrobblesData, Track } from '../types'
 import { months as monthList } from '../types'
 import { aggregate, sortMapWithArray } from '../utils'
+import 'core-js/features/array/at';
 
 export function parseScrobbles(
   recentTracks: Track[],

@@ -3,6 +3,7 @@ import {
   Colors,
   extractColorsFromImageData
 } from 'extract-colors/dist/extract-colors.umd.js'
+import 'core-js/features/array/at';
 
 export function loadImage(src: string) {
   return new Promise<HTMLImageElement>((resolve, reject) => {
