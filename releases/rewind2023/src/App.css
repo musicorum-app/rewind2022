@@ -1,0 +1,29 @@
+* {
+  font-family: Satoshi-Regular, sans-serif;
+  color: white
+}
+
+@supports (font-variation-settings: normal) {
+  * {
+    font-family: "Satoshi-Variable", sans-serif;
+    font-variation-settings: "wght" 500;
+  }
+}
+
+.ReactCollapse--collapse {
+  transition: height 200ms;
+}
+
+:root {
+  --margin: 24px;
+}
+
+@media only screen and (max-width: 600px) {
+  :root {
+    --margin: 18px;
+  }
+}
+
+.chakra-modal__content-container {
+  z-index: 1000;
+}

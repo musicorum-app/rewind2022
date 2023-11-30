@@ -78,12 +78,16 @@ export default function Timeline({
         } else {
           timeline.play()
         }
+      } else if (event.key === 'Home') {
+        timeline.progress(0)
+      } else if (event.key === 'End') {
+        timeline.progress(1)
       }
     }
 
-    window.addEventListener('keypress', listener)
+    window.addEventListener('keydown', listener)
 
-    return () => window.removeEventListener('keypress', listener)
+    return () => window.removeEventListener('keydown', listener)
   }, [timeline])
 
   return (
