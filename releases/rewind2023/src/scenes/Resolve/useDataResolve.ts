@@ -11,12 +11,26 @@ import {
   LastfmErrorCode
 } from '@musicorum/lastfm/dist/error/LastfmError'
 import {
-  RewindData2022,
+  RewindData2023,
   sanitizeRewindData
 } from '../../modules/rewindDataExtras'
 import { RewindCache } from '../../types'
 import { RewindData } from '@rewind/resolver/src/types'
 import * as Sentry from '@sentry/react'
+
+let from = new Date('2023-01-01T00:00')
+let to = new Date('2023-12-31T23:59')
+
+const fromLimit = 1672488000000 // 2022-12-31T12:00:00.000Z
+const toLimit = 1704110400000 // 2024-01-01T12:00:00.000Z
+
+if (isNaN(from.getTime()) || from.getTime() < fromLimit) {
+  from = new Date(1672531200000) // 2023-01-01T00:00:00.000Z
+}
+
+if (isNaN(to.getTime()) || to.getTime() > toLimit) {
+  to = new Date(1704067140000) // 2023-12-31T23:59:00.000Z
+}
 
 export enum DataResolveStep {
   USER_INPUT,
@@ -39,7 +53,7 @@ export interface DataResolveStore {
   user: LastfmUserInfo | null
   setUser: (user: LastfmUserInfo | null) => void
 
-  rewindData: RewindData2022 | null
+  rewindData: RewindData2023 | null
   resolve: () => void
 
   clear: () => void
@@ -78,7 +92,7 @@ export const useDataResolve = create<DataResolveStore>((set, get) => ({
     set({ step: DataResolveStep.LOADING })
 
     try {
-      const cached = localStorage.getItem('Rewind22Cache')
+      const cached = localStorage.getItem('Rewind23Cache')
 
       let data: RewindData | null = null
       let fromCached = false
@@ -101,12 +115,18 @@ export const useDataResolve = create<DataResolveStore>((set, get) => ({
       }
 
       if (!data) {
-        data = await resolveRewindData(user, lastfmClient, (loadingStatus) => {
-          set({ loadingStatus })
-        })
+        data = await resolveRewindData(
+          from,
+          to,
+          user,
+          lastfmClient,
+          (loadingStatus) => {
+            set({ loadingStatus })
+          }
+        )
 
         localStorage.setItem(
-          'Rewind22Cache',
+          'Rewind23Cache',
           JSON.stringify({
             data,
             version: import.meta.env.VITE_CACHE_VERSION

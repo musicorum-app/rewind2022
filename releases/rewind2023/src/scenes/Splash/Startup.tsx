@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next'
 import Button from '../../components/Button'
 import { LoadState, useOrchestrator } from '../../hooks/useOrchestrator'
 import { Palettes } from '../../theme/colors'
+import { continueTimeline } from './splashSceneTimeline'
+import { useTimelineController } from '../../hooks/useTimelineController'
 
 const Text = styled.h1`
   margin: 0;
@@ -20,53 +22,36 @@ const ContinueButton = styled(Button)`
 `
 
 export default function Startup() {
-  // const [topText, bottomText, button, loadSheet, loadValues] = useSplashSheet(
-  //   (s) => [
-  //     s.topTextValues,
-  //     s.bottomTextValues,
-  //     s.buttonValues,
-  //     s.loadSheet,
-  //     s.loadValues
-  //   ]
-  // )
-
   const { t } = useTranslation()
 
   const setOrchestratorState = useOrchestrator((s) => s.setState)
 
-  // const createStyle = (values: typeof topText): CSSProperties => ({
-  //   opacity: values.opacity,
-  //   transform: `translateY(${values.y}px) scale(${values.scale})`
-  // })
+  const handleContinue = () => {
+    continueTimeline.play().then(() => {
+      setOrchestratorState(LoadState.RESOLVE)
+      useTimelineController.getState().setTimeline(null)
+    })
+  }
 
-  // const handleContinue = () => {
-  //   loadSheet.sequence.play().then(() => {
-  //     setOrchestratorState(LoadState.RESOLVE)
-  //   })
-  // }
+  return (
+    <Centered
+      pointerEvents
+      style={{
+        flexDirection: 'column',
+        overflow: 'hidden'
+      }}
+      className="splash-startup-text"
+    >
+      <Text>{t('splash.text1')}</Text>
+      <Text>{t('splash.text2')}</Text>
 
-  return null
-  // <Centered
-  //   pointerEvents
-  //   style={{
-  //     flexDirection: 'column',
-  //     transform: `translateX(${loadValues.x}px)`,
-  //     opacity: loadValues.opacity,
-  //     overflow: 'hidden'
-  //   }}
-  // >
-  //   <Text style={createStyle(topText)}>{t('splash.text1')}</Text>
-  //   <Text style={createStyle(bottomText)}>{t('splash.text2')}</Text>
-
-  //   <ContinueButton
-  //     style={{
-  //       opacity: button.opacity,
-  //       visibility: button.active ? 'visible' : 'hidden'
-  //     }}
-  //     background={Palettes.Candy.color}
-  //     onClick={handleContinue}
-  //   >
-  //     {t('common.continue')}
-  //   </ContinueButton>
-  // </Centered>
+      <ContinueButton
+        background={Palettes.Candy.color}
+        className="splash-continue-btn"
+        onClick={handleContinue}
+      >
+        {t('common.continue')}
+      </ContinueButton>
+    </Centered>
+  )
 }

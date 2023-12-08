@@ -46,9 +46,9 @@ export const Palettes: Record<PaletteType, Palette> = {
     targetColors: ['#C4C4C4', '#2E2E2E']
   },
   Yellow: {
-    darkerColor: '#4A3B03',
-    color: '#E9CB20',
-    targetColors: ['#e1db00', '#E9CB20', '#ff0']
+    darkerColor: '#4D3800',
+    color: '#f4ad1f',
+    targetColors: ['#f4ad1f', '#E9CB20', '#ff0']
   },
   Red: {
     darkerColor: '#370000',
@@ -57,7 +57,8 @@ export const Palettes: Record<PaletteType, Palette> = {
   },
   DarkBlue: {
     darkerColor: '#150036',
-    color: '#446DFF'
+    color: '#446DFF',
+    targetColors: ['#446DFF', '#00174A']
   },
   WeirdSky: {
     darkerColor: '#002E41',

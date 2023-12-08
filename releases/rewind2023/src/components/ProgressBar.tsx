@@ -28,7 +28,7 @@ const ProgressBar = forwardRef<HTMLDivElement, Partial<ProgressBarProps>>(
     return (
       <LoadingBar
         ref={ref}
-        color={props.color ?? Palettes.MidnightSky.color}
+        color={props.color ?? Palettes.Candy.color}
         value={props.value ?? 0}
       >
         <div aria-valuenow={props.value ?? 0} />

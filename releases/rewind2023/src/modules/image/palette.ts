@@ -33,8 +33,6 @@ export async function getImagePalettes(image?: string) {
     }
   }
 
-  console.log('AAAAAAAAAAAA', colors, palettes)
-
   return palettes
 }
 
@@ -42,12 +40,7 @@ export function getClosestPalette(color: string, ignoreMain = true) {
   let availablePalettes = Object.values(PaletteType) as PaletteType[]
   if (ignoreMain) {
     availablePalettes = availablePalettes.filter(
-      (p) =>
-        ![
-          PaletteType.Candy,
-          PaletteType.MidnightSky,
-          PaletteType.DisplacedOcean
-        ].includes(p)
+      (p) => ![PaletteType.Candy, PaletteType.Gold, PaletteType.Sky].includes(p)
     )
   }
 
@@ -63,15 +56,13 @@ export function getClosestPalette(color: string, ignoreMain = true) {
       const distances = targetColors.map((c) => chroma.deltaE(color, c))
 
       if (import.meta.env.DEV) {
-        const colors = palette.gradient.join(', ')
-        const textColor =
-          chroma(palette.gradient[0]).luminance() > 0.5 ? 'black' : 'white'
+        const { color, darkerColor } = palette
 
         for (const c of targetColors) {
           const textColor2 = chroma(c).luminance() > 0.5 ? 'black' : 'white'
           console.log(
             `%c${p}%c <-> %c${chroma.deltaE(color, c).toFixed(2)}`,
-            `color: ${textColor};background: linear-gradient(90deg, ${colors}); padding: 2px 5px`,
+            `color: ${color};background: ${darkerColor}; padding: 2px 5px`,
             'color: inherit',
             `color: ${textColor2};background: ${c}; padding: 2px 5px`
           )
@@ -93,13 +84,11 @@ export function getClosestPalette(color: string, ignoreMain = true) {
   if (import.meta.env.DEV) {
     console.log('Distances:', distances)
     const p = Palettes[palette]
-    const colors = p.gradient.join(', ')
-    const textColor =
-      chroma(p.gradient[0]).luminance() > 0.5 ? 'black' : 'white'
+    const { color, darkerColor } = p
 
     console.log(
       `Picked palette: %c${palette}%c - ${distances[0].distance}`,
-      `color: ${textColor};background: linear-gradient(90deg, ${colors}); padding: 2px 14px`,
+      `color: ${color};background: ${darkerColor}; padding: 2px 14px`,
       'color: inherit'
     )
   }

@@ -113,13 +113,13 @@ export default function UserInput() {
         formRef.current,
         {
           opacity: [0, 1],
-          x: [-80, 0]
+          x: [-100, 0]
         },
         {
           easing: 'ease-out',
           duration: 0.4
         }
-      )
+      ) 
     }
   }, [])
 
@@ -148,7 +148,10 @@ export default function UserInput() {
             maxWidth: '260px'
           }}
         >
-          <UserTextInput name="user" placeholder={t('begin.lastfm_user')} />
+          <UserTextInput
+            name="user"
+            placeholder={t('begin.lastfm_user') || ''}
+          />
           <Button disabled={loading} type="submit">
             {t('common.continue')}
           </Button>

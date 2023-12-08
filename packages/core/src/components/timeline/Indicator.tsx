@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
-import { RefObject, useEffect, useState } from 'react'
+import { CSSProperties, RefObject, useEffect, useState } from 'react'
 import { clamp, mapValue } from '../../utils'
 
-const IndicatorWrapper = styled.div<{ progress: number }>`
+const IndicatorWrapper = styled.div`
   position: absolute;
-  left: ${(p) => p.progress * 100}%;
+  left: var(--progress);
 
   transform: translateY(calc(-50% + 16px)) translateX(-50%);
   cursor: pointer;
@@ -77,7 +77,14 @@ export default function Indicator({
   }, [isDragging, mouseX, lineRef])
 
   return (
-    <IndicatorWrapper progress={progress} onMouseDown={handleDragStart}>
+    <IndicatorWrapper
+      onMouseDown={handleDragStart}
+      style={
+        {
+          '--progress': progress * 100 + '%'
+        } as CSSProperties
+      }
+    >
       <svg
         width="11"
         height="24"

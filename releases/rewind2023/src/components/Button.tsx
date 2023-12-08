@@ -8,7 +8,7 @@ export interface ButtonProps {
 }
 
 const Button = styled.button<ButtonProps>`
-  background: ${(p) => p.background ?? Palettes.MidnightSky.color};
+  background: ${(p) => p.background ?? Palettes.Candy.color};
   border-radius: 200px;
   color: ${(p) => p.color ?? 'white'};
   font-size: 17px;
@@ -22,15 +22,15 @@ const Button = styled.button<ButtonProps>`
 
   &:hover {
     background: ${(p) =>
-      chroma(p.background ?? Palettes.MidnightSky.color)
-        .darken(0.2)
+      chroma(p.background ?? Palettes.Candy.color)
+        .darken(0.8)
         .hex()};
-    transform: scale(1.05);
+    transform: scale(1.05) !important;
   }
 
   &:focus {
     background: ${(p) =>
-      chroma(p.background ?? Palettes.MidnightSky.color)
+      chroma(p.background ?? Palettes.Candy.color)
         .darken(0.8)
         .hex()};
     transform: scale(0.95);

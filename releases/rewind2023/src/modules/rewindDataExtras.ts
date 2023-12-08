@@ -27,6 +27,7 @@ import { renderPlaylistImage } from './image/playlist'
 import { renderSquareShareImage } from './image/squareShare'
 import { renderStoriesShareImage } from './image/storiesShare'
 import { getLargeLastfmImage } from './lastfm'
+import { renderPlaceholder } from './image/placeholder'
 
 export interface Image {
   color: string | null
@@ -57,7 +58,7 @@ export interface GeneratedImage {
   palette: PaletteType
 }
 
-export interface RewindData2022
+export interface RewindData2023
   extends Omit<RewindData, 'firstScrobbles' | 'tracks' | 'artists' | 'albums'> {
   firstScrobbles: FirstScrobblesData
   tracks: Omit<TopTracks, 'items'> & {
@@ -119,7 +120,7 @@ async function convertTrack<T extends { image: string | null }>(
 export async function sanitizeRewindData(
   rewindData: RewindData,
   user: LastfmUserInfo
-): Promise<RewindData2022> {
+): Promise<RewindData2023> {
   const firstScrobbles = await Promise.all(
     rewindData.firstScrobbles.items.map((track, i) =>
       convertTrack(track, true, i === 0)
@@ -180,7 +181,7 @@ export async function sanitizeRewindData(
 async function generateImages(
   user: LastfmUserInfo,
   rewindData: RewindData
-): Promise<RewindData2022['images']> {
+): Promise<RewindData2023['images']> {
   console.log(user)
   const userPalettes = await getImagePalettes(user.images[3]?.url)
   const playlistImages: GeneratedImage[] = []
@@ -188,19 +189,19 @@ async function generateImages(
   const squareShareImages: GeneratedImage[] = []
 
   for (const p of userPalettes) {
-    const playlistBlob = await renderPlaylistImage(user, p)
+    const playlistBlob = await renderPlaceholder(user, p)
     playlistImages.push({
       palette: p,
       url: URL.createObjectURL(playlistBlob)
     })
 
-    const shareBlob = await renderStoriesShareImage(user, rewindData, p)
+    const shareBlob = await renderPlaceholder(user, p)
     storiesShareImages.push({
       palette: p,
       url: URL.createObjectURL(shareBlob)
     })
 
-    const squareBlob = await renderSquareShareImage(user, rewindData, p)
+    const squareBlob = await renderPlaceholder(user, p)
     squareShareImages.push({
       palette: p,
       url: URL.createObjectURL(squareBlob)

@@ -46,7 +46,7 @@ export default function SplashScene() {
       <PoweredBy />
       <MusicorumPresents />
       <RewindText />
-      {/* <Startup /> */}
+      <Startup />
     </Stack>
   )
 }

@@ -10,30 +10,10 @@ import UserDone from './UserDone'
 import { Palettes } from '../../theme/colors'
 import CacheConfirm from './CacheConfirm'
 
-const preload = document.querySelector<HTMLDivElement>('#preload')!
-const app = document.querySelector<HTMLDivElement>('#root')!
-
 export default function ResolveScene() {
   const currentStep = useDataResolve((s) => s.step)
 
-  const { i18n } = useTranslation()
-  // @ts-expect-error tmnc
-  window.t = i18n
-
-  useEffect(() => {
-    // startSheet.sequence.play()
-    app.style.opacity = '1'
-    app.style.display = 'flex'
-
-    preload.style.opacity = '0'
-    preload.style.display = 'none'
-
-    interpolateBackgroundGradient(
-      Palettes.MidnightSky.gradient,
-      Palettes.MidnightSky.gradient,
-      1
-    )
-  }, [])
+  // useEffect(() => {}, [])
 
   return (
     <Stack>
