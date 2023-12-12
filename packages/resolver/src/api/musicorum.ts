@@ -37,7 +37,7 @@ export function getArtistsResources(artists: string[]) {
 }
 
 export function getTracksResources(
-  tracks: { name: string; album?: string; artist?: string }[]
+  tracks: { name: string; album?: string | null; artist?: string | null }[]
 ) {
   return request<(TrackResource | null)[]>(
     '/v2/resources/tracks',

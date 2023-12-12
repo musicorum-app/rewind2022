@@ -1,9 +1,4 @@
 import gsap from 'gsap'
-import { interpolateBetweenReferenceElements } from '../../modules/referenceInterpolator'
-
-const trackImageObj = {
-  interpolation: 0
-}
 
 export const firstStepForwardTimeline = () =>
   gsap
@@ -37,17 +32,30 @@ export const firstStepForwardTimeline = () =>
       },
       '0'
     )
+    .add('image-appear', 0.8)
     .fromTo(
-      trackImageObj,
+      '#fst .track-image',
       {
-        interpolation: 0
+        '--image-container-clip-percent': '100%'
       },
       {
-        interpolation: 1,
-        duration: 1.2,
-        ease: 'expo.inOut'
+        '--image-container-clip-percent': '0%',
+        duration: 0.5,
+        ease: 'power2.out'
       },
-      '0.1'
+      'image-appear'
+    )
+    .fromTo(
+      '#fst .track-image',
+      {
+        '--image-container-image-clip-percent': '100%'
+      },
+      {
+        '--image-container-image-clip-percent': '0%',
+        duration: 0.5,
+        ease: 'power2.out'
+      },
+      '-=0.1'
     )
     .add('textsAppear', '1')
     .fromTo(
@@ -117,33 +125,18 @@ export const firstStepBackwardTimeline = () =>
       '0.7'
     )
     .fromTo(
-      [
-        '#ysp .bottom-text',
-        '#ysp .back-image-1',
-        '#ysp .back-image-2',
-        '#ysp .back-image-3',
-        '#ysp .back-image-5'
-      ],
+      '#fst .track-image',
       {
-        opacity: 0
+        '--image-container-clip-percent': '0%',
+        '--image-container-image-clip-percent': '0%'
       },
       {
-        opacity: 1,
-        stagger: 0.1
+        '--image-container-clip-percent': '100%',
+        '--image-container-image-clip-percent': '100%',
+        duration: 0.5,
+        ease: 'power2.in'
       },
-      '1'
-    )
-    .fromTo(
-      trackImageObj,
-      {
-        interpolation: 1
-      },
-      {
-        interpolation: 0,
-        duration: 1.2,
-        ease: 'expo.inOut'
-      },
-      '0.2'
+      '0.3'
     )
     .add('textsDisappear', '0')
     .fromTo(
@@ -187,4 +180,27 @@ export const firstStepBackwardTimeline = () =>
         duration: 0.6
       },
       'textsDisappear+=0.1'
+    )
+    .fromTo(
+      '#ysp .bottom-text',
+      {
+        opacity: 0
+      },
+      {
+        opacity: 1,
+        duration: 0.7,
+        ease: 'power2.inOut'
+      }
+    )
+    .fromTo(
+      '#ysp .main-year',
+      {
+        '--percent': '0%'
+      },
+      {
+        '--percent': '100%',
+        duration: 0.7,
+        ease: 'power2.inOut'
+      },
+      '-=0.2'
     )

@@ -32,7 +32,7 @@ export default function CacheConfirm() {
         duration: 0.4
       }
     ).finished.then(() => {
-      localStorage.removeItem('Rewind22Cache')
+      localStorage.removeItem('Rewind23Cache')
       setStep(DataResolveStep.USER_CONFIRM)
     })
   }

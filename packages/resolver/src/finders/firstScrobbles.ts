@@ -39,8 +39,8 @@ export default async function parseFirstScrobbles(
   const resources = await getTracksResources(
     firstScrobbles.map((track) => ({
       name: track.name,
-      artist: track.artist,
-      album: track.album
+      artist: track.artist || null,
+      album: track.album || null
     }))
   )
 
