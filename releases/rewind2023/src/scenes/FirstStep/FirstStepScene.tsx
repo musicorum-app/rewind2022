@@ -161,7 +161,9 @@ export default function FirstStepScene() {
       }}
       id="fst"
     >
-      <SceneHeader>The first one</SceneHeader>
+      <SceneHeader className="first-one opacity-0">
+        {t('first_track.title')}
+      </SceneHeader>
 
       <Container>
         <TextContainer>

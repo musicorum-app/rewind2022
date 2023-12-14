@@ -8,7 +8,7 @@ import { useTimelineController } from '../hooks/useTimelineController'
 import { extractImageColor } from '../modules/image'
 import { useDataResolve, useRewindData } from '../scenes/Resolve/useDataResolve'
 import { getClosestPalette } from '../modules/image/palette'
-import { useBlade, useMonitor } from '@rewind/toolkit'
+import { useBlade, useFolder, useMonitor } from '@rewind/toolkit'
 import { ButtonGridApi } from '@tweakpane/plugin-essentials'
 import { ButtonGridBladeParams } from '@tweakpane/plugin-essentials/dist/types/button-grid/plugin'
 import { TextView } from '@tweakpane/core'
@@ -17,19 +17,32 @@ import { TextBladeParams } from 'tweakpane'
 const levaElement = document.querySelector('#overlay')
 
 export default function MainController() {
-  const [loadState, isTransitioning, setLoadState, prev, next, scene] =
-    useOrchestrator((s) => [
-      s.state,
-      s.isTransitioning,
-      s.setState,
-      s.prev,
-      s.next,
-      s.scene
-    ])
+  const [
+    loadState,
+    isTransitioning,
+    setIsTransitioning,
+    setLoadState,
+    prev,
+    next,
+    scene
+  ] = useOrchestrator((s) => [
+    s.state,
+    s.isTransitioning,
+    s.setIsTransitioning,
+    s.setState,
+    s.prev,
+    s.next,
+    s.scene
+  ])
 
   const currentTimeline = useTimelineController((s) => s.currentTimeline)
 
   const clear = useDataResolve((s) => s.clear)
+
+  const orchestratorFolder = useFolder({
+    title: 'Orchestrator',
+    index: 0
+  })
 
   // const values = useControls(
   //   'Orchestrator',
@@ -48,17 +61,30 @@ export default function MainController() {
   //   [loadState]
   // )
 
-  useMonitor(scene, {
-    view: 'text',
-    label: 'scene',
-    readonly: true
-  })
+  useMonitor(
+    scene,
+    {
+      view: 'text',
+      label: 'scene',
+      readonly: true
+    },
+    undefined,
+    orchestratorFolder.current
+  )
 
-  useMonitor(isTransitioning, {
-    view: 'boolean',
-    label: 'is transitioning',
-    readonly: true
-  })
+  useMonitor(
+    isTransitioning,
+    {
+      view: 'boolean',
+      label: 'is transitioning'
+    },
+    (blade) => {
+      blade.on('change', (ev) => {
+        setIsTransitioning(ev.value as boolean)
+      })
+    },
+    orchestratorFolder.current
+  )
 
   useBlade<ButtonGridApi, ButtonGridBladeParams>(
     {
@@ -74,7 +100,8 @@ export default function MainController() {
         if (ev.cell.title === '<') prev()
         else next()
       })
-    }
+    },
+    orchestratorFolder.current
   )
 
   // useControls(

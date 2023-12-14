@@ -1,13 +1,7 @@
 import gsap from 'gsap'
-import { interpolateBetweenReferenceElements } from '../../modules/referenceInterpolator'
-import { Gradient, Palettes } from '../../theme/colors'
-import { gradientToCss } from '../../utils/style'
+import { Gradient, Palette, Palettes } from '../../theme/colors'
 
-const maskInterpolatioObj = {
-  interpolation: 1
-}
-
-export const scrobblesForwardTimeline = (originGradient: Gradient) => {
+export const scrobblesForwardTimeline = (originPalette: Palette) => {
   const tl = gsap
     .timeline({
       paused: true,
@@ -18,13 +12,24 @@ export const scrobblesForwardTimeline = (originGradient: Gradient) => {
     .fromTo(
       'body',
       {
-        background: gradientToCss(originGradient)
+        background: originPalette.darkerColor
       },
       {
-        background: gradientToCss(Palettes.DisplacedOcean.gradient),
+        background: Palettes.Candy.darkerColor,
         duration: 0.8
       },
       '0.4'
+    )
+    .fromTo(
+      '#ysp',
+      {
+        opacity: 1
+      },
+      {
+        opacity: 0,
+        duration: 0.1
+      },
+      0
     )
     .fromTo(
       '#scr',
@@ -90,36 +95,35 @@ export const scrobblesForwardTimeline = (originGradient: Gradient) => {
       {
         width: '0%',
         ease: 'expo.inOut',
-        duration: 1.5,
-        onUpdate: () => {
-          interpolateBetweenReferenceElements(
-            document.querySelector('#year-splash-track-ref')!,
-            document.querySelector('#first-track-ref')!,
-            document.querySelector('#fst-track-image')!,
-            1
-          )
-        },
-        onComplete: () => {
-          interpolateBetweenReferenceElements(
-            document.querySelector('#year-splash-track-ref')!,
-            document.querySelector('#first-track-ref')!,
-            document.querySelector('#fst-track-image')!,
-            1
-          )
-        }
+        duration: 1.5
       },
       '0'
     )
     .fromTo(
-      '#fst-track-image',
+      '#fst .track-image',
       {
-        opacity: 1
+        // '--image-container-clip-percent': '0%',
+        '--image-container-image-clip-percent': '0%'
       },
       {
-        opacity: 1,
-        duration: 0.1
+        // '--image-container-clip-percent': '100%',
+        '--image-container-image-clip-percent': '100%',
+        duration: 0.5,
+        ease: 'power2.in'
       },
-      '0.9'
+      'textsDisappear+=0.1'
+    )
+    .fromTo(
+      '#fst .track-image',
+      {
+        '--image-container-clip-percent': '0%'
+      },
+      {
+        '--image-container-clip-percent': '100%',
+        duration: 0.5,
+        ease: 'power2.in'
+      },
+      'textsDisappear+=0.4'
     )
 
   const lines = document.querySelectorAll<HTMLDivElement>('#scr .scrobble-line')
@@ -128,7 +132,6 @@ export const scrobblesForwardTimeline = (originGradient: Gradient) => {
     getComputedStyle(lines[0].children[0]).getPropertyValue('font-size')
   )*/
 
-  console.log(lineHeight)
   const originY = 11 - lineHeight * indexLimit
 
   for (let i = 0; i < lines.length; i++) {
@@ -185,7 +188,7 @@ export const scrobblesForwardTimeline = (originGradient: Gradient) => {
   return tl
 }
 
-export const scrobblesBackwardTimeline = (originGradient: Gradient) => {
+export const scrobblesBackwardTimeline = (originPalette: Palette) => {
   return gsap
     .timeline({
       paused: true,
@@ -211,13 +214,23 @@ export const scrobblesBackwardTimeline = (originGradient: Gradient) => {
     .fromTo(
       'body',
       {
-        background: gradientToCss(Palettes.DisplacedOcean.gradient)
+        background: Palettes.Candy.darkerColor
       },
       {
-        background: gradientToCss(originGradient),
+        background: originPalette.darkerColor,
         duration: 0.8
       },
       '0.4'
+    )
+    .fromTo(
+      '#ysp',
+      {
+        opacity: 0
+      },
+      {
+        opacity: 1,
+        duration: 0.1
+      }
     )
     .add('textsDisappear', '0.7')
     .fromTo(
@@ -273,35 +286,32 @@ export const scrobblesBackwardTimeline = (originGradient: Gradient) => {
       {
         width: '100%',
         ease: 'expo.inOut',
-        duration: 1,
-        onUpdate: () => {
-          interpolateBetweenReferenceElements(
-            document.querySelector('#year-splash-track-ref')!,
-            document.querySelector('#first-track-ref')!,
-            document.querySelector('#fst-track-image')!,
-            1
-          )
-        },
-        onComplete: () => {
-          interpolateBetweenReferenceElements(
-            document.querySelector('#year-splash-track-ref')!,
-            document.querySelector('#first-track-ref')!,
-            document.querySelector('#fst-track-image')!,
-            1
-          )
-        }
+        duration: 1
       },
       'textsDisappear'
     )
     .fromTo(
-      '#fst-track-image',
+      '#fst .track-image',
       {
-        opacity: 0
+        '--image-container-clip-percent': '100%'
       },
       {
-        opacity: 1,
-        duration: 0.1
+        '--image-container-clip-percent': '0%',
+        duration: 0.5,
+        ease: 'power2.out'
       },
       '0.9'
+    )
+    .fromTo(
+      '#fst .track-image',
+      {
+        '--image-container-image-clip-percent': '100%'
+      },
+      {
+        '--image-container-image-clip-percent': '0%',
+        duration: 0.5,
+        ease: 'power2.out'
+      },
+      '-=0.5'
     )
 }

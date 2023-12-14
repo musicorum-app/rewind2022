@@ -65,11 +65,18 @@ export default function TopSceneTemplate(props: TopSceneTemplateProps) {
 
   const count = small && !rellySmall ? 6 : medium ? 4 : 5
 
-  const color =
-    Palettes[props.items[0].image.palette ?? PaletteType.Black].color
+  const palette = Palettes[props.items[0].image.palette ?? PaletteType.Black]
 
   return (
-    <Centered column id={props.id} pointerEvents={scene === props.scene}>
+    <Centered
+      column
+      id={props.id}
+      pointerEvents={scene === props.scene}
+      style={{
+        '--scene-main-color': palette.color,
+        '--scene-darker-color': palette.darkerColor
+      }}
+    >
       <ComplementaryText className="text">{props.topText}</ComplementaryText>
       <Container>
         {props.items.slice(0, count).map((track, index) => (
@@ -81,7 +88,7 @@ export default function TopSceneTemplate(props: TopSceneTemplateProps) {
               count: track.scrobbles
             })}
             image={track.image.url}
-            color={color || 'black'}
+            color={palette.color}
             preview={track.preview ?? null}
           />
         ))}

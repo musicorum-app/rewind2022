@@ -27,3 +27,7 @@
 .chakra-modal__content-container {
   z-index: 1000;
 }
+
+.opacity-0 {
+  opacity: 0;
+}

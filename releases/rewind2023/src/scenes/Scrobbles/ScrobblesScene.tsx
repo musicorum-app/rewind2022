@@ -14,7 +14,7 @@ import { scenesStore } from '../scenes'
 import Flex from '@react-css/flex'
 import { useTranslation } from 'react-i18next'
 import { useSceneAudio } from '../../hooks/useSceneAudio'
-import 'core-js/features/array/at';
+import 'core-js/features/array/at'
 
 const Container = styled(Centered)`
   font-size: 182px;
@@ -70,7 +70,7 @@ const Line = styled.div`
   transform: translateY(-10em);
 `
 
-const Digit = styled.h1`
+const Digit = styled.h1<{ color?: string }>`
   font-size: 1em;
   font-variation-settings: 'wght' 900;
   margin: 0;
@@ -78,6 +78,7 @@ const Digit = styled.h1`
   width: 115px;
   display: flex;
   justify-content: center;
+  color: ${(p) => p.color ?? 'inherit'};
 
   @media only screen and (max-width: 700px) {
     width: 78px;
@@ -96,6 +97,7 @@ const CountCopy = styled(Digit)`
   opacity: 0;
   display: flex;
   width: auto !important;
+  color: var(--scene-main-color);
 `
 
 const TextsCentered = styled(Centered)`
@@ -148,25 +150,23 @@ export default function ScrobblesScene() {
     return lines
   }, [rewindData])
 
-  const originGradient = useMemo(() => {
+  const originPalette = useMemo(() => {
     const targetPalette = rewindData?.firstScrobbles.items[0].image.palette
-    return targetPalette
-      ? Palettes[targetPalette].gradient
-      : Palettes.Chuu.gradient
+    return targetPalette ? Palettes[targetPalette] : Palettes.Chuu
   }, [rewindData])
 
   useEffect(() => {
     setTimelines(RewindScene.Scrobbles, {
       forward: {
         id: 'scr-forward',
-        factory: () => scrobblesForwardTimeline(originGradient)
+        factory: () => scrobblesForwardTimeline(originPalette)
       },
       backward: {
         id: 'scr-backward',
-        factory: () => scrobblesBackwardTimeline(originGradient)
+        factory: () => scrobblesBackwardTimeline(originPalette)
       }
     })
-  }, [originGradient, scrobblesForwardTimeline])
+  }, [originPalette, scrobblesForwardTimeline])
 
   useSceneAudio(
     RewindScene.Scrobbles,
@@ -178,16 +178,30 @@ export default function ScrobblesScene() {
     return null
   }
 
+  console.log(scrobblesList)
+
+  function resolveColor(i: number, j: number) {
+    return (i % 2 ? !(j % 2) : j % 2) ? 'var(--scene-main-color)' : 'inherit'
+  }
+
   return (
-    <Container id="scr">
+    <Container
+      id="scr"
+      style={{
+        '--scene-main-color': Palettes.Candy.color,
+        '--scene-darker-color': Palettes.Candy.darkerColor
+      }}
+    >
       <Stack>
         {scrobblesList && (
           <ScrobbleListContainer className="list-container">
             <ScrobbleList>
               {scrobblesList.map((line, i) => (
                 <Line className="scrobble-line" key={i}>
-                  {line.map((digit, i) => (
-                    <Digit key={i}>{digit}</Digit>
+                  {line.map((digit, j) => (
+                    <Digit key={j} color={resolveColor(i, j)}>
+                      {digit}
+                    </Digit>
                   ))}
                 </Line>
               ))}
@@ -203,7 +217,7 @@ export default function ScrobblesScene() {
               opacity: 0
             }}
           >
-            2022
+            2023
           </Digit>
           <ComplementaryText className="complementary-text">
             {t('scrobbles.bottom_text')}

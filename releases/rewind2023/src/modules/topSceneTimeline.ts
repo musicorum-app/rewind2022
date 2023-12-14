@@ -15,10 +15,35 @@ export function includeTopSceneForwardTimeline(
       {
         opacity: 1,
         scale: 1,
+        duration: 0.3,
         y: 0,
         stagger: 0.09
       },
       'forward'
+    )
+    .fromTo(
+      `#${id} .top-item .image`,
+      {
+        '--image-container-clip-percent': '100%'
+      },
+      {
+        '--image-container-clip-percent': '0%',
+        duration: 0.5,
+        stagger: 0.1
+      },
+      'forward+=0.2'
+    )
+    .fromTo(
+      `#${id} .top-item .image`,
+      {
+        '--image-container-image-clip-percent': '100%'
+      },
+      {
+        '--image-container-image-clip-percent': '0%',
+        duration: 0.5,
+        stagger: 0.1
+      },
+      'forward+=0.4'
     )
     .fromTo(
       `#${id} .top-item h2`,

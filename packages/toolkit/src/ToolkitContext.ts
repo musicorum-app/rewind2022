@@ -1,4 +1,5 @@
 import {
+  RefObject,
   createContext,
   useContext,
   useEffect,
@@ -8,6 +9,7 @@ import {
 } from 'react'
 import { Pane } from 'tweakpane'
 import * as EssentialsPlugin from '@tweakpane/plugin-essentials'
+import { pluginsBundle } from './tweakpane-plugins/bundle'
 
 const isDev = !!import.meta.env.DEV
 
@@ -17,16 +19,20 @@ interface IToolkitContext {
 
 export const ToolkitContext = createContext<IToolkitContext | null>(null)
 
-export function useToolkitProviderData(): IToolkitContext {
+export function useToolkitProviderData(
+  containerRef: RefObject<HTMLDivElement | null>
+): IToolkitContext {
   const [pane, setPane] = useState<Pane | null>(null)
 
   useLayoutEffect(() => {
-    if (!isDev) return
+    if (!isDev || !containerRef.current) return
 
     const pane = new Pane({
-      title: 'Rewind Toolkit'
+      title: 'Rewind Toolkit',
+      container: containerRef.current
     })
     pane.registerPlugin(EssentialsPlugin)
+    pane.registerPlugin(pluginsBundle)
 
     setPane(pane)
 

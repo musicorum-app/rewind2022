@@ -38,13 +38,14 @@
     "welcome": "Welcome to your yearly rewind"
   },
   "first_track": {
+    "title": "The first one",
     "sub_text_zero": "This was your first scrobble of the year, on {{date, datetime}}. You only listened this song once this year.",
     "sub_text_one": "This was your first scrobble of the year, on {{date, datetime}}. You only listened this song one more time this year.",
     "sub_text_other": "This was your first scrobble of the year, on {{date, datetime}}. You also listened this song {{count, number}} more times this year."
   },
   "scrobbles": {
-    "top_text": "You also had",
-    "bottom_text": "scrobbles this year"
+    "top_text": "This year you had",
+    "bottom_text": "scrobbles"
   },
   "months": {
     "jan": "jan",
@@ -61,9 +62,8 @@
     "dec": "dec"
   },
   "scrobbles_details": {
-    "last_year_more": "<0>{{count}} ({{percent}}%)</0> more than 2021",
-    "last_year_same": "same as 2021",
-    "last_year_less": "<0>{{count}} ({{percent}}%)</0> less than 2021",
+    "last_year_diff": "vs <0>{{count}}</0> from 2022 ({{percent}}%)",
+    "last_year_same": "same as 2022 (<0>{{count}}</0>)",
     "details": {
       "average": {
         "label": "Daily Average",

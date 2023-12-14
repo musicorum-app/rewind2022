@@ -4,6 +4,7 @@ import { FiPlay, FiPause } from 'react-icons/fi'
 import { usePlayer } from '../hooks/usePlayer'
 import { useEffect } from 'react'
 import { RewindScene } from '../types'
+import { ImageContainer } from './ImageContainer'
 
 const MediaButton = styled.button<{ color: string }>`
   margin-top: 12px;
@@ -33,6 +34,8 @@ const MediaButton = styled.button<{ color: string }>`
 const Texts = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 100%;
 `
 
 const Container = styled.div`
@@ -56,11 +59,15 @@ const Container = styled.div`
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    width: var(--width);
+    width: fit-content;
+    max-width: var(--width);
     font-variation-settings: 'wght' 900;
     font-size: 20px;
     text-align: center;
     margin: 1rem 0 0.5rem 0;
+    padding: 0 7px;
+    background: var(--scene-main-color);
+    color: var(--scene-darker-color);
   }
 
   & h5 {
@@ -145,7 +152,7 @@ export default function TopItem(props: TopItemProps) {
 
   return (
     <Container className="top-item">
-      <ImageWithBorder src={props.image ?? ''} color={props.color} />
+      <ImageContainer src={props.image ?? ''} className="image" />
       <Texts>
         <h2>{props.title}</h2>
         <h5>{props.secondary}</h5>
