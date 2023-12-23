@@ -5,6 +5,8 @@ import { Palettes } from '../theme/colors'
 export interface ButtonProps {
   background?: string
   color?: string
+  href?: string
+  target?: string
 }
 
 const Button = styled.button<ButtonProps>`
@@ -19,6 +21,7 @@ const Button = styled.button<ButtonProps>`
   cursor: pointer;
   transition: all 140ms linear;
   box-sizing: border-box;
+  text-decoration: none;
 
   &:hover {
     background: ${(p) =>

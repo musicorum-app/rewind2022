@@ -1,15 +1,16 @@
 import { Quadro } from '@musicorum/quadro'
 import { loadFont } from '@rewind/core/src/utils/canvas'
+import { Palette } from '../../theme/colors'
 
 export const defaultTitleFont = '900 18px Satoshi-Black'
 export const defaultValueFont = '900 25px Satoshi-Black'
 
 export function createListCanvas(
   title: string,
-  lines: string[],
+  lines: string[] | [string, number][],
   width: number,
   height: number,
-  mainColor: string,
+  palette: Palette,
   itemColor: string,
   titleFont = defaultTitleFont,
   valueFont = defaultValueFont,
@@ -24,23 +25,41 @@ export function createListCanvas(
   qdr.textOverflow = 'ellipsis'
 
   ctx.font = titleFont
-  const titleHeight = ctx.measureText('TEST FONT').actualBoundingBoxDescent
-  const titleActualSize = titleHeight * 1.6
+  const titlePadding = 0
 
   ctx.textAlign = 'start'
   ctx.textBaseline = 'top'
-  ctx.fillStyle = mainColor
 
-  qdr.writeTextLine(title, 0, 2, width)
+  ctx.fillStyle = palette.color
+  qdr.writeTextLine(title, titlePadding, 3, width)
 
-  qdr.fillStyle = itemColor
   qdr.font = valueFont
-
-  const formatter = new Intl.NumberFormat()
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
-    qdr.writeTextLine(line, 0, lineHeight * (i + 1), width)
+    const paddingX = 2
+    qdr.fillStyle = itemColor
+
+    if (Array.isArray(line)) {
+      const [name, value] = line
+      const numberWidth = ctx.measureText(value.toString()).width
+      qdr.textAlign = 'start'
+      qdr.writeTextLine(
+        name,
+        paddingX,
+        lineHeight * (i + 1),
+        width - numberWidth - 10
+      )
+      qdr.textAlign = 'end'
+      qdr.writeTextLine(
+        value.toString(),
+        width - paddingX,
+        lineHeight * (i + 1),
+        numberWidth + 5
+      )
+    } else {
+      qdr.writeTextLine(line, paddingX, lineHeight * (i + 1), width)
+    }
   }
 
   return canvas

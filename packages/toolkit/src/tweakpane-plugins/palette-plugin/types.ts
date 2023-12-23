@@ -3,6 +3,7 @@ import { BaseInputParams, Value, ViewProps } from '@tweakpane/core'
 export interface PaletteSelectConfig {
   value: Value<Palette>
   viewProps: ViewProps
+  params: PaletteSelectParams
 }
 
 export interface PaletteSelectParams extends BaseInputParams {

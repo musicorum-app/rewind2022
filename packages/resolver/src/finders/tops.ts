@@ -5,6 +5,7 @@ import { ArtistResource, TrackResource } from '../api/types'
 import {
   Album,
   EntityTop,
+  TopArtistItem,
   TopArtists,
   TopTracks,
   TrackWithResource,
@@ -12,7 +13,7 @@ import {
 } from '../types'
 import { Artist, ArtistWithResource, Track } from '../types'
 import { aggregate, sortMapWithArray } from '../utils'
-import 'core-js/features/array/at';
+import 'core-js/features/array/at'
 
 function getTop(recentTracks: Track[], hashFn: (track: Track) => string) {
   const aggregator = aggregate(recentTracks, hashFn)
@@ -77,26 +78,36 @@ export async function getTopArtists(
     top.slice(0, 100).map((t) => t[0].artist)
   )
 
-  const artists: ArtistWithResource[] = top
-    .slice(0, 100)
-    .map((tracks, index) => {
-      const resource = resources[index] as ArtistResource | null
-      return {
-        name: tracks[0].artist,
-        scrobbles: tracks.length,
-        resource: resource
-          ? {
-              spotify_id: resource.spotify_id,
-              deezer_id: resource.deezer_id,
-              genres: resource.genres,
-              tags: resource.tags,
-              popularity: resource.popularity,
-              images: resource.resources[0]?.images
-            }
-          : null,
-        image: resource?.resources[0]?.images[0]?.url ?? null
-      }
-    })
+  const artists: TopArtistItem[] = top.slice(0, 100).map((tracks, index) => {
+    const resource = resources[index] as ArtistResource | null
+    const topTracks = getTop(
+      recentTracks,
+      (track) => `${track.name}_${track.artist}`
+    )
+      .filter((r) => r[0].artist === tracks[0].artist)
+      .slice(0, 10)
+      .map((tracks) => ({
+        ...tracks[0],
+        scrobbles: tracks.length
+      }))
+
+    return {
+      name: tracks[0].artist,
+      scrobbles: tracks.length,
+      topTracks,
+      resource: resource
+        ? {
+            spotify_id: resource.spotify_id,
+            deezer_id: resource.deezer_id,
+            genres: resource.genres,
+            tags: resource.tags,
+            popularity: resource.popularity,
+            images: resource.resources[0]?.images
+          }
+        : null,
+      image: resource?.resources[0]?.images[0]?.url ?? null
+    }
+  })
 
   const sorted = artists
     .filter((a) => !!a.resource?.popularity)

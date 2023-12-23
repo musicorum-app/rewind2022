@@ -5,11 +5,7 @@ export const GradientSelect = styled.button<{ palette: Palette }>`
   width: 42px;
   height: 42px;
   border-radius: 100%;
-  background: linear-gradient(
-    135deg,
-    ${(p) => p.palette.gradient[0]},
-    ${(p) => p.palette.gradient[1]}
-  );
+  background: ${(p) => p.palette.darkerColor};
   border: 5px solid ${(p) => p.palette.color};
   box-shadow: 0px 1px 11px 2px rgba(0, 0, 0, 0.34);
   cursor: pointer;

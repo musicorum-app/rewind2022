@@ -7,18 +7,18 @@ import {
   loadFont,
   roundedCanvas
 } from '@rewind/core/src/utils/canvas'
-import { loadImage } from '../image'
-import { imageTypeDefaultImages } from '../lastfmImage'
+import { ImageType, imageTypeDefaultImages } from '../lastfmImage'
 import { createLogo } from '../../utils/canvas'
 import { RewindData } from '@rewind/resolver/src/types'
 import { createListCanvas, defaultTitleFont, defaultValueFont } from './common'
+import { loadImageAsset } from '../image'
 
 const width = 720
 const height = 1280
 const margin = 60
 const radius = 60
 const padding = 40
-const mainImageSize = 360
+const mainImageSize = 410
 const sideImagesSize = 260
 const sideImagesRadius = 14
 const spacing = 16
@@ -31,7 +31,7 @@ export async function renderStoriesShareImage(
   paletteType: PaletteType
 ) {
   const palette = Palettes[paletteType]
-  const textColor = paletteType === PaletteType.Black ? 'black' : 'white'
+  const textColor = 'white'
 
   const canvas = document.createElement('canvas')
   canvas.width = width
@@ -39,33 +39,34 @@ export async function renderStoriesShareImage(
   const ctx = canvas.getContext('2d')!
   const qdr = new Quadro(ctx)
 
-  const gradient = ctx.createLinearGradient(0, 0, width, height)
-  gradient.addColorStop(0, palette.gradient[0])
-  gradient.addColorStop(1, palette.gradient[1])
-
-  qdr.fillStyle = gradient
-  qdr.fillRect(0, 0, width, height)
+  const hasUserImage = !!user.images[3]?.url
 
   qdr.fillStyle = palette.color
+  qdr.fillRect(0, 0, width, height)
+
+  qdr.fillStyle = palette.darkerColor
+  const boxHeight = height - margin * 2 - mainImageSize / 2
   drawRoundedRect(
     ctx,
     margin,
-    margin,
+    margin + mainImageSize / 2,
     width - margin * 2,
-    height - margin * 2,
+    boxHeight,
     radius
   )
   ctx.fill()
 
-  const artistImage = await loadImage(
-    rewindData.artists.items[0].image || imageTypeDefaultImages.ARTIST
+  const artistImage = await loadImageAsset(
+    rewindData.artists.items[hasUserImage ? 0 : 1].image,
+    ImageType.ARTIST
   )
 
-  const albumImage = await loadImage(
-    rewindData.albums.items[0].image || imageTypeDefaultImages.ALBUM
+  const albumImage = await loadImageAsset(
+    rewindData.albums.items[0].image,
+    ImageType.ALBUM
   )
 
-  const sideImagesY = margin + padding + mainImageSize / 2
+  const sideImagesY = margin + mainImageSize / 2
 
   const artistImageCanvas = roundedCanvas(
     artistImage,
@@ -74,7 +75,7 @@ export async function renderStoriesShareImage(
     sideImagesRadius
   )
 
-  qdr.globalAlpha = 0.5
+  // qdr.globalAlpha = 0.5
   qdr.yAlign = 'center'
   qdr.drawImage(
     artistImageCanvas,
@@ -107,9 +108,10 @@ export async function renderStoriesShareImage(
   ctx.fillStyle = 'rgba(0, 0, 0, 0)'
   ctx.fillRect(width / 2, sideImagesY, mainImageSize, mainImageSize)
 
-  const image = await loadImage(
-    user.images[3]?.url || imageTypeDefaultImages.USER
-  )
+  const mainImage = hasUserImage
+    ? user.images[3]?.url
+    : rewindData.artists.items[0].image
+  const image = await loadImageAsset(mainImage, ImageType.USER)
 
   const userImageCanvas = roundedCanvas(
     image,
@@ -127,7 +129,7 @@ export async function renderStoriesShareImage(
     mainImageSize
   )
 
-  const mainColor = palette.gradient[0]
+  const mainColor = palette.color
 
   ctx.shadowColor = 'none'
   ctx.shadowBlur = 0
@@ -139,7 +141,7 @@ export async function renderStoriesShareImage(
 
   await loadFont(ctx.font)
 
-  ctx.fillText(user.name, width / 2, margin + padding * 1.5 + mainImageSize)
+  ctx.fillText(user.name, width / 2, margin + mainImageSize + padding / 2)
 
   ctx.fillStyle = mainColor
   ctx.font = defaultTitleFont
@@ -153,14 +155,29 @@ export async function renderStoriesShareImage(
   ctx.textBaseline = 'top'
 
   const textsX = margin + padding
-  const textsY = margin + padding * 3 + mainImageSize
+  const textsY = margin + padding * 2 + mainImageSize
 
   qdr.writeTextLine('SCROBBLES', textsX, textsY, width - (padding + margin) * 2)
 
-  qdr.fillStyle = textColor
   qdr.font = '900 80px Satoshi-Black'
-
   const formatter = new Intl.NumberFormat()
+
+  const scrobblesTextMetrics = ctx.measureText(
+    formatter.format(rewindData.scrobbles.total)
+  )
+
+  qdr.xAlign = 'left'
+  qdr.yAlign = 'top'
+
+  qdr.fillStyle = mainColor
+  qdr.fillRect(
+    textsX - 2,
+    textsY - 1 + titleActualSize,
+    scrobblesTextMetrics.width + 4,
+    scrobblesTextMetrics.actualBoundingBoxDescent + 2
+  )
+
+  qdr.fillStyle = palette.darkerColor
 
   qdr.writeTextLine(
     formatter.format(rewindData.scrobbles.total),
@@ -169,10 +186,12 @@ export async function renderStoriesShareImage(
     width - (padding + margin) * 2
   )
 
+  qdr.fillStyle = 'white'
+
   const cardsY = textsY + spacing + 120
   const remainingSpace =
     height - cardsY - margin - padding - barHeight - spacing
-  const cardHeight = remainingSpace / 2
+  const cardHeight = remainingSpace / 2 + 4
   const cardWidth = (width - margin * 2 - padding * 2 - spacing) / 2
   const cardMargin = margin + padding
   const limit = 6
@@ -185,7 +204,7 @@ export async function renderStoriesShareImage(
     rewindData.artists.items.map((i) => i.name).slice(0, limit),
     cardWidth,
     cardHeight,
-    mainColor,
+    palette,
     textColor
   )
 
@@ -202,7 +221,7 @@ export async function renderStoriesShareImage(
     rewindData.albums.items.map((i) => i.name).slice(0, limit),
     cardWidth,
     cardHeight,
-    mainColor,
+    palette,
     textColor
   )
 
@@ -222,7 +241,7 @@ export async function renderStoriesShareImage(
     rewindData.tracks.items.map((i) => i.name).slice(0, limit),
     cardWidth,
     cardHeight,
-    mainColor,
+    palette,
     textColor
   )
 
@@ -250,7 +269,7 @@ export async function renderStoriesShareImage(
     sortedList.slice(0, limit),
     cardWidth,
     cardHeight,
-    mainColor,
+    palette,
     textColor
   )
 
@@ -272,10 +291,12 @@ export async function renderStoriesShareImage(
   ctx.arcTo(width - margin, height - margin, width - margin, barY, margin)
   ctx.lineTo(width - margin, barY)
   ctx.closePath()
-  ctx.fill()
+  // ctx.fill()
 
   const logoWidth = 130 * 1.9
   const logoHeight = 18 * 1.9
+  const yearTextWidth = 100
+  const endLogoWidth = logoWidth + yearTextWidth + 6
 
   const logo = await createLogo(palette.color, logoWidth, logoHeight)
 
@@ -283,23 +304,23 @@ export async function renderStoriesShareImage(
   qdr.yAlign = 'center'
   qdr.drawImage(
     logo,
-    margin + barPadding,
+    width / 2 - endLogoWidth / 2,
     height - margin - barHeight / 2,
     logoWidth,
     logoHeight
   )
 
   ctx.fillStyle = palette.color
-  ctx.textAlign = 'end'
+  ctx.textAlign = 'right'
   ctx.textBaseline = 'middle'
   ctx.font = '900 38px Satoshi-Black'
 
   await loadFont('900 38px Satoshi-Black')
 
   ctx.fillText(
-    '2022',
-    width - margin - barPadding,
-    height - margin - barHeight / 2
+    '2023',
+    width / 2 + endLogoWidth / 2,
+    height - margin - barHeight / 2 + 3
   )
 
   ctx.fillStyle = mainColor
@@ -308,7 +329,7 @@ export async function renderStoriesShareImage(
   ctx.textBaseline = 'middle'
   ctx.textAlign = 'left'
   const linkX = width - margin - spacing
-  const linkY = height - margin - barHeight - spacing
+  const linkY = height - margin - spacing - margin
   ctx.translate(linkX, linkY)
   ctx.rotate(Math.PI / -2)
   ctx.fillText('musc.pw/rewind', 0, 0)

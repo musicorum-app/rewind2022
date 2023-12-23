@@ -35,6 +35,10 @@ export interface ArtistWithResource extends Artist {
   } | null
 }
 
+export interface TopArtistItem extends ArtistWithResource {
+  topTracks: WithScrobbles<Track>[]
+}
+
 export interface Album {
   name: string
   artist?: string
@@ -48,7 +52,9 @@ export type EntityTop<E> = {
   total: number
 }
 
-export interface TopArtists extends EntityTop<ArtistWithResource> {
+export interface TopArtists
+  extends Omit<EntityTop<ArtistWithResource>, 'items'> {
+  items: WithScrobbles<TopArtistItem>[]
   popularity: {
     high: ArtistWithResource | null
     low: ArtistWithResource | null

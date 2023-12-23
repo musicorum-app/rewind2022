@@ -8,6 +8,7 @@ import {
   ArtistWithResource,
   EntityTop,
   RewindData,
+  TopArtistItem,
   TopArtists,
   TopTracks,
   Track,
@@ -28,6 +29,7 @@ import { renderSquareShareImage } from './image/squareShare'
 import { renderStoriesShareImage } from './image/storiesShare'
 import { getLargeLastfmImage } from './lastfm'
 import { renderPlaceholder } from './image/placeholder'
+import { renderTopArtistImage } from './image/artistShare'
 
 export interface Image {
   color: string | null
@@ -58,6 +60,11 @@ export interface GeneratedImage {
   palette: PaletteType
 }
 
+export interface ArtistShare {
+  image: GeneratedImage
+  artist: WithImage<ArtistWithResource>
+}
+
 export interface RewindData2023
   extends Omit<RewindData, 'firstScrobbles' | 'tracks' | 'artists' | 'albums'> {
   firstScrobbles: FirstScrobblesData
@@ -80,6 +87,7 @@ export interface RewindData2023
     playlist: GeneratedImage[]
     squareShare: GeneratedImage[]
     storiesShare: GeneratedImage[]
+    artistShares: ArtistShare[]
   }
 }
 
@@ -135,7 +143,7 @@ export async function sanitizeRewindData(
 
   const topArtists = await Promise.all(
     rewindData.artists.items.map((artist, i) =>
-      convertTrack(artist, true, i === 0)
+      convertTrack(artist, true, true)
     )
   )
 
@@ -174,43 +182,60 @@ export async function sanitizeRewindData(
       total: rewindData.albums.total,
       items: topAlbums
     },
-    images: await generateImages(user, rewindData)
+    images: await generateImages(user, rewindData, topArtists)
   }
 }
 
 async function generateImages(
   user: LastfmUserInfo,
-  rewindData: RewindData
+  rewindData: RewindData,
+  topArtists: WithImage<TopArtistItem>[]
 ): Promise<RewindData2023['images']> {
-  console.log(user)
   const userPalettes = await getImagePalettes(user.images[3]?.url)
   const playlistImages: GeneratedImage[] = []
   const storiesShareImages: GeneratedImage[] = []
   const squareShareImages: GeneratedImage[] = []
+  const artistShareImages: ArtistShare[] = []
 
   for (const p of userPalettes) {
-    const playlistBlob = await renderPlaceholder(user, p)
+    const playlistBlob = await renderPlaylistImage(user, rewindData, p)
     playlistImages.push({
       palette: p,
       url: URL.createObjectURL(playlistBlob)
     })
 
-    const shareBlob = await renderPlaceholder(user, p)
+    const shareBlob = await renderStoriesShareImage(user, rewindData, p)
     storiesShareImages.push({
       palette: p,
       url: URL.createObjectURL(shareBlob)
     })
 
-    const squareBlob = await renderPlaceholder(user, p)
+    const squareBlob = await renderSquareShareImage(user, rewindData, p)
     squareShareImages.push({
       palette: p,
       url: URL.createObjectURL(squareBlob)
     })
   }
 
+  for (const artist of topArtists) {
+    const palette = artist.image.palette || PaletteType.Candy
+    const image = await renderTopArtistImage(user, rewindData, artist)
+
+    artistShareImages.push({
+      artist,
+      image: {
+        palette,
+        url: URL.createObjectURL(image)
+      }
+    })
+  }
+
+  playlistImages.map((i) => i.url).forEach((u) => console.log(u))
+
   return {
     playlist: playlistImages,
     squareShare: squareShareImages,
-    storiesShare: storiesShareImages
+    storiesShare: storiesShareImages,
+    artistShares: artistShareImages
   }
 }

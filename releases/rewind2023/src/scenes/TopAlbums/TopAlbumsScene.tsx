@@ -15,6 +15,7 @@ import {
   createTopAlbumsTimelineForward
 } from './topAlbumsTimeline'
 import { usePaletteToolkit } from '../../hooks/usePaletteToolkit'
+import { ImageType } from '../../modules/lastfmImage'
 
 export default function TopAlbumsScene() {
   const rewindData = useRewindData()
@@ -40,27 +41,29 @@ export default function TopAlbumsScene() {
     selectedResource?.name
   )
 
-  const palette = usePaletteToolkit(RewindScene.TopAlbumsScene, Palettes.Black)
+  const scenePaletteType = usePaletteToolkit(
+    RewindScene.TopAlbumsScene,
+    rewindData?.albums.items[0].image.palette ?? PaletteType.Wine
+  )
+  const scenePalette = Palettes[scenePaletteType]
 
   useEffect(() => {
     if (!rewindData) return
 
     const palette =
       Palettes[rewindData.tracks.items[0].image.palette ?? PaletteType.Black]
-    const targetPalette =
-      Palettes[rewindData.albums.items[0].image.palette ?? PaletteType.Black]
 
     setTimelines(RewindScene.TopAlbumsScene, {
       forward: {
         id: 'tal-forward',
-        factory: () => createTopAlbumsTimelineForward(palette, targetPalette)
+        factory: () => createTopAlbumsTimelineForward(palette, scenePalette)
       },
       backward: {
         id: 'tal-backward',
-        factory: () => createTopAlbumsTimelineBackward(palette, targetPalette)
+        factory: () => createTopAlbumsTimelineBackward(palette, scenePalette)
       }
     })
-  }, [rewindData])
+  }, [rewindData, scenePalette])
 
   if (!rewindData) {
     return null
@@ -69,9 +72,11 @@ export default function TopAlbumsScene() {
   return (
     <TopSceneTemplate
       id="tal"
+      imageType={ImageType.TRACK}
       scene={RewindScene.TopAlbumsScene}
       items={rewindData.albums.items}
       topText={t('top_albums.top')}
+      palette={scenePaletteType}
       bottomText={t('top_albums.bottom', {
         count: rewindData.albums.total
       })}

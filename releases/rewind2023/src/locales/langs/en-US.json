@@ -106,24 +106,28 @@
     "note": "* based on the average of your top 100 artists of the year, with Spotify's popularity score"
   },
   "end_splash": {
-    "text": "And this was your year on music!"
+    "text": "And this was your year in music!"
   },
   "collage": {
-    "text": "And of course, this wouldn’t be a last.fm thing without a an 10x10 album collage"
+    "text": "And of course, this wouldn’t be a last.fm thing without a 10x10 album collage"
+  },
+  "artist_share": {
+    "title": "Share your favorite artist!",
+    "text": "Show the love for your most listened artists!"
   },
   "share": {
     "title": "Share your rewind!",
-    "text": "Show to your friends your 2022 in music with #MusicorumRewind!",
+    "text": "Show to your friends your 2023 in music with #MusicorumRewind!",
     "change_mode": "Change Mode"
   },
   "finish": {
     "title": "That was it!",
     "text1": "This was your year in music rewinded! We hope you enjoyed this experience!",
     "text2": "This website was done by one person. If you liked this and want to see more, share this and give it a feedback! Also, consider joining our Patreon to help fund the development :D",
-    "text3": "Happy 2023!",
+    "text3": "Happy 2024!",
     "buttons": {
       "tweet": "Tweet",
-      "thanks": "Thanks",
+      "thanks": "Credits",
       "feedback": "Feedback"
     },
     "tweet_text": "This year I had {{count}} scrobbles on #Lastfm. Take a look at your rewind on #MusicorumRewind by @MusicorumApp"
@@ -132,8 +136,8 @@
     "save_on": "Save on {{service}}",
     "download": "Download image",
     "creation": {
-      "name": "My 2022 rewind",
-      "description": "My most listened tracks from 2022, based on my Last.fm profile, by #MusicorumRewind"
+      "name": "My 2023 rewind",
+      "description": "My most listened tracks from 2023, based on my Last.fm profile, by #MusicorumRewind"
     },
     "generic_error": "Couldn't create playlist",
     "created": {

@@ -13,7 +13,6 @@ export async function createLogo(color: string, width: number, height: number) {
 
   quadro.globalCompositeOperation = 'destination-in'
   const logo = await loadImage(musicorumLogo)
-  console.log(logo)
   quadro.drawImage(logo, 0, 0, width, height)
 
   return canvas

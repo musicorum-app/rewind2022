@@ -5,6 +5,7 @@ import { usePlayer } from '../hooks/usePlayer'
 import { useEffect } from 'react'
 import { RewindScene } from '../types'
 import { ImageContainer } from './ImageContainer'
+import { ImageType, imageTypeDefaultImages } from '../modules/lastfmImage'
 
 const MediaButton = styled.button<{ color: string }>`
   margin-top: 12px;
@@ -90,10 +91,12 @@ const Container = styled.div`
       margin-left: 12px;
       flex: 1;
       width: 30vw;
+      align-items: start;
     }
 
     & h2 {
       margin: 0;
+      max-width: fit-content;
     }
 
     & ${Texts} * {
@@ -117,6 +120,7 @@ const Container = styled.div`
 export interface TopItemProps {
   index: number
   image?: string | null
+  imageType: ImageType
   color: string
   title: string
   secondary: string
@@ -152,7 +156,11 @@ export default function TopItem(props: TopItemProps) {
 
   return (
     <Container className="top-item">
-      <ImageContainer src={props.image ?? ''} className="image" />
+      <ImageContainer
+        src={props.image ?? ''}
+        className="image"
+        fallbackSrc={imageTypeDefaultImages[props.imageType]}
+      />
       <Texts>
         <h2>{props.title}</h2>
         <h5>{props.secondary}</h5>

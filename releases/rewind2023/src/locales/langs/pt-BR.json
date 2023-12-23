@@ -13,7 +13,7 @@
   },
   "splash": {
     "text1": "A hora de rever seu",
-    "text2": "2022 na música chegou"
+    "text2": "2023 na música chegou"
   },
   "begin": {
     "lastfm_user": "Usuário do Last.fm",
@@ -61,9 +61,8 @@
     "dec": "dez"
   },
   "scrobbles_details": {
-    "last_year_more": "<0>{{count}} ({{percent}}%)</0> mais do que em 2021",
-    "last_year_same": "igual em 2021",
-    "last_year_less": "<0>{{count}} ({{percent}}%)</0> menos do que em 2021",
+    "last_year_diff": "vs <0>{{count}}</0> de 2022 ({{percent}}%)",
+    "last_year_same": "igual de 2022 (<0>{{count}}</0>)",
     "details": {
       "average": {
         "label": "Média Diária",
@@ -111,6 +110,10 @@
   "collage": {
     "text": "E obviamente isso não seria uma coisa do Last.fm sem sua collage de álbum 10x10"
   },
+  "artist_share": {
+    "title": "Compartilhe seus artistas favoritos!",
+    "text": "Mostre a paixão pelos seus artistas mais ouvidos!"
+  },
   "share": {
     "title": "Compartilhe seu rewind!",
     "text": "Mostre ao seus amigos seu rewind com #MusicorumRewind!",
@@ -120,10 +123,10 @@
     "title": "É isso!",
     "text1": "Esse foi seu ano na música rebobinado! Esperamos que tenha gostado da experiência!",
     "text2": "Esse site foi desenvolvido por uma única pessoa. Se você quer ver mais disso, compartilhe e deixe uma opinião! Também considere assinar nosso Patreon para ajudar nos custos de desenvolvimento :D",
-    "text3": "Feliz 2023!",
+    "text3": "Feliz 2024!",
     "buttons": {
       "tweet": "Tweetar",
-      "thanks": "Agradecimentos",
+      "thanks": "Créditos",
       "feedback": "Feedback"
     },
     "tweet_text": "Esse ano eu tive {{count}} scrobbles no #Lastfm. Veja seu rewind no #MusicorumRewind por @MusicorumApp"
@@ -132,14 +135,14 @@
     "save_on": "Salvar em {{service}}",
     "download": "Baixar imagem",
     "creation": {
-      "name": "Meu 2023 rebobinado",
-      "description": "Minhas faixas mais ouvidas em 2022, baseado no meu perfil do Last.fm, por #MusicorumRewind"
+      "name": "Meu 2023 na música",
+      "description": "Minhas músicas mais ouvidas em 2023, baseado no meu perfil do Last.fm, por #MusicorumRewind"
     },
     "generic_error": "Não foi possível criar a playlist",
     "created": {
       "title": "Aqui está sua playlist!",
       "missing_one": "Uma faixa não pôde ser encontrada no {{service}} e está faltando: {{names}}" ,
-      "missing_other": "Algumas faixas não puderam ser encontradas no {{service}} e estão faltando: {{names}}"
+      "missing_other": "Algumas músicas não puderam ser encontradas no {{service}} e estão faltando: {{names}}"
     }
   }
 }

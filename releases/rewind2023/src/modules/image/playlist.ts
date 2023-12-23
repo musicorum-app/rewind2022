@@ -7,10 +7,11 @@ import {
   loadFont,
   roundedCanvas
 } from '@rewind/core/src/utils/canvas'
-import { loadImage } from '../image'
-import { imageTypeDefaultImages } from '../lastfmImage'
+import { ImageType, imageTypeDefaultImages } from '../lastfmImage'
 import musicorumLogo from '../../assets/logo.svg'
 import { createLogo } from '../../utils/canvas'
+import { loadImageAsset } from '../image'
+import { RewindData } from '@rewind/resolver/src/types'
 
 const size = 400
 const margin = 30
@@ -20,6 +21,7 @@ const barPadding = 24
 
 export async function renderPlaylistImage(
   user: LastfmUserInfo,
+  rewindData: RewindData,
   paletteType: PaletteType
 ) {
   const palette = Palettes[paletteType]
@@ -30,11 +32,7 @@ export async function renderPlaylistImage(
   const ctx = canvas.getContext('2d')!
   const qdr = new Quadro(ctx)
 
-  const gradient = ctx.createLinearGradient(0, 0, size, size)
-  gradient.addColorStop(0, palette.gradient[0])
-  gradient.addColorStop(1, palette.gradient[1])
-
-  qdr.fillStyle = gradient
+  qdr.fillStyle = palette.darkerColor
   qdr.fillRect(0, 0, size, size)
 
   qdr.fillStyle = palette.color
@@ -48,8 +46,9 @@ export async function renderPlaylistImage(
   )
   ctx.fill()
 
-  const image = await loadImage(
-    user.images[3]?.url || imageTypeDefaultImages.USER
+  const image = await loadImageAsset(
+    user.images[3]?.url || rewindData.artists.items[0].image,
+    ImageType.USER
   )
 
   const imageSize = size - (margin + imageMargin) * 2
@@ -77,7 +76,7 @@ export async function renderPlaylistImage(
   const logoWidth = 130 * 1.1
   const logoHeight = 18 * 1.1
 
-  const mainColor = palette.gradient[0]
+  const mainColor = palette.darkerColor
   const logo = await createLogo(mainColor, logoWidth, logoHeight)
 
   qdr.xAlign = 'left'
@@ -98,7 +97,7 @@ export async function renderPlaylistImage(
   await loadFont('900 24px Satoshi-Black')
 
   ctx.fillText(
-    '2022',
+    '2023',
     size - margin - barPadding,
     size - margin - barHeight / 2
   )

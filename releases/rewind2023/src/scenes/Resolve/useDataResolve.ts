@@ -54,7 +54,7 @@ export interface DataResolveStore {
   setUser: (user: LastfmUserInfo | null) => void
 
   rewindData: RewindData2023 | null
-  resolve: () => void
+  resolve: () => Promise<void>
 
   clear: () => void
 }

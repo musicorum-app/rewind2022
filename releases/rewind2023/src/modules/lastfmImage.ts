@@ -1,6 +1,7 @@
-import { LastfmImage } from '@musicorum/lastfm/dist/types/packages/common'
 import defaultUserImage from '../assets/defaultUser.svg?inline'
 import defaultTrackImage from '../assets/defaultTrack.svg?inline'
+import defaultAlbumImage from '../assets/defaultAlbum.svg?inline'
+import defaultArtistImage from '../assets/defaultArtist.svg?inline'
 import { Image } from './rewindDataExtras'
 
 export enum ImageType {
@@ -13,8 +14,8 @@ export enum ImageType {
 export const imageTypeDefaultImages: Record<ImageType, string> = {
   [ImageType.USER]: defaultUserImage,
   [ImageType.TRACK]: defaultTrackImage,
-  [ImageType.ALBUM]: defaultTrackImage,
-  [ImageType.ARTIST]: defaultTrackImage
+  [ImageType.ALBUM]: defaultAlbumImage,
+  [ImageType.ARTIST]: defaultArtistImage
 }
 
 export function getImage(img: Image, size?: number) {

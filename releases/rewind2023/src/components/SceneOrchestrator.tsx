@@ -10,6 +10,14 @@ import ScrobblesChartScene from '../scenes/ScrobblesChart/ScrobblesChartScene'
 import TopArtistsScene from '../scenes/TopArtists/TopArtistsScene'
 import TopTracksScene from '../scenes/TopTracks/TopTracksScene'
 import TopAlbumsScene from '../scenes/TopAlbums/TopAlbumsScene'
+import CollageScene from '../scenes/Collage/CollageScene'
+import TagCloudScene from '../scenes/TagCloud/TagCloudScene'
+import PopularityScene from '../scenes/Popularity/PopularityScene'
+import EndSplashScene from '../scenes/EndSplash/EndSplashScene'
+import PlaylistScene from '../scenes/Playlist/PlaylistScene'
+import ShareScene from '../scenes/Share/ShareScene'
+import FinishScene from '../scenes/Finish/FinishScene'
+import ArtistShareScene from '../scenes/ArtistShare/ArtistShareScene'
 
 export default function SceneOrchestrator() {
   const [prev, next, setIsTransitioning] = useOrchestrator((s) => [
@@ -40,13 +48,14 @@ export default function SceneOrchestrator() {
       <TopArtistsScene />
       <TopTracksScene />
       <TopAlbumsScene />
-      {/* <CollageScene /> */}
-      {/* <TagCloudScene /> */}
-      {/* <PopularityScene /> */}
-      {/* <EndSplashScene /> */}
-      {/* <PlaylistScene /> */}
-      {/* <ShareScene /> */}
-      {/* <FinishScene /> */}
+      <CollageScene />
+      <ArtistShareScene />
+      <TagCloudScene />
+      <PopularityScene />
+      <EndSplashScene />
+      <PlaylistScene />
+      <ShareScene />
+      <FinishScene />
     </Stack>
   )
 }

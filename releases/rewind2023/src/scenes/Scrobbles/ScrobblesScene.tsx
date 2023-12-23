@@ -4,7 +4,7 @@ import Stack from '@rewind/core/src/components/Stack'
 import { useRewindData } from '../Resolve/useDataResolve'
 import { useEffect, useMemo } from 'react'
 import { interpolateBackgroundGradient } from '../../modules/backgroundGradient'
-import { Palettes } from '../../theme/colors'
+import { PaletteType, Palettes } from '../../theme/colors'
 import { RewindScene } from '../../types'
 import {
   scrobblesBackwardTimeline,
@@ -15,6 +15,7 @@ import Flex from '@react-css/flex'
 import { useTranslation } from 'react-i18next'
 import { useSceneAudio } from '../../hooks/useSceneAudio'
 import 'core-js/features/array/at'
+import { usePaletteToolkit } from '../../hooks/usePaletteToolkit'
 
 const Container = styled(Centered)`
   font-size: 182px;
@@ -94,15 +95,23 @@ const CountCopy = styled(Digit)`
   left: 50%;
   top: 50%;
   transform: translate(-50%, calc(-50% + 9px));
-  opacity: 0;
   display: flex;
   width: auto !important;
-  color: var(--scene-main-color);
+  background: var(--scene-main-color);
+  color: var(--scene-darker-color);
+  clip-path: inset(0 0 0 var(--scrobble-clip, 100%));
+  padding: 0 10px;
 `
 
 const TextsCentered = styled(Centered)`
   display: flex;
   flex-direction: column;
+  position: relative;
+  top: 6px;
+
+  & ${Digit} {
+    font-size: 1.05em;
+  }
 
   & > div {
     display: flex;
@@ -155,18 +164,21 @@ export default function ScrobblesScene() {
     return targetPalette ? Palettes[targetPalette] : Palettes.Chuu
   }, [rewindData])
 
+  const paletteType = usePaletteToolkit(RewindScene.Scrobbles, PaletteType.Chuu)
+  const palette = Palettes[paletteType]
+
   useEffect(() => {
     setTimelines(RewindScene.Scrobbles, {
       forward: {
         id: 'scr-forward',
-        factory: () => scrobblesForwardTimeline(originPalette)
+        factory: () => scrobblesForwardTimeline(originPalette, palette)
       },
       backward: {
         id: 'scr-backward',
-        factory: () => scrobblesBackwardTimeline(originPalette)
+        factory: () => scrobblesBackwardTimeline(originPalette, palette)
       }
     })
-  }, [originPalette, scrobblesForwardTimeline])
+  }, [originPalette, palette, scrobblesForwardTimeline])
 
   useSceneAudio(
     RewindScene.Scrobbles,
@@ -178,8 +190,6 @@ export default function ScrobblesScene() {
     return null
   }
 
-  console.log(scrobblesList)
-
   function resolveColor(i: number, j: number) {
     return (i % 2 ? !(j % 2) : j % 2) ? 'var(--scene-main-color)' : 'inherit'
   }
@@ -188,8 +198,8 @@ export default function ScrobblesScene() {
     <Container
       id="scr"
       style={{
-        '--scene-main-color': Palettes.Candy.color,
-        '--scene-darker-color': Palettes.Candy.darkerColor
+        '--scene-main-color': palette.color,
+        '--scene-darker-color': palette.darkerColor
       }}
     >
       <Stack>
@@ -219,7 +229,7 @@ export default function ScrobblesScene() {
           >
             2023
           </Digit>
-          <ComplementaryText className="complementary-text">
+          <ComplementaryText className="complementary-text bottom">
             {t('scrobbles.bottom_text')}
           </ComplementaryText>
         </TextsCentered>

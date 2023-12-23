@@ -1,7 +1,7 @@
 import Centered from '@rewind/core/src/components/Centered'
 import { useRewindData } from '../Resolve/useDataResolve'
 import { useRef, useLayoutEffect, useState, useMemo } from 'react'
-import { Palettes } from '../../theme/colors'
+import { PaletteType, Palettes } from '../../theme/colors'
 import { interpolateBackgroundGradient } from '../../modules/backgroundGradient'
 import styled from '@emotion/styled'
 import PositionReferenceObject from '../../components/PositionReferenceObject'
@@ -26,6 +26,7 @@ import ImageWithBorder from '../../components/ImageWithBorder'
 import { SceneHeader } from '../../components/SceneHeader'
 import { Box } from '@chakra-ui/react'
 import { ImageContainer } from '../../components/ImageContainer'
+import { usePaletteToolkit } from '../../hooks/usePaletteToolkit'
 
 const Container = styled.div`
   display: grid;
@@ -128,10 +129,11 @@ export default function FirstStepScene() {
   //   'transitionInterpolation'
   // )
 
-  const palette = useMemo(() => {
-    const targetPalette = rewindData?.firstScrobbles.items[0].image.palette
-    return targetPalette ? Palettes[targetPalette] : Palettes.Chuu
-  }, [rewindData])
+  const paletteType = usePaletteToolkit(
+    RewindScene.FirstTrack,
+    rewindData?.firstScrobbles.items[0].image.palette || PaletteType.Chuu
+  )
+  const palette = Palettes[paletteType]
 
   useEffect(() => {
     console.log('timeline changed')

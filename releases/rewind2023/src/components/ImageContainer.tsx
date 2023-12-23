@@ -1,3 +1,4 @@
+import { Image as ChakraImage, ImageProps } from '@chakra-ui/image'
 import styled from '@emotion/styled'
 
 const ImageWrapper = styled.div`
@@ -6,7 +7,7 @@ const ImageWrapper = styled.div`
   clip-path: inset(0 var(--image-container-clip-percent, 100%) 0 0);
 `
 
-const Image = styled.img`
+const Image = styled(ChakraImage)`
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -15,15 +16,10 @@ const Image = styled.img`
   clip-path: inset(0 var(--image-container-image-clip-percent, 100%) 0 0);
 `
 
-interface ImageContainerProps {
-  src: string
-  className?: string
-}
-
-export function ImageContainer({ src, className }: ImageContainerProps) {
+export function ImageContainer({ className, ...props }: ImageProps) {
   return (
     <ImageWrapper className={className}>
-      <Image src={src} />
+      <Image {...props} />
     </ImageWrapper>
   )
 }

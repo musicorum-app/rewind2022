@@ -9,9 +9,9 @@ import {
 import { RewindData } from '@rewind/resolver/src/types'
 import { Palettes, PaletteType } from '../../theme/colors'
 import { createLogo } from '../../utils/canvas'
-import { loadImage } from '../image'
-import { imageTypeDefaultImages } from '../lastfmImage'
+import { ImageType, imageTypeDefaultImages } from '../lastfmImage'
 import { createListCanvas } from './common'
+import { loadImageAsset } from '../image'
 
 const size = 1280
 const margin = 60
@@ -34,7 +34,7 @@ export async function renderSquareShareImage(
   paletteType: PaletteType
 ) {
   const palette = Palettes[paletteType]
-  const textColor = paletteType === PaletteType.Black ? 'black' : 'white'
+  const textColor = 'white'
 
   const canvas = document.createElement('canvas')
   canvas.width = size
@@ -42,14 +42,12 @@ export async function renderSquareShareImage(
   const ctx = canvas.getContext('2d')!
   const qdr = new Quadro(ctx)
 
-  const gradient = ctx.createLinearGradient(0, 0, size, size)
-  gradient.addColorStop(0, palette.gradient[0])
-  gradient.addColorStop(1, palette.gradient[1])
-
-  qdr.fillStyle = gradient
-  qdr.fillRect(0, 0, size, size)
+  const hasUserImage = !!user.images[3]?.url
 
   qdr.fillStyle = palette.color
+  qdr.fillRect(0, 0, size, size)
+
+  qdr.fillStyle = palette.darkerColor
   drawRoundedRect(
     ctx,
     margin,
@@ -60,12 +58,14 @@ export async function renderSquareShareImage(
   )
   ctx.fill()
 
-  const artistImage = await loadImage(
-    rewindData.artists.items[0].image || imageTypeDefaultImages.ARTIST
+  const artistImage = await loadImageAsset(
+    rewindData.artists.items[hasUserImage ? 0 : 1].image,
+    ImageType.ARTIST
   )
 
-  const albumImage = await loadImage(
-    rewindData.albums.items[0].image || imageTypeDefaultImages.ALBUM
+  const albumImage = await loadImageAsset(
+    rewindData.albums.items[0].image,
+    ImageType.ALBUM
   )
 
   const sideImagesY = margin + padding + mainImageSize / 2
@@ -110,9 +110,10 @@ export async function renderSquareShareImage(
   ctx.fillStyle = 'rgba(0, 0, 0, 0)'
   ctx.fillRect(size / 2, sideImagesY, mainImageSize, mainImageSize)
 
-  const image = await loadImage(
-    user.images[3]?.url || imageTypeDefaultImages.USER
-  )
+  const mainImage = hasUserImage
+    ? user.images[3]?.url
+    : rewindData.artists.items[0].image
+  const image = await loadImageAsset(mainImage, ImageType.USER)
 
   const userImageCanvas = roundedCanvas(
     image,
@@ -130,7 +131,7 @@ export async function renderSquareShareImage(
     mainImageSize
   )
 
-  const mainColor = palette.gradient[0]
+  const mainColor = palette.color
 
   ctx.shadowColor = 'none'
   ctx.shadowBlur = 0
@@ -166,13 +167,28 @@ export async function renderSquareShareImage(
     size / 2 - (padding + margin) * 2
   )
 
-  qdr.fillStyle = textColor
+  qdr.fillStyle = palette.color
   qdr.font = '900 100px Satoshi-Black'
+  qdr.xAlign = 'left'
+  qdr.yAlign = 'top'
 
   const formatter = new Intl.NumberFormat()
+  const scrobblesText = formatter.format(rewindData.scrobbles.total)
+  const {
+    actualBoundingBoxDescent: scrobbleTextHeight,
+    width: scrobblesWidth
+  } = ctx.measureText(scrobblesText)
 
+  qdr.fillRect(
+    textsX,
+    textsY + titleActualSize,
+    scrobblesWidth,
+    scrobbleTextHeight
+  )
+
+  qdr.fillStyle = palette.darkerColor
   qdr.writeTextLine(
-    formatter.format(rewindData.scrobbles.total),
+    scrobblesText,
     textsX,
     textsY + titleActualSize,
     size - (padding + margin) * 2
@@ -189,18 +205,24 @@ export async function renderSquareShareImage(
   const list = [...weights.entries()]
   const sortedList = list.sort((a, b) => b[1] - a[1]).map((f) => f[0])
 
-  if (sortedList[0]) {
-    qdr.writeTextLine(
-      sortedList[0].toLowerCase(),
-      size / 2,
-      textsY + titleActualSize,
-      (size - (padding + margin) * 2) / 2
-    )
-  }
+  const topTag = sortedList[0]?.toLowerCase() || '-'
+  const { actualBoundingBoxDescent: topTagHeight, width: topTagWidth } =
+    ctx.measureText(topTag)
+
+  qdr.fillStyle = palette.color
+  qdr.fillRect(size / 2, textsY + titleActualSize, topTagWidth, topTagHeight)
+
+  qdr.fillStyle = palette.darkerColor
+  qdr.writeTextLine(
+    topTag,
+    size / 2,
+    textsY + titleActualSize,
+    (size - (padding + margin) * 2) / 2
+  )
 
   const cardsY = textsY + spacing + 62
   const remainingSpace = size - cardsY - margin - padding - barHeight - spacing
-  const cardHeight = remainingSpace
+  const cardHeight = remainingSpace + 4
   const cardWidth = (size - margin * 2 - padding * 2 - spacing) / 2
   const cardMargin = margin + padding
   const limit = 5
@@ -213,7 +235,7 @@ export async function renderSquareShareImage(
     rewindData.artists.items.map((i) => i.name).slice(0, limit),
     cardWidth,
     cardHeight,
-    mainColor,
+    palette,
     textColor,
     titleFont,
     valueFont,
@@ -233,7 +255,7 @@ export async function renderSquareShareImage(
     rewindData.albums.items.map((i) => i.name).slice(0, limit),
     cardWidth,
     cardHeight,
-    mainColor,
+    palette,
     textColor,
     titleFont,
     valueFont,
@@ -258,10 +280,12 @@ export async function renderSquareShareImage(
   ctx.arcTo(size - margin, size - margin, size - margin, barY, margin)
   ctx.lineTo(size - margin, barY)
   ctx.closePath()
-  ctx.fill()
+  // ctx.fill()
 
   const logoWidth = 130 * 1.9
   const logoHeight = 18 * 1.9
+  const yearTextWidth = 100
+  const endLogoWidth = logoWidth + yearTextWidth + 6
 
   const logo = await createLogo(palette.color, logoWidth, logoHeight)
 
@@ -269,8 +293,8 @@ export async function renderSquareShareImage(
   qdr.yAlign = 'center'
   qdr.drawImage(
     logo,
-    margin + barPadding,
-    size - margin - barHeight / 2,
+    size / 2 - endLogoWidth / 2,
+    size - margin - barHeight / 2 - 8,
     logoWidth,
     logoHeight
   )
@@ -283,9 +307,9 @@ export async function renderSquareShareImage(
   await loadFont('900 38px Satoshi-Black')
 
   ctx.fillText(
-    '2022',
-    size - margin - barPadding,
-    size - margin - barHeight / 2
+    '2023',
+    size / 2 + endLogoWidth / 2,
+    size - margin - barHeight / 2 + 3 - 8
   )
 
   ctx.fillStyle = mainColor

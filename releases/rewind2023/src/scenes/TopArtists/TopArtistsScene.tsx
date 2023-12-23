@@ -17,6 +17,7 @@ import useWindowSize from '@rewind/core/src/hooks/useWindowSize'
 import { useSceneAudio } from '../../hooks/useSceneAudio'
 import 'core-js/features/array/at'
 import { usePaletteToolkit } from '../../hooks/usePaletteToolkit'
+import { ImageType } from '../../modules/lastfmImage'
 
 export default function TopArtistsScene() {
   const rewindData = useRewindData()
@@ -51,13 +52,14 @@ export default function TopArtistsScene() {
     selectedResource?.name
   )
 
-  const palette = usePaletteToolkit(RewindScene.TopArtistsScene, Palettes.Candy)
+  const paletteType = usePaletteToolkit(
+    RewindScene.TopArtistsScene,
+    rewindData?.artists.items[0].image.palette ?? PaletteType.Black
+  )
+  const palette = Palettes[paletteType]
 
   useEffect(() => {
     if (!rewindData) return
-
-    const palette =
-      Palettes[rewindData.artists.items[0].image.palette ?? PaletteType.Black]
 
     setTimelines(RewindScene.TopArtistsScene, {
       forward: {
@@ -69,7 +71,8 @@ export default function TopArtistsScene() {
         factory: () => createTopArtistsTimelineBackward(palette)
       }
     })
-  }, [rewindData])
+    console.log('a')
+  }, [rewindData, palette])
 
   if (!rewindData) {
     return null
@@ -78,9 +81,11 @@ export default function TopArtistsScene() {
   return (
     <TopSceneTemplate
       id="tar"
+      imageType={ImageType.ARTIST}
       scene={RewindScene.TopArtistsScene}
       items={rewindData.artists.items}
       topText={t('top_artists.top')}
+      palette={paletteType}
       bottomText={t('top_artists.bottom', {
         count: rewindData.artists.total
       })}

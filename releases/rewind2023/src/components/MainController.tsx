@@ -6,13 +6,23 @@ import { Portal } from 'react-portal'
 import { LoadState, useOrchestrator } from '../hooks/useOrchestrator'
 import { useTimelineController } from '../hooks/useTimelineController'
 import { extractImageColor } from '../modules/image'
-import { useDataResolve, useRewindData } from '../scenes/Resolve/useDataResolve'
+import {
+  DataResolveStep,
+  useDataResolve,
+  useRewindData
+} from '../scenes/Resolve/useDataResolve'
 import { getClosestPalette } from '../modules/image/palette'
 import { useBlade, useFolder, useMonitor } from '@rewind/toolkit'
 import { ButtonGridApi } from '@tweakpane/plugin-essentials'
 import { ButtonGridBladeParams } from '@tweakpane/plugin-essentials/dist/types/button-grid/plugin'
-import { TextView } from '@tweakpane/core'
+import {
+  ButtonApi,
+  ButtonBladeParams,
+  ButtonParams,
+  TextView
+} from '@tweakpane/core'
 import { TextBladeParams } from 'tweakpane'
+import { lastfmClient } from '../modules/lastfm'
 
 const levaElement = document.querySelector('#overlay')
 
@@ -101,6 +111,23 @@ export default function MainController() {
         else next()
       })
     },
+    orchestratorFolder.current
+  )
+
+  useBlade<ButtonApi, ButtonBladeParams>(
+    {
+      view: 'button',
+      title: 'Fast load',
+      label: 'fast load'
+    },
+    (blade) =>
+      blade.on('click', async () => {
+        setLoadState(LoadState.RESOLVE)
+        const user = await lastfmClient.user.getInfo('metye')
+        useDataResolve.getState().setUser(user)
+        useDataResolve.getState().setStep(DataResolveStep.LOADING)
+        await useDataResolve.getState().resolve()
+      }),
     orchestratorFolder.current
   )
 

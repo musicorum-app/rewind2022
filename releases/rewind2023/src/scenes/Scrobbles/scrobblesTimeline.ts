@@ -1,7 +1,10 @@
 import gsap from 'gsap'
 import { Gradient, Palette, Palettes } from '../../theme/colors'
 
-export const scrobblesForwardTimeline = (originPalette: Palette) => {
+export const scrobblesForwardTimeline = (
+  originPalette: Palette,
+  scenePalette: Palette
+) => {
   const tl = gsap
     .timeline({
       paused: true,
@@ -15,7 +18,7 @@ export const scrobblesForwardTimeline = (originPalette: Palette) => {
         background: originPalette.darkerColor
       },
       {
-        background: Palettes.Candy.darkerColor,
+        background: scenePalette.darkerColor,
         duration: 0.8
       },
       '0.4'
@@ -150,16 +153,16 @@ export const scrobblesForwardTimeline = (originPalette: Palette) => {
     )
   }
 
-  tl.add('scrobbleEnd')
+  tl.add('scrobbleEnd', '-=0.8')
     .fromTo(
       '#scr .count-copy',
       {
-        opacity: 0
+        '--scrobble-clip': '100%'
       },
       {
-        opacity: 1,
-        duration: 0.0001
-      }
+        '--scrobble-clip': '0%'
+      },
+      'scrobbleEnd'
     )
     .fromTo(
       '#scr .list-container',
@@ -168,10 +171,9 @@ export const scrobblesForwardTimeline = (originPalette: Palette) => {
       },
       {
         opacity: 0,
-        duration: 0.7,
-        ease: 'power1.inOut'
+        duration: 0.2
       },
-      'scrobbleEnd'
+      'scrobbleEnd+=0.25'
     )
     .fromTo(
       '#scr .complementary-text',
@@ -188,7 +190,10 @@ export const scrobblesForwardTimeline = (originPalette: Palette) => {
   return tl
 }
 
-export const scrobblesBackwardTimeline = (originPalette: Palette) => {
+export const scrobblesBackwardTimeline = (
+  originPalette: Palette,
+  scenePalette: Palette
+) => {
   return gsap
     .timeline({
       paused: true,
@@ -214,7 +219,7 @@ export const scrobblesBackwardTimeline = (originPalette: Palette) => {
     .fromTo(
       'body',
       {
-        background: Palettes.Candy.darkerColor
+        background: scenePalette.darkerColor
       },
       {
         background: originPalette.darkerColor,

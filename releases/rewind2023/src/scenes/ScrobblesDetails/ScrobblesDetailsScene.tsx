@@ -188,6 +188,10 @@ export default function ScrobblesDetailsScene() {
 
   const streak = rewindData.scrobbles.biggestStreak
 
+  const percentDiff = Math.round(rewindData.scrobbles.lastYearPercentDiff)
+  const percentDiffString =
+    percentDiff > 0 ? '+' + percentDiff : percentDiff.toString()
+
   return (
     <Centered column id="scd">
       <CountContainer className="info">
@@ -211,7 +215,7 @@ export default function ScrobblesDetailsScene() {
             }`}
             count={Math.abs(lastYearTotal)}
             values={{
-              percent: Math.round(rewindData.scrobbles.lastYearPercentDiff)
+              percent: percentDiffString
             }}
             components={[<b></b>]}
           />

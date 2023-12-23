@@ -33,14 +33,23 @@ export const scenesStore = create<ScenesStore>((set) => ({
     set((p) => {
       if (import.meta.env.DEV) {
         const timelineController = useTimelineController.getState()
-        console.log(timelineController.currentTimeline)
-        console.log(getTimelineId(timelineController.currentTimeline))
+        const forwardId = timelines.forward?.id
+        const backwardId = timelines.backward?.id
+        const currentTimelineId = getTimelineId(
+          timelineController.currentTimeline
+        )
+
+        if (
+          timelineController.currentTimeline &&
+          (currentTimelineId === forwardId || currentTimelineId === backwardId)
+        ) {
+          timelineController.currentTimeline.kill()
+        }
 
         if (
           autoReplace &&
           timelines.forward &&
-          getTimelineId(timelineController.currentTimeline) ===
-            timelines.forward.id
+          currentTimelineId === timelines.forward.id
         ) {
           const tl = timelines.forward.factory()
           timelineController.setTimeline(tl)
@@ -48,8 +57,7 @@ export const scenesStore = create<ScenesStore>((set) => ({
         } else if (
           autoReplace &&
           timelines.backward &&
-          getTimelineId(timelineController.currentTimeline) ===
-            timelines.backward.id
+          currentTimelineId === timelines.backward.id
         ) {
           const tl = timelines.backward.factory()
           timelineController.setTimeline(tl)

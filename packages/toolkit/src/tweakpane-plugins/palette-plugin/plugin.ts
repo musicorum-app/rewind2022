@@ -57,7 +57,8 @@ export const PaletteSelectPlugin = createPlugin<PaletteSelectPluginType>({
   controller(args) {
     return new PaletteSelectController(args.document, {
       value: args.value,
-      viewProps: args.viewProps
+      viewProps: args.viewProps,
+      params: args.params
     })
   }
 })

@@ -41,9 +41,9 @@ export const Palettes: Record<PaletteType, Palette> = {
   },
 
   Black: {
-    darkerColor: '#C4C4C4',
-    color: '#2E2E2E',
-    targetColors: ['#C4C4C4', '#2E2E2E']
+    darkerColor: '#2E2E2E',
+    color: '#C4C4C4',
+    targetColors: ['#2E2E2E', '#C4C4C4']
   },
   Yellow: {
     darkerColor: '#4D3800',

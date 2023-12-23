@@ -46,7 +46,12 @@ export default function Dialog({
     }
   }
   return (
-    <Modal isOpen={open} onClose={closeFn} onEsc={closeFn}>
+    <Modal
+      isOpen={open}
+      onClose={closeFn}
+      onEsc={closeFn}
+      scrollBehavior="inside"
+    >
       <Overlay onClick={onClose} />
       <Content>
         <Container>{children}</Container>

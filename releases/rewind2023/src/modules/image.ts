@@ -3,21 +3,30 @@ import {
   Colors,
   extractColorsFromImageData
 } from 'extract-colors/dist/extract-colors.umd.js'
-import 'core-js/features/array/at';
+import 'core-js/features/array/at'
+import { ImageType, imageTypeDefaultImages } from './lastfmImage'
 
 export function loadImage(src: string) {
   return new Promise<HTMLImageElement>((resolve, reject) => {
     const img = new Image()
-    img.src = src
     img.crossOrigin = 'anonymous'
+    img.src = src
 
     img.addEventListener('load', () => {
       resolve(img)
     })
     img.addEventListener('error', (ev) => {
-      reject(ev.error)
+      reject(new Error('Failed to load image'))
     })
   })
+}
+
+export async function loadImageAsset(
+  src: string | undefined | null,
+  type: ImageType
+) {
+  const fallbackSrc = imageTypeDefaultImages[type]
+  return loadImage(src || fallbackSrc).catch(() => loadImage(fallbackSrc))
 }
 
 export async function preloadImage(url: string) {

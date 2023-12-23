@@ -9,6 +9,7 @@ import { Image } from '../modules/rewindDataExtras'
 import { Gradient, Palettes, PaletteType } from '../theme/colors'
 import { RewindScene } from '../types'
 import TopItem from './TopItem'
+import { ImageType } from '../modules/lastfmImage'
 
 const Container = styled.div`
   display: flex;
@@ -46,10 +47,12 @@ interface TopSceneTemplateProps {
     image: Image
     preview?: string | null
   }[]
+  imageType: ImageType
   ableToPlay?: boolean
   topText: string
   bottomText: string
   scene: RewindScene
+  palette: PaletteType
   id?: string
 }
 
@@ -65,7 +68,7 @@ export default function TopSceneTemplate(props: TopSceneTemplateProps) {
 
   const count = small && !rellySmall ? 6 : medium ? 4 : 5
 
-  const palette = Palettes[props.items[0].image.palette ?? PaletteType.Black]
+  const palette = Palettes[props.palette]
 
   return (
     <Centered
@@ -88,6 +91,7 @@ export default function TopSceneTemplate(props: TopSceneTemplateProps) {
               count: track.scrobbles
             })}
             image={track.image.url}
+            imageType={props.imageType}
             color={palette.color}
             preview={track.preview ?? null}
           />
