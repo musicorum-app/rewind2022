@@ -140,7 +140,7 @@ export async function renderTopArtistImage(
     scrobblesText,
     textsX,
     textsY + spacing / 2 + 18,
-    titleWidth
+    maxTextWidth
   )
 
   // list
