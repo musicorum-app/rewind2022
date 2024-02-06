@@ -14,15 +14,6 @@ import { formatTrack } from './modules/image'
 import { parseScrobbles } from './finders/scrobbles'
 import parseFirstScrobbles from './finders/firstScrobbles'
 
-let from = new Date('2022-01-01T00:00')
-const to = new Date('2022-12-31T23:59')
-
-if (isNaN(from.getTime()) || from.getTime() < 1640908800000) {
-  from = new Date(1640995200000)
-}
-
-console.log(from)
-
 export enum ResolveStep {
   STARTUP,
   FETCHING_PAGES,
@@ -37,6 +28,8 @@ export interface StatusUpdatePayload {
 }
 
 export async function resolveRewindData(
+  from: Date,
+  to: Date,
   user: LastfmUserInfo,
   lastClient: LastClient,
   statusCallback: (status: StatusUpdatePayload) => void
@@ -69,7 +62,8 @@ export async function resolveRewindData(
         value: pagination.getAll().length,
         maxValue: pagination.totalResults
       })
-      await pagination.fetchPage(i)
+      await pagination
+        .fetchPage(i)
         .catch(() => pagination.fetchPage(i))
         .catch(() => pagination.fetchPage(i))
     }
@@ -89,8 +83,8 @@ export async function resolveRewindData(
   }
 
   const lastYear = await lastClient.user.getRecentTracks(user.name, {
-    from: new Date('2021-01-01 00:00'),
-    to: new Date('2021-12-31 23:59'),
+    from: new Date(1640995200000), // 2022-01-01 00:00Z
+    to: new Date(1672531140000), // 2022-12-31 23:59Z
     limit: 2
   })
 

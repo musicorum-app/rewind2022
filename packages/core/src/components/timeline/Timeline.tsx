@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { FiPlay, FiPause, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import { IconButton } from './IconButton'
 import Indicator from './Indicator'
+import LabelIndicator from './LabelIndicator'
 
 const Wrapper = styled.div`
   display: flex;
@@ -20,7 +21,7 @@ const LineSegment = styled.div`
 `
 
 const Line = styled.hr`
-  border: 2px solid var(--border);
+  border: 2px solid #383436;
   border-radius: 5px;
   margin: 0;
   width: 100%;
@@ -78,13 +79,24 @@ export default function Timeline({
         } else {
           timeline.play()
         }
+      } else if (event.key === 'Home') {
+        timeline.progress(0)
+      } else if (event.key === 'End') {
+        timeline.progress(1)
       }
     }
 
-    window.addEventListener('keypress', listener)
+    window.addEventListener('keydown', listener)
 
-    return () => window.removeEventListener('keypress', listener)
+    return () => window.removeEventListener('keydown', listener)
   }, [timeline])
+
+  const labels = useMemo(() => {
+    return Object.entries(timeline.labels).map(([name, position]) => ({
+      name,
+      position: position / timeline.duration()
+    }))
+  }, [timeline.labels, timeline.duration()])
 
   return (
     <Wrapper>
@@ -107,6 +119,14 @@ export default function Timeline({
           timeline={timeline}
         />
         <Line ref={lineRef} />
+
+        {labels.map((label) => (
+          <LabelIndicator
+            key={label.name}
+            name={label.name}
+            position={label.position}
+          />
+        ))}
       </LineSegment>
     </Wrapper>
   )

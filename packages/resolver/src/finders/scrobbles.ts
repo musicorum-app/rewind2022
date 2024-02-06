@@ -2,7 +2,7 @@ import { LastfmRecentTracksResponse } from '@musicorum/lastfm/dist/types/package
 import { Month, RewindData, ScrobblesData, Track } from '../types'
 import { months as monthList } from '../types'
 import { aggregate, sortMapWithArray } from '../utils'
-import 'core-js/features/array/at';
+import 'core-js/features/array/at'
 
 export function parseScrobbles(
   recentTracks: Track[],
@@ -31,7 +31,7 @@ export function parseScrobbles(
   const total = recentTracks.length
   const lastYearTotal = parseInt(lastYear.attr.total)
 
-  const percent = 100 * ((total - lastYearTotal) / total)
+  const percent = (total / lastYearTotal - 1) * 100
 
   return {
     total,

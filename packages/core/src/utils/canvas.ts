@@ -1,7 +1,9 @@
+import { Quadro } from '@musicorum/quadro'
+
 export function canvasToBlob(
   canvas: HTMLCanvasElement,
   type = 'image/jpeg',
-  quality = 80
+  quality = 98
 ) {
   return new Promise<Blob>((resolve, reject) => {
     canvas.toBlob(
@@ -46,6 +48,13 @@ export function roundedCanvas(
   const x = 0
   const y = 0
 
+  const coverImageCanvas = document.createElement('canvas')
+  coverImageCanvas.width = w
+  coverImageCanvas.height = h
+  const qdr = new Quadro(coverImageCanvas.getContext('2d')!)
+  qdr.imageFit = 'cover'
+  qdr.drawImage(image, 0, 0, w, h)
+
   const canvas = document.createElement('canvas')
   canvas.width = w
   canvas.height = h
@@ -64,7 +73,7 @@ export function roundedCanvas(
   ctx.closePath()
 
   ctx.globalCompositeOperation = 'source-over'
-  ctx.drawImage(image, 0, 0, w, h)
+  ctx.drawImage(coverImageCanvas, 0, 0, w, h)
 
   ctx.globalCompositeOperation = 'destination-in'
   ctx.fillStyle = '#fff'
