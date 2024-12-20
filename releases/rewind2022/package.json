@@ -32,7 +32,7 @@
     "extract-colors": "^1.1.22",
     "fetch-jsonp": "^1.2.3",
     "framer-motion": "^7.6.4",
-    "gsap": "npm:@gsap/member",
+    "gsap": "gsap@npm:@gsap/member",
     "howler": "^2.2.3",
     "i18next": "^22.0.4",
     "i18next-browser-languagedetector": "^7.0.0",
