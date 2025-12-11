@@ -1,0 +1,149 @@
+{
+  "common": {
+    "continue": "Continue",
+    "back": "Back",
+    "try_again": "Try again",
+    "start": "Start",
+    "download": "Download",
+    "select_language": "Select language",
+    "scrobbles_zero": "no scrobbles",
+    "scrobbles_one": "one scrobble",
+    "scrobbles_other": "{{count}} scrobbles",
+    "now_playing": "NOW PLAYING"
+  },
+  "splash": {
+    "text1": "It's time to rewind",
+    "text2": "your 2024 in music"
+  },
+  "begin": {
+    "lastfm_user": "Last.fm username",
+    "ready": "Everything done and ready!"
+  },
+  "loading": {
+    "previous_found": "We found a previous rewind you did before. Do you want to use it?",
+    "generic": "Loading...",
+    "fetching_resources": "Doing some magic...",
+    "drawing": "Drawing some fancy stuff...",
+    "wait": "This may take a while, please wait",
+    "fetching_pages": "Reading your scrobbles...",
+    "note": "Please note that your experience may vary because of your scrobble count, availability of artists and albums, and other factors"
+  },
+  "errors": {
+    "generic": "Something went wrong!",
+    "user_not_found": "User not found",
+    "private_scrobbles": "Your last.fm profile have private scrobbles. Please <1>make them public</1> to continue",
+    "rate_limit": "There are too many people using this website right now and last.fm is limiting us. Please try again later"
+  },
+  "year_splash": {
+    "welcome": "Welcome to your yearly rewind"
+  },
+  "first_track": {
+    "title": "The first one",
+    "sub_text_zero": "This was your first scrobble of the year, on {{date, datetime}}. You only listened this song once this year.",
+    "sub_text_one": "This was your first scrobble of the year, on {{date, datetime}}. You only listened this song one more time this year.",
+    "sub_text_other": "This was your first scrobble of the year, on {{date, datetime}}. You also listened this song {{count, number}} more times this year."
+  },
+  "scrobbles": {
+    "top_text": "This year you had",
+    "bottom_text": "scrobbles"
+  },
+  "months": {
+    "jan": "jan",
+    "feb": "feb",
+    "mar": "mar",
+    "apr": "apr",
+    "may": "may",
+    "jun": "jun",
+    "jul": "jul",
+    "aug": "aug",
+    "sep": "sep",
+    "oct": "oct",
+    "nov": "nov",
+    "dec": "dec"
+  },
+  "scrobbles_details": {
+    "last_year_diff": "vs <0>{{count}}</0> from 2023 ({{percent}}%)",
+    "last_year_same": "same as 2023 (<0>{{count}}</0>)",
+    "details": {
+      "average": {
+        "label": "Daily Average",
+        "title": "{{count}} scrobbles",
+        "secondary": "per day"
+      },
+      "streak": {
+        "label": "Biggest streak",
+        "title_zero": "no streak",
+        "title_one": "one day",
+        "title_other": "{{count}} days",
+        "secondary": "{{from, datetime}} to {{to, datetime}}"
+      },
+      "golden_day": {
+        "label": "Golden day",
+        "title": "{{count}} scrobbles",
+        "secondary": "in one day ({{date, datetime}})"
+      }
+    }
+  },
+  "top_artists": {
+    "top": "And these were the artists you listened the most",
+    "bottom": "counting up to {{count}} artists this year"
+  },
+  "top_tracks": {
+    "top": "And these were the tracks you listened the most",
+    "bottom": "counting up to {{count}} tracks this year"
+  },
+  "top_albums": {
+    "top": "Finally, these were the albums you listened the most",
+    "bottom": "counting up to {{count}} albums this year"
+  },
+  "tag_cloud": {
+    "title": "You also listened to different tags, like these ones"
+  },
+  "popularity": {
+    "low": "<0>{{name}}</0> was your least popular artist of the year, with {{value}}% of popularity",
+    "high": "<0>{{name}}</0> was your most popular artist of the year, with {{value}}% of popularity",
+    "subtitle": "is how mainstream you were this year*",
+    "note": "* based on the average of your top 100 artists of the year, with Spotify's popularity score"
+  },
+  "end_splash": {
+    "text": "And this was your year in music!"
+  },
+  "collage": {
+    "text": "And of course, this wouldn’t be a last.fm thing without a 10x10 album collage"
+  },
+  "artist_share": {
+    "title": "Share your favorite artist!",
+    "text": "Show the love for your most listened artists!"
+  },
+  "share": {
+    "title": "Share your rewind!",
+    "text": "Show to your friends your 2024 in music with #MusicorumRewind!",
+    "change_mode": "Change Mode"
+  },
+  "finish": {
+    "title": "That was it!",
+    "text1": "This was your year in music rewinded! We hope you enjoyed this experience!",
+    "text2": "This website was done by one person. If you liked this and want to see more, share this and give it a feedback! Also, consider joining our Patreon to help fund the development :D",
+    "text3": "Happy 2024!",
+    "buttons": {
+      "tweet": "Tweet",
+      "thanks": "Credits",
+      "feedback": "Feedback"
+    },
+    "tweet_text": "This year I had {{count}} scrobbles on #Lastfm. Take a look at your rewind on #MusicorumRewind by @MusicorumApp"
+  },
+  "playlist": {
+    "save_on": "Save on {{service}}",
+    "download": "Download image",
+    "creation": {
+      "name": "My 2024 rewind",
+      "description": "My most listened tracks from 2024, based on my Last.fm profile, by #MusicorumRewind"
+    },
+    "generic_error": "Couldn't create playlist",
+    "created": {
+      "title": "Here's your playlist!",
+      "missing_one": "One song could not be found on {{service}} and is missing: {{names}}" ,
+      "missing_other": "Some songs were not found on {{service}} and are missing: {{names}}" 
+    }
+  }
+}

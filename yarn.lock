@@ -3150,10 +3150,10 @@ gsap@^3.11.3:
   resolved "https://registry.yarnpkg.com/gsap/-/gsap-3.12.3.tgz#5baa5d05e845eead09134134d2698210068b9619"
   integrity sha512-TySXTE+ABiAVa61W+h5wv2p5GkJT1Uj//4nWpK8EjmhcDqwH++35IvtbQlVVFj+rdcJdFCdCt0SKgb+SwdPq/A==
 
-"gsap@npm:@gsap/member", "gsap@npm:@gsap/member@^3.12.3":
-  version "3.12.3"
-  resolved "https://npm.greensock.com/@gsap%2fmember/-/member-3.12.3.tgz#6f0d08d4b4d42f41fdcfdbff327516293ad663ff"
-  integrity sha512-Nn+fF9MOpfjVABzfX7ZA30C6TXTU6U8RKNQnVz6P3SfalWfWcs3TlFFXaDzqeeMhQ7PYUy5+nMf2L3AQrIwDZg==
+"gsap@gsap@npm:@gsap/member", "gsap@gsap@npm:@gsap/member@^3.12.3":
+  version "3.12.5"
+  resolved "https://registry.yarnpkg.com/gsap/-/gsap-3.12.5.tgz#136c02dad4c673b441bdb1ca00104bfcb4eae7f4"
+  integrity sha512-srBfnk4n+Oe/ZnMIOXt3gT605BX9x5+rh/prT2F1SsNJsU1XuMiP0E2aptW481OnonOGACZWBqseH5Z7csHxhQ==
 
 har-schema@^2.0.0:
   version "2.0.0"

@@ -54,10 +54,14 @@ function calculateStreak(
 
   let biggestStreak: Track[] = []
   let streak: Track[] = []
-  let lastDate = new Date('2022-01-01 00:00')
+  let lastDate = new Date(history.find((t) => !!t.date)?.date || 1672488000000)
 
   for (const track of history) {
     if (!track.date) {
+      continue
+    }
+    if (!streak.length) {
+      streak.push(track)
       continue
     }
     const trackDate = new Date(track.date)

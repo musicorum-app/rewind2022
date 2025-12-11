@@ -136,7 +136,7 @@ export function getTopAlbums(recentTracks: Track[]): EntityTop<Album> {
   console.log(top)
 
   const items = top.slice(0, 100).map((tracks) => ({
-    name: tracks[0].album,
+    name: (tracks.find(t => !!t.album) || tracks[0]).album,
     artist: tracks[0].artist,
     image: tracks.find((t) => !!t.image)?.image ?? null,
     scrobbles: tracks.length

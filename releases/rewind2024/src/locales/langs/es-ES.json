@@ -1,0 +1,149 @@
+{
+  "common": {
+    "continue": "Continuar",
+    "back": "Atras",
+    "try_again": "Reintentar",
+    "start": "Comenzar",
+    "download": "Descargar",
+    "select_language": "Seleccionar idioma",
+    "scrobbles_zero": "Sin scrobbles",
+    "scrobbles_one": "Un scrobble",
+    "scrobbles_other": "{{count}} scrobbles",
+    "now_playing": "REPRODUCIENDO AHORA MISMO"
+  },
+  "splash": {
+    "text1": "Es hora de tu rewind",
+    "text2": "tu 2024 en música"
+  },
+  "begin": {
+    "lastfm_user": "Nombre de usuario de Last.fm",
+    "ready": "¡Todo listo!"
+  },
+  "loading": {
+    "previous_found": "Encontramos un rewind que hiciste anteriormente. ¿Deseas usarlo?",
+    "generic": "Cargando...",
+    "fetching_resources": "Haciendo algo de magia...",
+    "drawing": "Diseñando algo increíble...",
+    "wait": "Esto puede tomar algo de tiempo, por favor espera.",
+    "fetching_pages": "Leyendo tus scrobbles...",
+    "note": "Toma en cuenta que tu experiencia puede variar debido a tu cantidad de scrobbles, la disponibilidad de artistas y álbumes, y otros factores."
+  },
+  "errors": {
+    "generic": "¡Algo salió mal!",
+    "user_not_found": "Usuario no encontrado.",
+    "private_scrobbles": "Tu perfil de Last.fm tiene los scrobbles en privado. Por favor <1>hazlos públicos</1> para continuar.",
+    "rate_limit": "Mucha gente está usando la página web ahora mismo y Last.fm nos está limitando. Por favor intenta de nuevo más tarde."
+  },
+  "year_splash": {
+    "welcome": "Bienvenido a tu rewind anual"
+  },
+  "first_track": {
+    "title": "El primero",
+    "sub_text_zero": "Este fue tu primer scrobble del año, el {{date, datetime}}. Solo escuchaste esta canción una vez este año.",
+    "sub_text_one": "Este fue tu primer scrobble del año, el {{date, datetime}}. Solo escuchaste esta canción una vez más este año.",
+    "sub_text_other": "Este fue tu primer scrobble del año, el {{date, datetime}}. También escuchaste esta canción {{count, number}} veces más este año."
+  },
+  "scrobbles": {
+    "top_text": "Este año hiciste",
+    "bottom_text": "scrobbles"
+  },
+  "months": {
+    "jan": "ene",
+    "feb": "feb",
+    "mar": "mar",
+    "apr": "abr",
+    "may": "may",
+    "jun": "jun",
+    "jul": "jul",
+    "aug": "ago",
+    "sep": "sep",
+    "oct": "oct",
+    "nov": "nov",
+    "dec": "dic"
+  },
+  "scrobbles_details": {
+    "last_year_diff": "vs <0>{{count}}</0> del 2023 ({{percent}}%)",
+    "last_year_same": "igual que en 2023 (<0>{{count}}</0>)",
+    "details": {
+      "average": {
+        "label": "Promedio diario",
+        "title": "{{count}} scrobbles",
+        "secondary": "por día"
+      },
+      "streak": {
+        "label": "Racha más larga",
+        "title_zero": "Sin racha",
+        "title_one": "un día",
+        "title_other": "{{count}} días",
+        "secondary": "{{from, datetime}} al {{to, datetime}}"
+      },
+      "golden_day": {
+        "label": "Día dorado",
+        "title": "{{count}} scrobbles",
+        "secondary": "en un día ({{date, datetime}})"
+      }
+    }
+  },
+  "top_artists": {
+    "top": "Y estos fueron los artistas que más escuchaste",
+    "bottom": "contando hasta {{count}} artistas este año"
+  },
+  "top_tracks": {
+    "top": "Y estas fueron las canciones que más escuchaste",
+    "bottom": "contando hasta {{count}} canciones este año"
+  },
+  "top_albums": {
+    "top": "Finalmente, estos fueron los álbumes que más escuchaste",
+    "bottom": "contando hasta {{count}} álbumes este año"
+  },
+  "tag_cloud": {
+    "title": "También escuchaste diferentes categorías, como estas"
+  },
+  "popularity": {
+    "low": "<0>{{name}}</0> fue tu artista menos popular del año, con {{value}}% de popularidad",
+    "high": "<0>{{name}}</0> fue tu artista más popular del año, con {{value}}% de popularidad",
+    "subtitle": "es cuán mainstream fuiste este año*",
+    "note": "* basado en el promedio de tus 100 artistas más escuchados del año, con el puntaje de popularidad de Spotify."
+  },
+  "end_splash": {
+    "text": "¡Y este fue tu año en música!"
+  },
+  "collage": {
+    "text": "Y claro, esto no sería algo de Last.fm sin un collage de álbumes de 10x10"
+  },
+  "artist_share": {
+    "title": "¡Comparte tu artista favorito!",
+    "text": "¡Muestra el amor a tus artistas más escuchados!"
+  },
+  "share": {
+    "title": "¡Comparte tu rewind!",
+    "text": "¡Enséñale a tus amigos tu 2024 en música con #MusicorumRewind!",
+    "change_mode": "Cambiar modo"
+  },
+  "finish": {
+    "title": "¡Eso fue todo!",
+    "text1": "¡Este fue el repaso de tu año en música! ¡Esperamos que hayas disfrutado de esta experiencia!",
+    "text2": "Este sitio fue hecho por una sola persona. Si te gustó y te gustaría ver más, ¡compártelo y déjanos tu opinión! Además, considera unirte a nuestro Patreon para ayudar a financiar el desarrollo :D.",
+    "text3": "¡Feliz 2024!",
+    "buttons": {
+      "tweet": "Tweet",
+      "thanks": "Créditos",
+      "feedback": "Comentarios"
+    },
+    "tweet_text": "Este año tuve {{count}} scrobbles en #Lastfm. Mira tu rewind en #MusicorumRewind por @MusicorumApp"
+  },
+  "playlist": {
+    "save_on": "Guardar en {{service}}",
+    "download": "Descargar imagen",
+    "creation": {
+      "name": "Mi rewind 2024",
+      "description": "Mis canciones más escuchadas del 2024, basado en mi perfil de Last.fm, por #MusicorumRewind"
+    },
+    "generic_error": "No se pudo generar una playlist",
+    "created": {
+      "title": "¡Aquí está tu playlist!",
+      "missing_one": "Una canción no se pudo encontrar en {{service}} y falta: {{names}}",
+      "missing_other": "Algunas canciones no se encontraron en {{service}} y no están disponibles: {{names}}"
+    }
+  }
+}
