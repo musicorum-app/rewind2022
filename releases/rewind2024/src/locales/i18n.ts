@@ -15,6 +15,8 @@ const resourcesLoader = resourcesToBackend((language, _, callback) => {
     loadLocale(import('./langs/pt-BR.json'), callback)
   } else if (language === 'en-US') {
     loadLocale(import('./langs/en-US.json'), callback)
+  } else if (language === 'es-ES') {
+    loadLocale(import('./langs/es-ES.json'), callback)
   } else {
     callback(new Error('Unsuported locale'), null)
   }

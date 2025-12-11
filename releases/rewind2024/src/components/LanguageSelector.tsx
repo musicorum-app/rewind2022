@@ -69,7 +69,8 @@ interface LanguageSelectorProps {
 
 const languages = {
   'pt-BR': 'Português',
-  'en-US': 'English'
+  'en-US': 'English',
+  'es-ES': 'Español'
 }
 
 export function LanguageSelector({ open, onClose }: LanguageSelectorProps) {
