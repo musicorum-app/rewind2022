@@ -1,0 +1,1 @@
+Due to licensing, it's not possible to commit the fonts, get them here: https://www.fontshare.com/fonts/satoshi
