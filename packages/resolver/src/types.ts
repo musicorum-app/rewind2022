@@ -1,5 +1,4 @@
-import { LastfmRecentTracksTrack } from '@musicorum/lastfm/dist/types/packages/user'
-import { ArtistResource, Image } from './api/types'
+import { Image } from './api/types'
 
 export interface Track {
   name: string

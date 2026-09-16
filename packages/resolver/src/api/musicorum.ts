@@ -27,7 +27,7 @@ export function getArtistsResources(artists: string[]) {
     '/v2/resources/artists',
     {
       popularity: 'true',
-      sources: 'spotify,deezer',
+      sources: 'spotify,deezer,lastfm',
       api_key: import.meta.env.VITE_MUSICORUM_KEY
     },
     {

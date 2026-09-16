@@ -83,8 +83,8 @@ export async function resolveRewindData(
   }
 
   const lastYear = await lastClient.user.getRecentTracks(user.name, {
-    from: new Date(1640995200000), // 2022-01-01 00:00Z
-    to: new Date(1672531140000), // 2022-12-31 23:59Z
+    from: new Date(1704067200000), // 2024-01-01 00:00Z
+    to: new Date(1735689540000), // 2024-12-31 23:59Z
     limit: 2
   })
 
